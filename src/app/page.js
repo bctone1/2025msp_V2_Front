@@ -33,13 +33,11 @@ export default function LoginPage({ className }) {
       email,
       password,
     });
-
-
     if (result?.error) {
       alert("회원정보가 없습니다.");
       // alert("Login failed: " + result.error);
     } else {
-      router.push("/home");
+      router.push("/home/user");
     }
   };
   const handleSignup = () => {
@@ -49,7 +47,7 @@ export default function LoginPage({ className }) {
 
   const handleGoogleLogin = () => {
     signIn("google", {
-      callbackUrl: "/home",
+      callbackUrl: "/home/user",
     });
   };
 
