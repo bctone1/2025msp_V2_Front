@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Profile = ({ models }) => {
+const Profile = ({ models, userInfo }) => {
   return (
     <div className="flex-1 p-6 bg-gray-50 overflow-y-auto">
       <div className="max-w-4xl mx-auto">
@@ -16,7 +16,7 @@ const Profile = ({ models }) => {
               <input
                 type="text"
                 className="w-full px-4 py-2 border rounded-lg"
-                defaultValue="홍길동"
+                defaultValue={userInfo.name}
               />
             </div>
 
@@ -25,7 +25,7 @@ const Profile = ({ models }) => {
               <input
                 type="email"
                 className="w-full px-4 py-2 border rounded-lg"
-                defaultValue="hong@example.com"
+                defaultValue={userInfo.email}
                 disabled
               />
             </div>
@@ -45,7 +45,7 @@ const Profile = ({ models }) => {
               <input
                 type="text"
                 className="w-full px-4 py-2 border rounded-lg"
-                defaultValue="AI 개발팀"
+                defaultValue={userInfo.group}
               />
             </div>
           </div>
@@ -67,7 +67,8 @@ const Profile = ({ models }) => {
               <select className="w-full px-4 py-2 border rounded-lg">
                 {models.map(model => (
                   <option key={model.id} value={model.id}>
-                    {model.name} ({model.provider})
+                    {model.name}
+                    {/* ({model.provider}) */}
                   </option>
                 ))}
               </select>
@@ -96,6 +97,7 @@ const Profile = ({ models }) => {
 
             <div>
               <label className="block text-sm font-medium mb-2">언어</label>
+
               <select className="w-full px-4 py-2 border rounded-lg">
                 <option value="ko">한국어</option>
                 <option value="en">English</option>
@@ -122,6 +124,7 @@ const Profile = ({ models }) => {
               <input
                 type="password"
                 className="w-full px-4 py-2 border rounded-lg"
+                // defaultValue={userInfo.password}
               />
             </div>
 

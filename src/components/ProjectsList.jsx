@@ -1,7 +1,5 @@
 import React from 'react';
-import {
-  PlusCircle, Search, Bot, Clock
-} from 'lucide-react';
+import { PlusCircle, Search, Bot, Clock } from 'lucide-react';
 
 const ProjectsList = ({
   projects,
@@ -56,26 +54,26 @@ const ProjectsList = ({
         <div className="grid grid-cols-2 gap-6">
           {projects.map(project => (
             <div
-              key={project.id}
-              onClick={() => selectProject(project.id)}
+              key={project.project_id}
+              onClick={() => selectProject(project.project_id)}
               className="bg-white rounded-lg border p-4 hover:border-blue-300 hover:shadow-sm cursor-pointer"
             >
               <div className="flex justify-between items-start">
                 <div>
-                  <h3 className="font-medium text-lg">{project.name}</h3>
-                  {project.desc && (
-                    <p className="text-sm text-gray-600 mt-1">{project.desc}</p>
+                  <h3 className="font-medium text-lg">{project.project_name}</h3>
+                  {project.description && (
+                    <p className="text-sm text-gray-600 mt-1">{project.description}</p>
                   )}
                 </div>
-                <span className={`px-2 py-0.5 rounded text-xs ${project.status === 'active'
+                {/* <span className={`px-2 py-0.5 rounded text-xs ${project.status === 'active'
                     ? 'bg-blue-100 text-blue-700'
                     : 'bg-green-100 text-green-700'
                   }`}>
                   {project.status === 'active' ? '진행중' : '완료'}
-                </span>
+                </span> */}
               </div>
 
-              <div className="mt-4">
+              {/* <div className="mt-4">
                 <div className="flex justify-between items-center mb-1.5 text-sm">
                   <span className="text-gray-600">진행률</span>
                   <span>{project.progress}%</span>
@@ -86,14 +84,19 @@ const ProjectsList = ({
                     style={{ width: `${project.progress}%` }}
                   ></div>
                 </div>
-              </div>
+              </div> */}
 
-              <div className="flex items-center justify-between mt-4">
-                <div className="flex items-center text-sm text-gray-600">
-                  <Bot size={14} className="mr-1" />
-                  <span>{models.find(m => m.id === project.model)?.name || project.model}</span>
+              <div className="flex items-center mt-3 text-xs text-gray-500 space-x-3 p-2 border rounded-lg shadow-sm bg-white">
+                <div className="flex items-center space-x-1">
+                  <span className="font-semibold text-gray-600">모델 :</span>
+                  <Bot size={14} className="mr-2 text-blue-500" />
+                  <span className="font-medium">{project.ai_model}</span>
                 </div>
 
+                <div className="flex items-center space-x-1">
+                  <span className="font-semibold text-gray-600">카테고리 :</span>
+                  <span className="text-gray-700">{project.category}</span>
+                </div>
               </div>
             </div>
           ))}

@@ -10,7 +10,7 @@ import { useSession } from "next-auth/react";
 
 const Navigation = ({ navView, changeNavigation }) => {
   const { data: session } = useSession();
-  console.log(session);
+  // console.log(session);
 
   return (
     <div className="w-64 bg-white border-r flex flex-col h-full">
