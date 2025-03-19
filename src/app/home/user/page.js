@@ -129,8 +129,8 @@ const EnhancedMetaLLMInterface = () => {
   ];
 
   const conversations = [
-    { id: 'conv-1', title: '로그인 기능 구현', project: 'proj-1', date: '2024-03-10', messages: 24 },
-    { id: 'conv-2', title: 'DB 설계 논의', project: 'proj-1', date: '2024-03-12', messages: 15 }
+    { id: 'conv-1', title: '로그인 기능 구현', project: 3, date: '2024-03-10', messages: 24 },
+    { id: 'conv-2', title: 'DB 설계 논의', project: 3, date: '2024-03-12', messages: 15 }
   ];
 
   // const apiKeys = [
@@ -147,7 +147,9 @@ const EnhancedMetaLLMInterface = () => {
 
   // 프로젝트 선택
   const selectProject = (projectId) => {
+    console.log(projectId);
     const project = projects.find(p => p.project_id === projectId);
+    // console.log(project);
     setActiveProject(project);
     setSelectedModel(project.ai_model);
     setView('project-detail');

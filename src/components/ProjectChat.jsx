@@ -1,18 +1,18 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { 
-  Bot, User, Send, FileText, 
-  Upload, Settings, Cloud, 
+import {
+  Bot, User, Send, FileText,
+  Upload, Settings, Cloud,
   Folder, Github, History,
   ChevronDown, Database
 } from 'lucide-react';
 
-const ProjectChat = ({ 
-  activeProject, 
-  models, 
-  conversations, 
-  selectedModel, 
+const ProjectChat = ({
+  activeProject,
+  models,
+  conversations,
+  selectedModel,
   setSelectedModel,
-  setView 
+  setView
 }) => {
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState([]);
@@ -20,16 +20,16 @@ const ProjectChat = ({
   const [showModelSelector, setShowModelSelector] = useState(false);
   const [fileSource, setFileSource] = useState('local'); // 'local', 'drive', 'github', 'dropbox'
   const [files, setFiles] = useState([]);
-  
+
   const fileInputRef = useRef(null);
   const messagesEndRef = useRef(null);
 
   // 컴포넌트 마운트 시 초기 메시지 설정
   useEffect(() => {
     setMessages([{
-      id: 1, 
+      id: 1,
       role: 'system',
-      content: `${activeProject.name} 프로젝트를 시작합니다. ${activeProject.desc ? `설명: ${activeProject.desc}` : ''} 어떤 도움이 필요하신가요?`
+      content: `${activeProject.project_name} 프로젝트를 시작합니다. ${activeProject.description ? `설명: ${activeProject.description}` : ''} 어떤 도움이 필요하신가요?`
     }]);
   }, [activeProject]);
 
@@ -52,7 +52,7 @@ const ProjectChat = ({
       const aiResponse = {
         id: messages.length + 2,
         role: 'assistant',
-        content: `${activeProject.name} 프로젝트에 대한 질문에 답변드립니다. 더 자세한 설명이 필요하시면 말씀해주세요.`,
+        content: `${activeProject.project_name} 프로젝트에 대한 질문에 답변드립니다. 더 자세한 설명이 필요하시면 말씀해주세요.`,
         model: selectedModel
       };
 
@@ -61,47 +61,84 @@ const ProjectChat = ({
       messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, 1000);
   };
-  
+
   // 파일 업로드
   const handleFileUpload = () => {
     if (fileSource === 'local') {
       fileInputRef.current?.click();
+
     } else {
       // 외부 스토리지 연동 시뮬레이션
       alert(`${fileSource} 연동을 시작합니다.`);
-      
+
       // 외부에서 가져온 파일 시뮬레이션
       setTimeout(() => {
         const externalFiles = [
           { name: `${fileSource}_문서1.pdf`, source: fileSource },
           { name: `${fileSource}_문서2.docx`, source: fileSource }
         ];
-        
+
         setFiles([...files, ...externalFiles]);
         alert(`${fileSource}에서 2개의 파일을 가져왔습니다.`);
       }, 1000);
     }
   };
 
-  const handleFileSelect = (e) => {
+  const handleFileSelect = async (e) => {
     const selectedFiles = Array.from(e.target.files);
+    const formData = new FormData();
+
+    // formData.append("files[]", selectedFiles);
+    formData.append("project_id", activeProject.project_id);
+    formData.append("user_email", activeProject.user_email);
+    selectedFiles.forEach(file => {
+      formData.append("files[]", file);
+    });
+
+    const formDataObject = {};
+    formData.forEach((value, key) => {
+      formDataObject[key] = value;
+    });
+    console.log(formDataObject);
+
+
+    // console.log(selectedFiles);
+    // console.log(activeProject.project_id, activeProject.user_email);
+
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/UploadFile`, {
+      method: "POST",
+      // headers: {
+      //   "Content-Type": "application/json",
+      // },
+      // body: JSON.stringify(formData),
+      body:formData
+    });
+    const data = await response.json();
+    if (response.ok) {
+      console.log(data);
+    } else {
+      alert("공급자 오류발생");
+    }
+
+
+
     if (selectedFiles.length > 0) {
       const newFiles = selectedFiles.map(f => ({
         name: f.name,
         source: 'local'
       }));
-      
+
       setFiles([...files, ...newFiles]);
-      
+
       const fileMessage = {
         id: messages.length + 1,
         role: 'user',
         content: `파일 업로드: ${selectedFiles.map(f => f.name).join(', ')}`,
         files: newFiles
       };
-      
+
       setMessages([...messages, fileMessage]);
-      
+
       // AI 응답 시뮬레이션
       setIsLoading(true);
       setTimeout(() => {
@@ -111,7 +148,7 @@ const ProjectChat = ({
           content: '파일이 지식 베이스에 추가되었습니다. 어떤 도움이 필요하신가요?',
           model: selectedModel
         };
-        
+
         setMessages(prev => [...prev, response]);
         setIsLoading(false);
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -121,18 +158,18 @@ const ProjectChat = ({
 
   // 파일 소스에 따른 아이콘 반환
   const getFileSourceIcon = (source) => {
-    switch(source) {
+    switch (source) {
       case 'drive': return <Cloud size={14} />;
       case 'github': return <Github size={14} />;
       case 'dropbox': return <Database size={14} />;
       default: return <FileText size={14} />;
     }
   };
-  
+
   // 대화 저장
   const saveConversation = () => {
     if (messages.length <= 1) return; // 시스템 메시지만 있는 경우 저장하지 않음
-    
+
     const title = messages.find(m => m.role === 'user')?.content.slice(0, 20) + '...';
     alert(`대화가 "${title}" 이름으로 저장되었습니다.`);
   };
@@ -144,7 +181,7 @@ const ProjectChat = ({
         {/* 프로젝트 정보 */}
         <div className="p-3 border-b">
           <div className="flex items-center justify-between">
-            <div className="font-medium truncate">{activeProject.name}</div>
+            <div className="font-medium truncate">{activeProject.project_name}</div>
             <button
               onClick={() => setView('projects')}
               className="p-1 hover:bg-gray-100 rounded"
@@ -153,8 +190,8 @@ const ProjectChat = ({
               <Folder size={16} className="text-gray-500" />
             </button>
           </div>
-          {activeProject.desc && (
-            <p className="text-xs text-gray-500 mt-1 truncate">{activeProject.desc}</p>
+          {activeProject.description && (
+            <p className="text-xs text-gray-500 mt-1 truncate">{activeProject.description}</p>
           )}
         </div>
 
@@ -225,11 +262,11 @@ const ProjectChat = ({
             </button>
           </div>
           {conversations
-            .filter(c => c.project === activeProject?.id)
+            .filter(c => c.project === activeProject?.project_id)
             .length > 0 ? (
             <div className="space-y-1">
               {conversations
-                .filter(c => c.project === activeProject?.id)
+                .filter(c => c.project === activeProject?.project_id)
                 .map(conv => (
                   <div
                     key={conv.id}
@@ -254,7 +291,7 @@ const ProjectChat = ({
         {/* 모델 선택 */}
         <div className="p-3 border-t">
           <div className="relative">
-            <button 
+            <button
               className="w-full flex items-center justify-between p-2 border rounded hover:bg-gray-50"
               onClick={() => setShowModelSelector(!showModelSelector)}
             >
@@ -264,20 +301,19 @@ const ProjectChat = ({
               </div>
               <ChevronDown size={16} />
             </button>
-            
+
             {showModelSelector && (
               <div className="absolute bottom-full left-0 right-0 mb-1 bg-white border rounded-lg shadow-lg z-10">
                 <div className="p-2">
                   {models.map(model => (
-                    <div 
+                    <div
                       key={model.id}
                       onClick={() => {
                         setSelectedModel(model.id);
                         setShowModelSelector(false);
                       }}
-                      className={`flex items-center gap-2 p-2 rounded cursor-pointer ${
-                        selectedModel === model.id ? 'bg-blue-50 text-blue-600' : 'hover:bg-gray-50'
-                      }`}
+                      className={`flex items-center gap-2 p-2 rounded cursor-pointer ${selectedModel === model.id ? 'bg-blue-50 text-blue-600' : 'hover:bg-gray-50'
+                        }`}
                     >
                       <Bot size={14} className={selectedModel === model.id ? "text-blue-500" : "text-gray-500"} />
                       <div>
@@ -314,13 +350,12 @@ const ProjectChat = ({
                 key={message.id}
                 className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
               >
-                <div className={`max-w-[75%] rounded-lg p-3 ${
-                  message.role === 'user'
-                    ? 'bg-blue-500 text-white'
-                    : message.role === 'system'
+                <div className={`max-w-[75%] rounded-lg p-3 ${message.role === 'user'
+                  ? 'bg-blue-500 text-white'
+                  : message.role === 'system'
                     ? 'bg-amber-50 border border-amber-200'
                     : 'bg-white border'
-                }`}>
+                  }`}>
                   <div className="flex items-center gap-2 mb-1.5">
                     {message.role === 'user' ? (
                       <User size={14} />
@@ -398,11 +433,10 @@ const ProjectChat = ({
             <button
               onClick={sendMessage}
               disabled={isLoading || !input.trim()}
-              className={`p-2 rounded-lg ${
-                isLoading || !input.trim()
-                  ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                  : 'bg-blue-500 text-white hover:bg-blue-600'
-              }`}
+              className={`p-2 rounded-lg ${isLoading || !input.trim()
+                ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                : 'bg-blue-500 text-white hover:bg-blue-600'
+                }`}
             >
               <Send size={18} />
             </button>
