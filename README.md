@@ -35,3 +35,12 @@ Embla Carousel: React용 슬라이더(캐러셀) 라이브러리</br>
 <h2>2025MSP Table ERD</h2>
 
 ![2025-03-19](https://github.com/user-attachments/assets/fa9d61ba-2334-4514-a79a-05f0280d2945)
+
+
+
+
+
+<h2>history</h2>
+FIX: 데이터 테이블 설계에 대화 세션, 지식베이스, 대화 이력을 추가
+UPDATE: API 포트 연결을 수정, 불필요한 UI를 삭제 후 속성 수정
+
