@@ -1,8 +1,8 @@
  <h2>2025msp 프로젝트의 기술 스택 정리</h2>
 
-📌 프레임워크 & 언어
-Next.js 15: React 기반의 풀스택 프레임워크
-React 19 (RC 버전): 최신 React 버전
+📌 프레임워크 & 언어 </br>
+Next.js 15: React 기반의 풀스택 프레임워크</br>
+React 19 (RC 버전): 최신 React 버전</br>
 
 🎨 UI 라이브러리 & 스타일링
 Tailwind CSS: 유틸리티 기반 CSS 프레임워크
