@@ -34,7 +34,24 @@ const ProjectChat = ({
   }, [activeProject]);
 
   // 메시지 전송
-  const sendMessage = () => {
+  const sendMessage = async () => {
+    alert(input);
+    console.log(activeProject);
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/RequestMessage`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ messageInput: input, project_id: activeProject.project_id, user_email: activeProject.user_email }),
+    });
+    const data = await response.json();
+    if (response.ok) {
+      console.log(data);
+    } else {
+      alert("오류발생");
+    }
+
+
     if (!input.trim()) return;
 
     const userMessage = {
@@ -107,11 +124,7 @@ const ProjectChat = ({
 
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/UploadFile`, {
       method: "POST",
-      // headers: {
-      //   "Content-Type": "application/json",
-      // },
-      // body: JSON.stringify(formData),
-      body:formData
+      body: formData
     });
     const data = await response.json();
     if (response.ok) {
@@ -168,6 +181,7 @@ const ProjectChat = ({
 
   // 대화 저장
   const saveConversation = () => {
+    alert("히스토리 클릭");
     if (messages.length <= 1) return; // 시스템 메시지만 있는 경우 저장하지 않음
 
     const title = messages.find(m => m.role === 'user')?.content.slice(0, 20) + '...';
@@ -253,13 +267,13 @@ const ProjectChat = ({
         <div className="p-3 flex-1 overflow-y-auto">
           <div className="flex items-center justify-between mb-2">
             <h3 className="text-sm font-medium">대화 이력</h3>
-            <button
+            {/* <button
               onClick={saveConversation}
               className="p-1 hover:bg-gray-100 rounded"
               title="현재 대화 저장"
             >
               <History size={14} className="text-gray-500" />
-            </button>
+            </button> */}
           </div>
           {conversations
             .filter(c => c.project === activeProject?.project_id)

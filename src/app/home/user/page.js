@@ -197,6 +197,7 @@ const EnhancedMetaLLMInterface = () => {
           models={models}
           setView={setView}
           setActiveProject={setActiveProject}
+          sessionemail={session.user.email}
         />
       )}
 

@@ -9,6 +9,8 @@ export const handler = NextAuth({
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     }),
+
+
     CredentialsProvider({
       name: "Credentials",
       credentials: {
@@ -39,11 +41,16 @@ export const handler = NextAuth({
         }
       },
     }),
+
+
+
   ],
   pages: {
     signIn: "/auth/login",
     error: "/auth/error",
   },
+
+
   callbacks: {
     async signIn({ user, account }) {
       if (account.provider === "google") {
@@ -62,6 +69,7 @@ export const handler = NextAuth({
       }
       return true; // 로그인 계속 진행
     },
+
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
@@ -71,6 +79,7 @@ export const handler = NextAuth({
       }
       return token;
     },
+
     async session({ session, token }) {
       session.user.id = token.id;
       session.user.email = token.email;
@@ -78,6 +87,7 @@ export const handler = NextAuth({
       session.user.role = token.role;
       return session;
     },
+    
   },
 });
 

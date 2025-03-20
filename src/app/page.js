@@ -29,15 +29,23 @@ export default function LoginPage({ className }) {
 
   const handleLogin = async () => {
     const result = await signIn("credentials", {
-      redirect: false, // 리디렉션 방지
+      redirect: false,
       email,
       password,
     });
+    console.log(result);
     if (result?.error) {
       alert("회원정보가 없습니다.");
-      // alert("Login failed: " + result.error);
     } else {
-      router.push("/home/user");
+      // 로그인 성공 후 세션 정보 가져오기
+      const res = await fetch("/api/auth/session");
+      const session = await res.json();
+
+      if (session?.user?.role === "admin") {
+        router.push("/home/admin");
+      } else if (session?.user?.role === "user") {
+        router.push("/home/user");
+      }
     }
   };
   const handleSignup = () => {
