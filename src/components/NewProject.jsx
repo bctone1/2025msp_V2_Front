@@ -18,8 +18,8 @@ const NewProject = ({
     if (!projectName) return;
     const newProject = {
       // id: `proj-${Date.now()}`,
-      name: projectName,
-      desc: projectDesc,
+      project_name: projectName,
+      description: projectDesc,
       category: projectCategory,
       model: selectedModel,
       user_email: sessionemail,
@@ -42,7 +42,7 @@ const NewProject = ({
       alert("생성되었습니다.");
       // 새 프로젝트 설정 및 화면 전환
       setActiveProject(newProject);
-      // setView('project-detail');
+      setView('project-detail');
     } else {
       alert("프로젝트 생성 실패");
       console.error("프로젝트 생성 실패:", response.statusText);

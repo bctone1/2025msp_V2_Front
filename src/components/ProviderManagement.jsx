@@ -194,7 +194,7 @@ const ProviderManagement = ({ providers: initialProviders }) => {
                   </div>
                   <div>
                     <h2 className="text-lg font-medium">{provider.name}</h2>
-                    <p className="text-sm text-gray-500">{provider.models.join(', ')}</p>
+                    {/* <p className="text-sm text-gray-500">{provider.models.join(', ')}</p> */}
                   </div>
                 </div>
                 <div className={`flex items-center gap-2 px-3 py-1 rounded-full text-sm ${
@@ -211,7 +211,7 @@ const ProviderManagement = ({ providers: initialProviders }) => {
               </div>
               
               {/* API 키 표시 */}
-              <div className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg mb-6">
+              {/* <div className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg mb-6">
                 <Key className="text-gray-400" size={16} />
                 <code className="flex-1 font-mono text-sm truncate">{provider.apiKey}</code>
                 <button className="px-3 py-1 bg-blue-50 text-blue-600 rounded hover:bg-blue-100">
@@ -220,10 +220,10 @@ const ProviderManagement = ({ providers: initialProviders }) => {
                 <button className="px-3 py-1 bg-gray-100 text-gray-600 rounded hover:bg-gray-200">
                   <RefreshCw size={14} />
                 </button>
-              </div>
+              </div> */}
               
               {/* 사용량 및 정보 */}
-              <div className="grid grid-cols-3 gap-6 mb-6">
+              <div className="grid grid-cols-2 gap-6 mb-6">
                 <div>
                   <h3 className="text-sm font-medium mb-2 flex items-center gap-2">
                     <Zap size={14} className="text-yellow-500" />
@@ -260,10 +260,10 @@ const ProviderManagement = ({ providers: initialProviders }) => {
                   </div>
                 </div>
                 
-                <div>
+                {/* <div>
                   <h3 className="text-sm font-medium mb-2">최근 사용</h3>
                   <div className="text-2xl font-bold">{provider.lastUsed}</div>
-                </div>
+                </div> */}
               </div>
               
               {/* 설정 및 액션 */}

@@ -220,7 +220,7 @@ const EnhancedMetaLLMInterface = () => {
 
       {view === 'profile' && (
         <Profile
-          models={providers} userInfo={userinfo}
+          models={models} userInfo={userinfo}
         />
       )}
     </div>

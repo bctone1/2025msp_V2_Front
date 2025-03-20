@@ -30,7 +30,7 @@ const Profile = ({ models, userInfo }) => {
               />
             </div>
 
-            <div>
+            {/* <div>
               <label className="block text-sm font-medium mb-2">직무</label>
               <select className="w-full px-4 py-2 border rounded-lg">
                 <option>개발자</option>
@@ -38,7 +38,7 @@ const Profile = ({ models, userInfo }) => {
                 <option>기획자</option>
                 <option>PM</option>
               </select>
-            </div>
+            </div> */}
 
             <div>
               <label className="block text-sm font-medium mb-2">소속 조직</label>
@@ -66,7 +66,7 @@ const Profile = ({ models, userInfo }) => {
               <label className="block text-sm font-medium mb-2">기본 AI 모델</label>
               <select className="w-full px-4 py-2 border rounded-lg">
                 {models.map(model => (
-                  <option key={model.id} value={model.id}>
+                  <option key={model.id} value={model.name}>
                     {model.name}
                     {/* ({model.provider}) */}
                   </option>

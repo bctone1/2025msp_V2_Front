@@ -152,7 +152,7 @@ const ApiKeys = ({ apiKeys: initialApiKeys }) => {
                   <h2 className="text-lg font-medium">{apiKey.name}</h2>
                   <p className="text-sm text-gray-500">{apiKey.provider_name}</p>
                 </div>
-                <div className={`flex items-center gap-2 px-3 py-1 rounded-full text-sm ${apiKey.status === 'ctive'
+                {/* <div className={`flex items-center gap-2 px-3 py-1 rounded-full text-sm ${apiKey.status === 'ctive'
                     ? 'bg-green-100 text-green-700'
                     : 'bg-red-100 text-red-700'
                   }`}>
@@ -161,7 +161,7 @@ const ApiKeys = ({ apiKeys: initialApiKeys }) => {
                     <XCircle size={16} />
                   }
                   <span>{apiKey.status === 'Active' ? '활성' : '비활성'}</span>
-                </div>
+                </div> */}
               </div>
 
               <div className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg mb-6">
@@ -218,7 +218,7 @@ const ApiKeys = ({ apiKeys: initialApiKeys }) => {
                 <button className="px-3 py-1.5 text-sm border rounded hover:bg-gray-50">
                   한도 설정
                 </button>
-                <button
+                {/* <button
                   onClick={() => toggleKeyStatus(apiKey.id)}
                   className={`px-3 py-1.5 text-sm rounded ${apiKey.status === 'Active'
                       ? 'bg-red-50 text-red-600 hover:bg-red-100'
@@ -226,7 +226,7 @@ const ApiKeys = ({ apiKeys: initialApiKeys }) => {
                     }`}
                 >
                   {apiKey.status === 'Active' ? '비활성화' : '활성화'}
-                </button>
+                </button> */}
               </div>
             </div>
           ))}

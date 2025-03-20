@@ -198,7 +198,7 @@ const ModelManagement = ({ providers }) => {
         </div>
         
         {/* 모델 우선순위 설정 */}
-        <div className="bg-white rounded-lg shadow-sm border p-6">
+        {/* <div className="bg-white rounded-lg shadow-sm border p-6">
           <h3 className="font-medium mb-4">모델 우선순위 설정</h3>
           <p className="text-sm text-gray-500 mb-4">
             모델 사용 우선순위를 설정합니다. 특정 모델이 사용 불가능한 경우 다음 순위 모델이 자동으로 선택됩니다.
@@ -232,7 +232,10 @@ const ModelManagement = ({ providers }) => {
               우선순위 저장
             </button>
           </div>
-        </div>
+        </div> */}
+
+
+
       </div>
     </div>
   );

@@ -41,6 +41,64 @@ Embla Carousel: React용 슬라이더(캐러셀) 라이브러리</br>
 
 
 <h2>history</h2>
-FIX: 데이터 테이블 설계에 대화 세션, 지식베이스, 대화 이력을 추가
-UPDATE: API 포트 연결을 수정, 불필요한 UI를 삭제 후 속성 수정
+<p style="color:red; font-size=17px">2025-03-19</p>
+FIX: 데이터 테이블 설계에 대화 세션, 지식베이스, 대화 이력을 추가 </br>
+UPDATE: API 포트 연결을 수정, 불필요한 UI를 삭제 후 속성 수정</br>
+
+<p style="color:red; font-size=17px">2025-03-20</p>
+FIX: 사용자&관리자 UI수정 </br>
+UPDATE: AI-Models 테이블 추가, API요청 코드 작성(provider, apikey, projectList, UserInfo)</br>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h2>TO DO LIST</h2>
+<p style="color:red; font-size=17px">===PUBLIC===</p>
+
+1. 프로젝트 관리 / 프로젝트 상세 / 대화이력을 누르면 대화 세션이 바뀌면서 대화 기록 출력하기</br>
+
+2. 프로젝트 관리 / 검색 구현</br>
+
+3. 내정보 / 프로필 저장버튼 구현</br>
+
+4. 내정보 / 기본설정 저장버튼 구현</br>
+
+5. 내정보 / 비밀번호 변경 구현</br>
+
+6. API 키 관리 / 새 API 키 등록 구현</br>
+
+7. 대시보드 데이터 정리</br>
+
+
+
+
+<p style="color:red; font-size=17px">===ADMIN===</p>
+
+1. 대시보드 데이터 정리</br>
+
+2. 프로바이더 데이터 연결</br>
+
+3. 프로바이더 / 프로바이더 추가 구현</br>
+
+4. 모델 설정 / 모델 데이터 연결</br>
+
+5. 모델 설정 / 모델 추가 구현</br>
+
+6. 사용자 관리 / 데이터 연결</br>
+
+7. 사용량 분석 / 사용량 기획</br>
+
+8. 시스템 설정 / 데이터 연결 및 기획</br>
+
+
 
