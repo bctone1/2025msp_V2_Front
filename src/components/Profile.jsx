@@ -1,6 +1,15 @@
 import React from 'react';
 
 const Profile = ({ models, userInfo }) => {
+  const handleSaveUserInfo = () => {
+    alert("프로필 정보 핸들러")
+  }
+
+  const handleSavePassword = () => {
+    alert("비밀번호 변경 핸들러")
+  }
+
+
   return (
     <div className="flex-1 p-6 bg-gray-50 overflow-y-auto">
       <div className="max-w-4xl mx-auto">
@@ -30,16 +39,6 @@ const Profile = ({ models, userInfo }) => {
               />
             </div>
 
-            {/* <div>
-              <label className="block text-sm font-medium mb-2">직무</label>
-              <select className="w-full px-4 py-2 border rounded-lg">
-                <option>개발자</option>
-                <option>디자이너</option>
-                <option>기획자</option>
-                <option>PM</option>
-              </select>
-            </div> */}
-
             <div>
               <label className="block text-sm font-medium mb-2">소속 조직</label>
               <input
@@ -51,68 +50,15 @@ const Profile = ({ models, userInfo }) => {
           </div>
 
           <div className="flex justify-end mt-6">
-            <button className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+            <button className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+              onClick={() => handleSaveUserInfo()}>
               저장
             </button>
           </div>
         </div>
 
         {/* 기본 설정 */}
-        <div className="bg-white rounded-lg border p-6 mb-6">
-          <h2 className="text-lg font-medium mb-4">기본 설정</h2>
 
-          <div className="space-y-6">
-            <div>
-              <label className="block text-sm font-medium mb-2">기본 AI 모델</label>
-              <select className="w-full px-4 py-2 border rounded-lg">
-                {models.map(model => (
-                  <option key={model.id} value={model.name}>
-                    {model.name}
-                    {/* ({model.provider}) */}
-                  </option>
-                ))}
-              </select>
-              <p className="text-xs text-gray-500 mt-1">
-                새 프로젝트 생성 시 기본으로 선택될 AI 모델입니다.
-              </p>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium mb-2">테마</label>
-              <div className="flex gap-4">
-                <div className="flex items-center">
-                  <input type="radio" id="light" name="theme" defaultChecked className="mr-2" />
-                  <label htmlFor="light">라이트 모드</label>
-                </div>
-                <div className="flex items-center">
-                  <input type="radio" id="dark" name="theme" className="mr-2" />
-                  <label htmlFor="dark">다크 모드</label>
-                </div>
-                <div className="flex items-center">
-                  <input type="radio" id="system" name="theme" className="mr-2" />
-                  <label htmlFor="system">시스템 설정 따름</label>
-                </div>
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium mb-2">언어</label>
-
-              <select className="w-full px-4 py-2 border rounded-lg">
-                <option value="ko">한국어</option>
-                <option value="en">English</option>
-                <option value="ja">日本語</option>
-                <option value="zh">中文</option>
-              </select>
-            </div>
-          </div>
-
-          <div className="flex justify-end mt-6">
-            <button className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
-              저장
-            </button>
-          </div>
-        </div>
 
         {/* 비밀번호 변경 */}
         <div className="bg-white rounded-lg border p-6 mb-6">
@@ -124,7 +70,7 @@ const Profile = ({ models, userInfo }) => {
               <input
                 type="password"
                 className="w-full px-4 py-2 border rounded-lg"
-                // defaultValue={userInfo.password}
+              // defaultValue={userInfo.password}
               />
             </div>
 
@@ -149,7 +95,8 @@ const Profile = ({ models, userInfo }) => {
           </div>
 
           <div className="flex justify-end mt-6">
-            <button className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+            <button className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+              onClick={() => handleSavePassword()}>
               비밀번호 변경
             </button>
           </div>

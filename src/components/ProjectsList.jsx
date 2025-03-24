@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { PlusCircle, Search, Bot, Clock } from 'lucide-react';
+
+
 
 const ProjectsList = ({
   projects,
@@ -8,6 +10,29 @@ const ProjectsList = ({
   selectProject,
   setView
 }) => {
+
+  const [searchTerm, setSearchTerm] = useState(""); // 검색어
+  const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
+  const projectsPerPage = 4; // 한 페이지에 표시할 프로젝트 개수
+
+  const filteredProjects = projects.filter((project) =>
+    project['project_name'].toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+
+  const indexOfLastProject = currentPage * projectsPerPage;
+  const indexOfFirstProject = indexOfLastProject - projectsPerPage;
+  const currentProjects = filteredProjects.slice(indexOfFirstProject, indexOfLastProject);
+  const totalPages = Math.ceil(filteredProjects.length / projectsPerPage);
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
+
+
+
+
   return (
     <div className="flex-1 p-6 bg-gray-50 overflow-y-auto">
       <div className="max-w-6xl mx-auto">
@@ -31,6 +56,8 @@ const ProjectsList = ({
               <input
                 type="text"
                 placeholder="프로젝트 검색..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-10 pr-4 py-2 border rounded-lg w-full"
               />
             </div>
@@ -52,7 +79,7 @@ const ProjectsList = ({
 
         {/* 프로젝트 목록 */}
         <div className="grid grid-cols-2 gap-6">
-          {projects.map(project => (
+          {currentProjects.map(project => (
             <div
               key={project.project_id}
               onClick={() => selectProject(project.project_id)}
@@ -65,26 +92,7 @@ const ProjectsList = ({
                     <p className="text-sm text-gray-600 mt-1">{project.description}</p>
                   )}
                 </div>
-                {/* <span className={`px-2 py-0.5 rounded text-xs ${project.status === 'active'
-                    ? 'bg-blue-100 text-blue-700'
-                    : 'bg-green-100 text-green-700'
-                  }`}>
-                  {project.status === 'active' ? '진행중' : '완료'}
-                </span> */}
               </div>
-
-              {/* <div className="mt-4">
-                <div className="flex justify-between items-center mb-1.5 text-sm">
-                  <span className="text-gray-600">진행률</span>
-                  <span>{project.progress}%</span>
-                </div>
-                <div className="w-full bg-gray-200 rounded-full h-2">
-                  <div
-                    className="bg-blue-600 h-2 rounded-full"
-                    style={{ width: `${project.progress}%` }}
-                  ></div>
-                </div>
-              </div> */}
 
               <div className="flex items-center mt-3 text-xs text-gray-500 space-x-3 p-2 border rounded-lg shadow-sm bg-white">
                 <div className="flex items-center space-x-1">
@@ -107,6 +115,22 @@ const ProjectsList = ({
             생성된 프로젝트가 없습니다. 새 프로젝트를 시작해보세요.
           </div>
         )}
+
+        {/* 페이지네이션 */}
+        <div className="mt-6 flex justify-center items-center space-x-2">
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+            <button
+              key={page}
+              onClick={() => handlePageChange(page)}
+              className={`px-3 py-1 rounded-lg ${page === currentPage
+                ? "bg-blue-500 text-white"
+                : "bg-gray-200 text-gray-700"
+                }`}
+            >
+              {page}
+            </button>
+          ))}
+        </div>
       </div>
     </div>
   );

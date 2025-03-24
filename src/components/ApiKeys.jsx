@@ -22,12 +22,14 @@ const ApiKeys = ({ apiKeys: initialApiKeys }) => {
 
   // 새 API 키 추가
   const addNewKey = () => {
+    alert("Add new api key handler");
     if (!newKeyData.name || !newKeyData.key) return;
+    console.log(newKeyData);
 
     const newKey = {
       id: `key-${Date.now()}`,
       name: newKeyData.name,
-      key: newKeyData.key,
+      api_key: newKeyData.key,
       provider: newKeyData.provider,
       status: 'active',
       lastUsed: '방금',
@@ -133,8 +135,8 @@ const ApiKeys = ({ apiKeys: initialApiKeys }) => {
                 onClick={addNewKey}
                 disabled={!newKeyData.name || !newKeyData.key}
                 className={`px-4 py-2 rounded-lg ${!newKeyData.name || !newKeyData.key
-                    ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
-                    : 'bg-blue-500 text-white hover:bg-blue-600'
+                  ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
+                  : 'bg-blue-500 text-white hover:bg-blue-600'
                   }`}
               >
                 저장
@@ -178,7 +180,7 @@ const ApiKeys = ({ apiKeys: initialApiKeys }) => {
                 <div>
                   <h3 className="text-sm font-medium mb-2">현재 사용량</h3>
                   <div className="flex items-end gap-2">
-                    <div className="text-2xl font-bold">{apiKey.usage_count.toLocaleString()}</div>
+                    <div className="text-2xl font-bold">{apiKey?.usage_count?.toLocaleString() ?? '0'}</div>
                     <div className="text-sm text-gray-500 mb-1">토큰</div>
                   </div>
                   {apiKey.usage_limit > 0 && (

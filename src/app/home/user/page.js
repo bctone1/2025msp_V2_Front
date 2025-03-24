@@ -46,7 +46,7 @@ const EnhancedMetaLLMInterface = () => {
     const data = await response.json();
     if (response.ok) {
       setProjects(data);
-      console.log(data);
+      // console.log(data);
     } else {
       alert("프로젝트 오류발생");
     }
@@ -94,6 +94,7 @@ const EnhancedMetaLLMInterface = () => {
       });
       const data = await response.json();
       if (response.ok) {
+        console.log(data);
         setApiKeys(data);
       } else {
         alert("APIkey 오류발생");
@@ -147,7 +148,7 @@ const EnhancedMetaLLMInterface = () => {
 
   // 프로젝트 선택
   const selectProject = (projectId) => {
-    console.log(projectId);
+    // console.log(projectId);
     const project = projects.find(p => p.project_id === projectId);
     // console.log(project);
     setActiveProject(project);
