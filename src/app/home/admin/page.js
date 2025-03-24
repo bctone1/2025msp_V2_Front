@@ -1,7 +1,9 @@
 "use client"
 
 // AdminInterface.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useSession } from "next-auth/react";
+
 import AdminNavigation from '@/components/AdminNavigation';
 import AdminDashboard from '@/components/AdminDashboard';
 import ProviderManagement from '@/components/ProviderManagement';
@@ -13,42 +15,90 @@ import UsageAnalytics from '@/components/UsageAnalytics';
 const AdminInterface = () => {
   // 메인 상태
   const [currentView, setCurrentView] = useState('dashboard');
+  const { data: session, status } = useSession();
+
+  
+
+
+  const [providerData, setproviderData] = useState([]);
+  const [ModelsData, setModelsData] = useState([]);
+
+  useEffect(() => {
+    const fetchProvider = async () => {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/providerList`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await response.json();
+      if (response.ok) {
+        console.log(data);
+        setproviderData(data);
+      } else {
+        alert("공급자 오류발생");
+      }
+    };
+
+
+    const fetchModels = async () => {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/modelsList`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await response.json();
+      if (response.ok) {
+        console.log(data);
+        setModelsData(data);
+      } else {
+        alert("공급자 오류발생");
+      }
+    };
+
+    fetchProvider();
+    fetchModels();
+  }, []);
+
 
   // 샘플 데이터
-  const providerData = {
-    providers: [
-      {
-        id: 'openai',
-        name: 'OpenAI',
-        status: 'active',
-        apiKey: 'sk-abc...xyz',
-        models: ['GPT-4', 'GPT-3.5 Turbo'],
-        usageStats: { current: 45320, limit: 100000, cost: 12.54 },
-        lastUsed: '2시간 전',
-        defaultParams: { temperature: 0.7, max_tokens: 4000 }
-      },
-      {
-        id: 'anthropic',
-        name: 'Anthropic',
-        status: 'active',
-        apiKey: 'sk-ant...def',
-        models: ['Claude 3 Opus', 'Claude 3 Sonnet'],
-        usageStats: { current: 12850, limit: 50000, cost: 8.92 },
-        lastUsed: '5시간 전',
-        defaultParams: { temperature: 0.5, max_tokens: 8000 }
-      },
-      {
-        id: 'deepseek',
-        name: 'DeepSeek',
-        status: 'inactive',
-        apiKey: 'sk-deep...ghi',
-        models: ['DeepSeek Coder', 'DeepSeek Chat'],
-        usageStats: { current: 0, limit: 0, cost: 0 },
-        lastUsed: '7일 전',
-        defaultParams: { temperature: 0.3, max_tokens: 4000 }
-      }
-    ]
-  };
+  // const providerData = {
+  //   providers: [
+  //     {
+  //       id: 'openai',
+  //       name: 'OpenAI',
+  //       status: 'active',
+  //       apiKey: 'sk-abc...xyz',
+  //       models: ['GPT-4', 'GPT-3.5 Turbo'],
+  //       usageStats: { current: 45320, limit: 100000, cost: 12.54 },
+  //       lastUsed: '2시간 전',
+  //       defaultParams: { temperature: 0.7, max_tokens: 4000 }
+  //     },
+  //     {
+  //       id: 'anthropic',
+  //       name: 'Anthropic',
+  //       status: 'active',
+  //       apiKey: 'sk-ant...def',
+  //       models: ['Claude 3 Opus', 'Claude 3 Sonnet'],
+  //       usageStats: { current: 12850, limit: 50000, cost: 8.92 },
+  //       lastUsed: '5시간 전',
+  //       defaultParams: { temperature: 0.5, max_tokens: 8000 }
+  //     },
+  //     {
+  //       id: 'deepseek',
+  //       name: 'DeepSeek',
+  //       status: 'inactive',
+  //       apiKey: 'sk-deep...ghi',
+  //       models: ['DeepSeek Coder', 'DeepSeek Chat'],
+  //       usageStats: { current: 0, limit: 0, cost: 0 },
+  //       lastUsed: '7일 전',
+  //       defaultParams: { temperature: 0.3, max_tokens: 4000 }
+  //     }
+  //   ]
+  // };
+
+  // console.log(providerData);
 
   const userData = {
     users: [
@@ -98,9 +148,9 @@ const AdminInterface = () => {
       case 'dashboard':
         return <AdminDashboard usageData={usageData} providerData={providerData} userData={userData} />;
       case 'providers':
-        return <ProviderManagement providers={providerData.providers} />;
+        return <ProviderManagement providers={providerData} />;
       case 'models':
-        return <ModelManagement providers={providerData.providers} />;
+        return <ModelManagement providers={ModelsData} />;
       case 'users':
         return <UserManagement users={userData.users} />;
       case 'settings':
@@ -135,7 +185,7 @@ const AdminInterface = () => {
             </h1>
 
             <div className="flex items-center gap-4">
-              <span className="text-sm text-gray-500">관리자: admin@example.com</span>
+              <span className="text-sm text-gray-500">관리자: {session?.user?.email || "정보 없음"}</span>
               <div className="h-8 w-8 bg-blue-500 rounded-full flex items-center justify-center text-white">
                 A
               </div>

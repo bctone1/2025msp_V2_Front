@@ -106,27 +106,29 @@ const AdminDashboard = ({ usageData, providerData, userData }) => {
             </div>
             
             <div className="space-y-3">
-              {providerData.providers.map(provider => (
+              {providerData.map(provider => (
                 <div key={provider.id} className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
+                    
                     <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                      provider.id === 'openai' ? 'bg-black text-white' :
-                      provider.id === 'anthropic' ? 'bg-blue-100 text-blue-600' :
+                      provider.name === 'OpenAI' ? 'bg-black text-white' :
+                      provider.name === 'Google' ? 'bg-blue-100 text-blue-600' :
                       'bg-gray-100 text-gray-600'
                     }`}>
-                      {provider.id.charAt(0).toUpperCase()}
+                      {/* {provider.id.charAt(0).toUpperCase()} */}
+                      {provider.id && typeof provider.id === "string" ? provider.id.charAt(0).toUpperCase() : ""}
                     </div>
                     <div>
                       <p className="text-sm font-medium">{provider.name}</p>
-                      <p className="text-xs text-gray-500">{provider.models.length} 모델</p>
+                      {/* <p className="text-xs text-gray-500">{provider.models.length} 모델</p> */}
                     </div>
                   </div>
                   <div className={`px-2 py-0.5 rounded-full text-xs ${
-                    provider.status === 'active' 
+                    provider.status === 'Active' 
                       ? 'bg-green-100 text-green-600' 
                       : 'bg-red-100 text-red-600'
                   }`}>
-                    {provider.status === 'active' ? '활성' : '비활성'}
+                    {provider.status === 'Active' ? '활성' : '비활성'}
                   </div>
                 </div>
               ))}

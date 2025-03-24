@@ -1,10 +1,10 @@
 // ModelManagement.jsx
 import React, { useState } from 'react';
-import { 
-  Bot, 
-  Sliders, 
-  Save, 
-  CheckCircle, 
+import {
+  Bot,
+  Sliders,
+  Save,
+  CheckCircle,
   XCircle,
   ArrowUpDown
 } from 'lucide-react';
@@ -14,45 +14,48 @@ const ModelManagement = ({ providers }) => {
   const extractModels = (providers) => {
     let modelsList = [];
     providers.forEach(provider => {
-      if (provider.status === 'active') {
-        provider.models.forEach(modelName => {
-          modelsList.push({
-            id: `${provider.id}-${modelName.toLowerCase().replace(/\s+/g, '-')}`,
-            name: modelName,
-            provider: provider.name,
-            providerId: provider.id,
-            // 기본 설정 (실제로는 API에서 가져와야 함)
-            settings: {
-              temperature: 0.7,
-              maxTokens: 4000,
-              topP: 1,
-              frequencyPenalty: 0,
-              presencePenalty: 0,
-              isDefault: modelName === 'GPT-4' && provider.id === 'openai'
-            }
-          });
-        });
-      }
+
+
+      modelsList.push({
+        // id: `${provider.id}-${modelName.toLowerCase().replace(/\s+/g, '-')}`,
+        id: provider.id,
+        provider_name : provider.provider_name ,
+        name: provider.model_name,
+        provider: provider.name,
+        providerId: provider.id,
+        // 기본 설정 (실제로는 API에서 가져와야 함)
+        settings: {
+          temperature: 0.7,
+          maxTokens: 4000,
+          topP: 1,
+          frequencyPenalty: 0,
+          presencePenalty: 0,
+          isDefault: provider.model_name === 'GPT-4' && provider.provider_name === 'OpenAI'
+        }
+
+      });
+
     });
     return modelsList;
   };
 
   const [models, setModels] = useState(extractModels(providers));
+  console.log(models);
   const [editingModel, setEditingModel] = useState(null);
   const [modelSettings, setModelSettings] = useState({});
 
   // 모델 수정 시작
   const startEditingModel = (model) => {
     setEditingModel(model.id);
-    setModelSettings({...model.settings});
+    setModelSettings({ ...model.settings });
   };
 
   // 모델 설정 저장
   const saveModelSettings = (modelId) => {
-    setModels(prevModels => 
-      prevModels.map(model => 
-        model.id === modelId 
-          ? {...model, settings: modelSettings} 
+    setModels(prevModels =>
+      prevModels.map(model =>
+        model.id === modelId
+          ? { ...model, settings: modelSettings }
           : model
       )
     );
@@ -61,9 +64,9 @@ const ModelManagement = ({ providers }) => {
 
   // 기본 모델 설정
   const setAsDefaultModel = (modelId) => {
-    setModels(prevModels => 
+    setModels(prevModels =>
       prevModels.map(model => ({
-        ...model, 
+        ...model,
         settings: {
           ...model.settings,
           isDefault: model.id === modelId
@@ -79,7 +82,7 @@ const ModelManagement = ({ providers }) => {
           <h2 className="text-lg font-medium">모델 설정</h2>
           <p className="text-sm text-gray-500">AI 모델의 기본 설정 및 파라미터를 관리합니다</p>
         </div>
-        
+
         {/* 모델 목록 테이블 */}
         <div className="bg-white rounded-lg shadow-sm border overflow-hidden mb-6">
           <table className="min-w-full">
@@ -91,9 +94,11 @@ const ModelManagement = ({ providers }) => {
                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   프로바이더
                 </th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+
+                {/* <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   기본값
-                </th>
+                </th> */}
+
                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   파라미터
                 </th>
@@ -112,51 +117,55 @@ const ModelManagement = ({ providers }) => {
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                      model.providerId === 'openai' ? 'bg-black text-white' :
+                    <div className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${model.providerId === 'openai' ? 'bg-black text-white' :
                       model.providerId === 'anthropic' ? 'bg-blue-100 text-blue-800' :
-                      'bg-gray-100 text-gray-800'
-                    }`}>
-                      {model.provider}
+                        'bg-gray-100 text-gray-800'
+                      }`}>
+                      {model.provider_name}
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+
+
+                  {/* <td className="px-6 py-4 whitespace-nowrap">
                     {model.settings.isDefault ? (
                       <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
                         <CheckCircle className="w-3 h-3 mr-1" />
                         기본
                       </span>
                     ) : (
-                      <button 
+                      <button
                         onClick={() => setAsDefaultModel(model.id)}
                         className="text-xs text-blue-600 hover:text-blue-800"
                       >
                         기본으로 설정
                       </button>
                     )}
-                  </td>
+                  </td> */}
+
+
+
                   <td className="px-6 py-4 whitespace-nowrap">
                     {editingModel === model.id ? (
                       <div className="flex items-center space-x-4">
                         <div>
                           <label className="block text-xs text-gray-500">Temperature</label>
-                          <input 
-                            type="number" 
-                            min="0" 
-                            max="2" 
+                          <input
+                            type="number"
+                            min="0"
+                            max="2"
                             step="0.1"
                             className="mt-1 p-1 border rounded w-16 text-sm"
                             value={modelSettings.temperature}
-                            onChange={(e) => setModelSettings({...modelSettings, temperature: parseFloat(e.target.value)})}
+                            onChange={(e) => setModelSettings({ ...modelSettings, temperature: parseFloat(e.target.value) })}
                           />
                         </div>
                         <div>
                           <label className="block text-xs text-gray-500">Max Tokens</label>
-                          <input 
-                            type="number" 
+                          <input
+                            type="number"
                             className="mt-1 p-1 border rounded w-20 text-sm"
                             value={modelSettings.maxTokens}
-                            onChange={(e) => setModelSettings({...modelSettings, maxTokens: parseInt(e.target.value)})}
+                            onChange={(e) => setModelSettings({ ...modelSettings, maxTokens: parseInt(e.target.value) })}
                           />
                         </div>
                       </div>
@@ -169,13 +178,13 @@ const ModelManagement = ({ providers }) => {
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                     {editingModel === model.id ? (
                       <div className="flex justify-end space-x-2">
-                        <button 
+                        <button
                           onClick={() => setEditingModel(null)}
                           className="text-red-600 hover:text-red-800"
                         >
                           취소
                         </button>
-                        <button 
+                        <button
                           onClick={() => saveModelSettings(model.id)}
                           className="text-green-600 hover:text-green-800"
                         >
@@ -183,7 +192,7 @@ const ModelManagement = ({ providers }) => {
                         </button>
                       </div>
                     ) : (
-                      <button 
+                      <button
                         onClick={() => startEditingModel(model)}
                         className="text-indigo-600 hover:text-indigo-800"
                       >
@@ -196,7 +205,7 @@ const ModelManagement = ({ providers }) => {
             </tbody>
           </table>
         </div>
-        
+
         {/* 모델 우선순위 설정 */}
         {/* <div className="bg-white rounded-lg shadow-sm border p-6">
           <h3 className="font-medium mb-4">모델 우선순위 설정</h3>
