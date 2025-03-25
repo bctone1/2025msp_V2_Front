@@ -94,7 +94,7 @@ const EnhancedMetaLLMInterface = () => {
       });
       const data = await response.json();
       if (response.ok) {
-        console.log(data);
+        // console.log(data);
         setApiKeys(data);
       } else {
         alert("APIkey 오류발생");

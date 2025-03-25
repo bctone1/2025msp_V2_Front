@@ -50,9 +50,11 @@ const AdminDashboard = ({ usageData, providerData, userData }) => {
               <h2 className="text-sm font-medium text-gray-500">활성 사용자</h2>
               <Users size={18} className="text-green-500" />
             </div>
-            <p className="text-2xl font-bold">{userData.users.filter(u => u.status === 'active').length}</p>
-            <p className="text-xs text-gray-500 mt-1">총 {userData.users.length}명 중</p>
+            <p className="text-2xl font-bold">{userData.filter(u => u.status === 'active').length}</p>
+            <p className="text-xs text-gray-500 mt-1">총 {userData.length}명 중</p>
           </div>
+
+          
         </div>
         
         {/* 상태 개요 및 최근 활동 */}

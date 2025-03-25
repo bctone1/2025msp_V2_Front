@@ -1,5 +1,5 @@
 // ProviderManagement.jsx
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import {
   PlusCircle,
   Bot,
@@ -12,67 +12,79 @@ import {
 } from 'lucide-react';
 
 const ProviderManagement = ({ providers: initialProviders }) => {
-
-  const getRandomStyle = () => {
-    const styles = [
-      "bg-red-500 text-white",
-      "bg-green-500 text-white",
-      "bg-blue-500 text-white",
-      "bg-yellow-500 text-black",
-      "bg-purple-500 text-white",
-      "bg-gray-500 text-white"
-    ];
-    return styles[Math.floor(Math.random() * styles.length)];
-  };
-
   const [providers, setProviders] = useState(initialProviders);
   const [isAddingProvider, setIsAddingProvider] = useState(false);
   const [newProviderData, setNewProviderData] = useState({
+    id: '',
     name: '',
+    status: 'Active',
     website: '',
     description: '',
-    status: '',
+
     // apiKey: '',
     // models: [],
     // defaultParams: { temperature: 0.7, max_tokens: 4000 }
   });
 
   // 프로바이더 활성화/비활성화 토글
-  const toggleProviderStatus = (providerId) => {
+  const toggleProviderStatus = (providerName) => {
     setProviders(items => items.map(item =>
-      item.id === providerId
+      item.name === providerName
         ? { ...item, status: item.status === 'Active' ? 'Inactive' : 'Active' }
         : item
     ));
   };
+  const deleteProvider = async (param) => {
+    if (window.confirm('정말로 삭제하시겠습니까?')) {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/DeleteProvider`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(param),
+      });
+      if (response.ok) {
+        // const data = await response.json();
+        console.log(`Provider with ID ${param.name} deleted.`);
+        setProviders(providers.filter(provider => provider.name !== param.name));
+      } else {
+        console.error("Failed to fetch data");
+      }
+
+    }
+  };
 
   // 새 프로바이더 추가
-  const addNewProvider = () => {
-    console.log(newProviderData);
+  const addNewProvider = async () => {
     if (!newProviderData.name || !newProviderData.website || !newProviderData.description) {
       alert("빈칸이 있습니다.");
       return;
     };
 
-    // const newProvider = {
-    //   id: newProviderData.name.toLowerCase().replace(/\s+/g, '-'),
-    //   name: newProviderData.name,
-    //   status: 'active',
-    //   apiKey: newProviderData.apiKey,
-    //   models: newProviderData.models,
-    //   usageStats: { current: 0, limit: 0, cost: 0 },
-    //   lastUsed: '방금',
-    //   defaultParams: newProviderData.defaultParams
-    // };
-
-    setProviders([...providers, newProviderData]);
-    setIsAddingProvider(false);
-    setNewProviderData({
-      name: '',
-      website: '',
-      description: '',
-      status: '',
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/AddNewProvider`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newProviderData),
     });
+    if (response.ok) {
+      const data = await response.json();
+      console.log(data);
+
+      setProviders([...providers, newProviderData]);
+      setIsAddingProvider(false);
+      setNewProviderData({
+        id: '',
+        name: '',
+        status: 'Active',
+        website: '',
+        description: '',
+      });
+
+    } else {
+      console.error("Failed to fetch data");
+    }
   };
 
   return (
@@ -89,7 +101,7 @@ const ProviderManagement = ({ providers: initialProviders }) => {
             className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 flex items-center gap-2"
           >
             <PlusCircle size={16} />
-            <span>새 프로바이더 연결</span>
+            <span>새 프로바이더 추가</span>
           </button>
         </div>
 
@@ -131,63 +143,6 @@ const ProviderManagement = ({ providers: initialProviders }) => {
                   onChange={(e) => setNewProviderData({ ...newProviderData, description: e.target.value })}
                 />
               </div>
-
-
-
-
-
-              {/* {newProviderData.name === 'Custom' && (
-                <div>
-                  <label className="block text-sm font-medium mb-2">커스텀 프로바이더 이름</label>
-                  <input
-                    type="text"
-                    className="w-full px-4 py-2 border rounded-lg"
-                    placeholder="프로바이더 이름 입력"
-                    onChange={(e) => setNewProviderData({ ...newProviderData, name: e.target.value })}
-                  />
-                </div>
-              )} */}
-
-              {/* <div className="col-span-2">
-                <label className="block text-sm font-medium mb-2">API 키</label>
-                <input
-                  type="text"
-                  value={newProviderData.apiKey}
-                  onChange={(e) => setNewProviderData({ ...newProviderData, apiKey: e.target.value })}
-                  className="w-full px-4 py-2 border rounded-lg font-mono"
-                  placeholder="sk-..."
-                />
-              </div> */}
-
-              {/* <div className="col-span-2">
-                <label className="block text-sm font-medium mb-2">사용 가능한 모델</label>
-                <div className="space-y-2">
-                  {newProviderData.name === 'OpenAI' && (
-                    <>
-                      <div className="flex items-center gap-2">
-                        <input type="checkbox" id="gpt4" onChange={(e) => {
-                          const models = [...newProviderData.models];
-                          if (e.target.checked) models.push('GPT-4');
-                          else models.splice(models.indexOf('GPT-4'), 1);
-                          setNewProviderData({ ...newProviderData, models });
-                        }} />
-                        <label htmlFor="gpt4">GPT-4</label>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <input type="checkbox" id="gpt35" onChange={(e) => {
-                          const models = [...newProviderData.models];
-                          if (e.target.checked) models.push('GPT-3.5 Turbo');
-                          else models.splice(models.indexOf('GPT-3.5 Turbo'), 1);
-                          setNewProviderData({ ...newProviderData, models });
-                        }} />
-                        <label htmlFor="gpt35">GPT-3.5 Turbo</label>
-                      </div>
-                    </>
-                  )}
-                </div>
-              </div> */}
-
-
             </div>
 
             <div className="flex justify-end gap-3">
@@ -199,8 +154,8 @@ const ProviderManagement = ({ providers: initialProviders }) => {
               </button>
               <button
                 onClick={addNewProvider}
-                disabled={!newProviderData.name}
-                className={`px-4 py-2 rounded-lg ${!newProviderData.name ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'bg-blue-500 text-white hover:bg-blue-600'}`}
+                // disabled={!newProviderData.name}
+                className={`px-4 py-2 rounded-lg ${!newProviderData.name || !newProviderData.website || !newProviderData.description ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'bg-blue-500 text-white hover:bg-blue-600'}`}
               >
                 추가
               </button>
@@ -211,12 +166,12 @@ const ProviderManagement = ({ providers: initialProviders }) => {
         {/* 프로바이더 카드 목록 */}
         <div className="space-y-6">
           {providers.map(provider => {
-            const providerStyle = getRandomStyle();
+
             return (
               <div key={provider.name} className="bg-white rounded-lg shadow-sm border p-6">
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-3">
-                    <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${providerStyle}`}>
+                    <div className={`w-10 h-10 rounded-lg flex items-center justify-center bg-yellow-500 text-black`}>
                       <Bot size={24} />
                     </div>
                     <div>
@@ -224,29 +179,9 @@ const ProviderManagement = ({ providers: initialProviders }) => {
 
                     </div>
                   </div>
-                  <div className={`flex items-center gap-2 px-3 py-1 rounded-full text-sm ${provider.status === 'Active'
-                    ? 'bg-green-100 text-green-700'
-                    : 'bg-red-100 text-red-700'
-                    }`}>
-                    {provider.status === 'Active' ?
-                      <CheckCircle size={16} /> :
-                      <XCircle size={16} />
-                    }
-                    <span>{provider.status === 'Active' ? '활성' : '비활성'}</span>
-                  </div>
                 </div>
 
-                {/* API 키 표시 */}
-                {/* <div className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg mb-6">
-                <Key className="text-gray-400" size={16} />
-                <code className="flex-1 font-mono text-sm truncate">{provider.apiKey}</code>
-                <button className="px-3 py-1 bg-blue-50 text-blue-600 rounded hover:bg-blue-100">
-                  복사
-                </button>
-                <button className="px-3 py-1 bg-gray-100 text-gray-600 rounded hover:bg-gray-200">
-                  <RefreshCw size={14} />
-                </button>
-              </div> */}
+
 
                 {/* 사용량 및 정보 */}
                 <div className="grid grid-cols-2 gap-6 mb-6">
@@ -256,14 +191,8 @@ const ProviderManagement = ({ providers: initialProviders }) => {
 
                 {/* 설정 및 액션 */}
                 <div className="flex justify-end gap-3 mt-6 pt-4 border-t">
-                  {/* <button className="px-3 py-1.5 text-sm border rounded hover:bg-gray-50">
-                  사용량 보기
-                </button> */}
-                  <button className="px-3 py-1.5 text-sm border rounded hover:bg-gray-50">
-                    모델 설정
-                  </button>
                   <button
-                    onClick={() => toggleProviderStatus(provider.id)}
+                    onClick={() => toggleProviderStatus(provider.name)}
                     className={`px-3 py-1.5 text-sm rounded ${provider.status === 'Active'
                       ? 'bg-red-50 text-red-600 hover:bg-red-100'
                       : 'bg-green-50 text-green-600 hover:bg-green-100'
@@ -271,6 +200,13 @@ const ProviderManagement = ({ providers: initialProviders }) => {
                   >
                     {provider.status === 'Active' ? '비활성화' : '활성화'}
                   </button>
+
+                  <button className="px-3 py-1.5 text-sm border rounded hover:bg-gray-50"
+                    onClick={() => deleteProvider(provider)}
+                  >
+                    삭제
+                  </button>
+
                 </div>
               </div>
             )

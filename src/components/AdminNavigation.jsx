@@ -1,13 +1,13 @@
 // AdminNavigation.jsx
 import React from 'react';
-import { 
-  LayoutDashboard, 
-  Cloud, 
-  Code, 
-  Users, 
-  Settings, 
-  BarChart, 
-  Bot 
+import {
+  LayoutDashboard,
+  Cloud,
+  Code,
+  Users,
+  Settings,
+  BarChart,
+  Bot
 } from 'lucide-react';
 
 const AdminNavigation = ({ currentView, setCurrentView }) => {
@@ -16,8 +16,8 @@ const AdminNavigation = ({ currentView, setCurrentView }) => {
     { id: 'providers', label: 'AI 프로바이더', icon: <Cloud size={18} /> },
     { id: 'models', label: '모델 설정', icon: <Code size={18} /> },
     { id: 'users', label: '사용자 관리', icon: <Users size={18} /> },
-    { id: 'analytics', label: '사용량 분석', icon: <BarChart size={18} /> },
-    { id: 'settings', label: '시스템 설정', icon: <Settings size={18} /> }
+    // { id: 'analytics', label: '사용량 분석', icon: <BarChart size={18} /> },
+    // { id: 'settings', label: '시스템 설정', icon: <Settings size={18} /> }
   ];
 
   return (
@@ -30,7 +30,7 @@ const AdminNavigation = ({ currentView, setCurrentView }) => {
           <p className="text-xs text-gray-500">관리자 콘솔</p>
         </div>
       </div>
-      
+
       {/* 네비게이션 메뉴 */}
       <nav className="p-4 flex-1">
         <ul className="space-y-1">
@@ -38,11 +38,10 @@ const AdminNavigation = ({ currentView, setCurrentView }) => {
             <li key={item.id}>
               <button
                 onClick={() => setCurrentView(item.id)}
-                className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-left ${
-                  currentView === item.id 
-                    ? 'bg-blue-50 text-blue-600' 
-                    : 'text-gray-700 hover:bg-gray-50'
-                }`}
+                className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-left ${currentView === item.id
+                  ? 'bg-blue-50 text-blue-600'
+                  : 'text-gray-700 hover:bg-gray-50'
+                  }`}
               >
                 <span className={currentView === item.id ? 'text-blue-600' : 'text-gray-500'}>
                   {item.icon}
@@ -53,7 +52,7 @@ const AdminNavigation = ({ currentView, setCurrentView }) => {
           ))}
         </ul>
       </nav>
-      
+
       {/* 버전 정보 */}
       <div className="p-4 border-t">
         <p className="text-xs text-gray-500">META LLM MSP v1.2.5</p>

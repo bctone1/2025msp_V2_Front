@@ -13,7 +13,7 @@ const ProjectsList = ({
 
   const [searchTerm, setSearchTerm] = useState(""); // 검색어
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
-  const projectsPerPage = 4; // 한 페이지에 표시할 프로젝트 개수
+  const projectsPerPage = 6; // 한 페이지에 표시할 프로젝트 개수
 
   const filteredProjects = projects.filter((project) =>
     project['project_name'].toLowerCase().includes(searchTerm.toLowerCase())
@@ -62,7 +62,7 @@ const ProjectsList = ({
               />
             </div>
 
-            <select className="px-4 py-2 border rounded-lg">
+            {/* <select className="px-4 py-2 border rounded-lg">
               <option value="all">모든 카테고리</option>
               {categories.map(category => (
                 <option key={category.id} value={category.id}>{category.name}</option>
@@ -73,7 +73,7 @@ const ProjectsList = ({
               <option value="all">모든 상태</option>
               <option value="active">진행중</option>
               <option value="completed">완료</option>
-            </select>
+            </select> */}
           </div>
         </div>
 

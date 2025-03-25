@@ -16,12 +16,10 @@ const AdminInterface = () => {
   // 메인 상태
   const [currentView, setCurrentView] = useState('dashboard');
   const { data: session, status } = useSession();
-
-  
-
-
   const [providerData, setproviderData] = useState([]);
   const [ModelsData, setModelsData] = useState([]);
+  const [userData, setuserData] = useState([]);
+
 
   useEffect(() => {
     const fetchProvider = async () => {
@@ -33,7 +31,7 @@ const AdminInterface = () => {
       });
       const data = await response.json();
       if (response.ok) {
-        console.log(data);
+        // console.log(data);
         setproviderData(data);
       } else {
         alert("공급자 오류발생");
@@ -50,13 +48,29 @@ const AdminInterface = () => {
       });
       const data = await response.json();
       if (response.ok) {
-        console.log(data);
+        // console.log(data);
         setModelsData(data);
       } else {
         alert("공급자 오류발생");
       }
     };
 
+    const fetchUser = async () => {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/getmembers`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await response.json();
+      if (response.ok) {
+        // console.log(data);
+        setuserData(data);
+      } else {
+        alert("맴버 오류발생");
+      }
+    };
+    fetchUser();
     fetchProvider();
     fetchModels();
   }, []);
@@ -100,13 +114,13 @@ const AdminInterface = () => {
 
   // console.log(providerData);
 
-  const userData = {
-    users: [
-      { id: 'user1', name: '김영희', email: 'kim@example.com', role: 'admin', status: 'active', lastActive: '1시간 전', projectCount: 5 },
-      { id: 'user2', name: '이철수', email: 'lee@example.com', role: 'user', status: 'active', lastActive: '3시간 전', projectCount: 3 },
-      { id: 'user3', name: '박지민', email: 'park@example.com', role: 'user', status: 'inactive', lastActive: '7일 전', projectCount: 0 }
-    ]
-  };
+  // const userData =
+  //   [
+  //     { id: 'user1', name: '김영희', email: 'kim@example.com', role: 'admin', status: 'active', lastActive: '1시간 전', projectCount: 5 },
+  //     { id: 'user2', name: '이철수', email: 'lee@example.com', role: 'user', status: 'active', lastActive: '3시간 전', projectCount: 3 },
+  //     { id: 'user3', name: '박지민', email: 'park@example.com', role: 'user', status: 'inactive', lastActive: '7일 전', projectCount: 0 }
+  //   ];
+
 
   const usageData = {
     summary: {
@@ -150,9 +164,9 @@ const AdminInterface = () => {
       case 'providers':
         return <ProviderManagement providers={providerData} />;
       case 'models':
-        return <ModelManagement providers={ModelsData} />;
+        return <ModelManagement models={ModelsData} providerData={providerData} />;
       case 'users':
-        return <UserManagement users={userData.users} />;
+        return <UserManagement users={userData} />;
       case 'settings':
         return <SystemSettings settings={systemData.settings} maintenance={systemData.maintenance} />;
       case 'analytics':
