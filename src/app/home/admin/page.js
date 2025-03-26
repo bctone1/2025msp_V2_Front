@@ -2,7 +2,8 @@
 
 // AdminInterface.jsx
 import React, { useState, useEffect } from 'react';
-import { useSession } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
+import { LogOut } from 'lucide-react';
 
 import AdminNavigation from '@/components/AdminNavigation';
 import AdminDashboard from '@/components/AdminDashboard';
@@ -12,10 +13,12 @@ import UserManagement from '@/components/UserManagement';
 import SystemSettings from '@/components/SystemSettings';
 import UsageAnalytics from '@/components/UsageAnalytics';
 
+
+
 const AdminInterface = () => {
   // 메인 상태
   const [currentView, setCurrentView] = useState('dashboard');
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
   const [providerData, setproviderData] = useState([]);
   const [ModelsData, setModelsData] = useState([]);
   const [userData, setuserData] = useState([]);
@@ -203,6 +206,9 @@ const AdminInterface = () => {
               <div className="h-8 w-8 bg-blue-500 rounded-full flex items-center justify-center text-white">
                 A
               </div>
+              <button onClick={() => signOut({ callbackUrl: "/" })}>
+            <LogOut className="ml-3 text-red-300" />
+          </button>
             </div>
           </div>
         </header>

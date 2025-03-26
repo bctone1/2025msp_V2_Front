@@ -4,7 +4,8 @@ import {
   Settings, Bot
 } from 'lucide-react';
 
-import { useSession } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
+import { LogOut } from 'lucide-react';
 
 
 
@@ -67,21 +68,27 @@ const Navigation = ({ navView, changeNavigation }) => {
           <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-medium">
             H
           </div>
+
           <div>
             {session ? (
               <>
                 <div className="font-medium">{session.user.name}</div>
                 <div className="text-xs text-gray-500">{session.user.email}</div>
               </>
+
             ) : (
               <>
                 <div className="font-medium">이름</div>
                 <div className="text-xs text-gray-500">이메일</div>
               </>
             )}
-
           </div>
+
+          <button onClick={() => signOut({ callbackUrl: "/" })}>
+            <LogOut className="text-red-300" />
+          </button>
         </div>
+
       </div>
     </div>
   );
