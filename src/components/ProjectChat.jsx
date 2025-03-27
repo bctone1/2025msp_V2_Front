@@ -24,6 +24,13 @@ const ProjectChat = ({
   const fileInputRef = useRef(null);
   const messagesEndRef = useRef(null);
 
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollTop = messagesEndRef.current.scrollHeight + 50; // 50px 더 아래로 이동
+    }
+  }, [messages]); // messages가 변경될 때마다 실행
+
+
   // 컴포넌트 마운트 시 초기 메시지 설정
   useEffect(() => {
     setMessages([{
@@ -35,8 +42,23 @@ const ProjectChat = ({
 
   // 메시지 전송
   const sendMessage = async () => {
-    alert(input);
     console.log(activeProject);
+
+    if (!input.trim()) return;
+
+    const userMessage = {
+      id: messages.length + 1,
+      role: 'user',
+      content: input
+    };
+
+
+    setMessages([...messages, userMessage]);
+    // messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    setInput('');
+    setIsLoading(true);
+
+
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/RequestMessage`, {
       method: "POST",
       headers: {
@@ -47,36 +69,38 @@ const ProjectChat = ({
     const data = await response.json();
     if (response.ok) {
       console.log(data);
+      setTimeout(() => {
+        const aiResponse = {
+          id: messages.length + 2,
+          role: 'assistant',
+          content: data,
+          model: selectedModel
+        };
+
+        setMessages(prev => [...prev, aiResponse]);
+        setIsLoading(false);
+        // messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+      }, 1000);
     } else {
       alert("오류발생");
     }
 
 
-    if (!input.trim()) return;
 
-    const userMessage = {
-      id: messages.length + 1,
-      role: 'user',
-      content: input
-    };
-
-    setMessages([...messages, userMessage]);
-    setInput('');
-    setIsLoading(true);
 
     // 응답 시뮬레이션
-    setTimeout(() => {
-      const aiResponse = {
-        id: messages.length + 2,
-        role: 'assistant',
-        content: `${activeProject.project_name} 프로젝트에 대한 질문에 답변드립니다. 더 자세한 설명이 필요하시면 말씀해주세요.`,
-        model: selectedModel
-      };
+    // setTimeout(() => {
+    //   const aiResponse = {
+    //     id: messages.length + 2,
+    //     role: 'assistant',
+    //     content: `${activeProject.project_name} 프로젝트에 대한 질문에 답변드립니다. 더 자세한 설명이 필요하시면 말씀해주세요.`,
+    //     model: selectedModel
+    //   };
 
-      setMessages(prev => [...prev, aiResponse]);
-      setIsLoading(false);
-      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }, 1000);
+    //   setMessages(prev => [...prev, aiResponse]);
+    //   setIsLoading(false);
+    //   messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    // }, 1000);
   };
 
   // 파일 업로드
@@ -164,7 +188,7 @@ const ProjectChat = ({
 
         setMessages(prev => [...prev, response]);
         setIsLoading(false);
-        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+        // messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
       }, 1000);
     }
   };
@@ -357,7 +381,7 @@ const ProjectChat = ({
         </div>
 
         {/* 메시지 영역 */}
-        <div className="flex-1 overflow-y-auto p-4">
+        <div className="flex-1 overflow-y-auto p-4" ref={messagesEndRef}>
           <div className="max-w-3xl mx-auto space-y-4">
             {messages.map(message => (
               <div
@@ -414,7 +438,7 @@ const ProjectChat = ({
               </div>
             )}
 
-            <div ref={messagesEndRef} />
+            {/* <div ref={messagesEndRef} /> */}
           </div>
         </div>
 

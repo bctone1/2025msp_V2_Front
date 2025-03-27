@@ -30,6 +30,7 @@ const EnhancedMetaLLMInterface = () => {
   useEffect(() => {
     if (status !== "authenticated") return;
     if (session?.user?.email) {
+      // console.log(session);
       fetchProjects(session.user.email);
       fetchUserInfo(session.user.email);
     }
@@ -216,6 +217,7 @@ const EnhancedMetaLLMInterface = () => {
       {view === 'apikeys' && (
         <ApiKeys
           apiKeys={apiKeys}
+          sessionData = {session}
         />
       )}
 

@@ -1,12 +1,59 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 const Profile = ({ models, userInfo }) => {
-  const handleSaveUserInfo = () => {
-    alert("프로필 정보 핸들러")
+
+  const [newProfileData, setNewProfileData] = useState({
+    name: '',
+    group: '',
+  });
+
+  const [newPasswordData, setNewPasswordData] = useState({
+    password: '',
+    newpassword: '',
+    confirmPassword: '',
+  });
+
+  const handleSaveProfile = async () => {
+    // console.log(newProfileData);
+    // console.log(userInfo.email);
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/ChangeProfile`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ newProfileData: newProfileData, ProfileData: userInfo }),
+    });
+    if (response.ok) {
+      // const data = await response.json();
+      alert("변경되었습니다.!");
+      window.location.href = "/"
+    } else {
+      console.error("Failed to fetch data");
+    }
   }
 
-  const handleSavePassword = () => {
-    alert("비밀번호 변경 핸들러")
+  const handleSavePassword = async () => {
+    if (newPasswordData.password != userInfo.password) {
+      alert("현재 비밀번호가 틀립니다.");
+      return;
+    } else if (newPasswordData.newpassword != newPasswordData.confirmPassword) {
+      alert("새로운 비밀번호를 확인해주세요.");
+      return;
+    };
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/ChangePassword`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ newPasswordData: newPasswordData, ProfileData: userInfo }),
+    });
+    if (response.ok) {
+      alert("변경되었습니다.!");
+      // window.location.href = "/"
+    } else {
+      console.error("Failed to fetch data");
+    }
+
   }
 
 
@@ -26,6 +73,7 @@ const Profile = ({ models, userInfo }) => {
                 type="text"
                 className="w-full px-4 py-2 border rounded-lg"
                 defaultValue={userInfo.name}
+                onChange={(e) => setNewProfileData({ ...newProfileData, name: e.target.value })}
               />
             </div>
 
@@ -45,13 +93,14 @@ const Profile = ({ models, userInfo }) => {
                 type="text"
                 className="w-full px-4 py-2 border rounded-lg"
                 defaultValue={userInfo.group}
+                onChange={(e) => setNewProfileData({ ...newProfileData, group: e.target.value })}
               />
             </div>
           </div>
 
           <div className="flex justify-end mt-6">
             <button className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
-              onClick={() => handleSaveUserInfo()}>
+              onClick={() => handleSaveProfile()}>
               저장
             </button>
           </div>
@@ -70,7 +119,7 @@ const Profile = ({ models, userInfo }) => {
               <input
                 type="password"
                 className="w-full px-4 py-2 border rounded-lg"
-              // defaultValue={userInfo.password}
+                onChange={(e) => setNewPasswordData({ ...newPasswordData, password: e.target.value })}
               />
             </div>
 
@@ -79,6 +128,7 @@ const Profile = ({ models, userInfo }) => {
               <input
                 type="password"
                 className="w-full px-4 py-2 border rounded-lg"
+                onChange={(e) => setNewPasswordData({ ...newPasswordData, newpassword: e.target.value })}
               />
               <p className="text-xs text-gray-500 mt-1">
                 8자 이상, 영문, 숫자, 특수문자를 포함해야 합니다.
@@ -90,6 +140,7 @@ const Profile = ({ models, userInfo }) => {
               <input
                 type="password"
                 className="w-full px-4 py-2 border rounded-lg"
+                onChange={(e) => setNewPasswordData({ ...newPasswordData, confirmPassword: e.target.value })}
               />
             </div>
           </div>

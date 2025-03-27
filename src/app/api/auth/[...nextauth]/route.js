@@ -4,6 +4,9 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import axios from "axios";
 
 export const handler = NextAuth({
+
+
+
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID,
@@ -45,6 +48,9 @@ export const handler = NextAuth({
 
 
   ],
+
+
+
   pages: {
     signIn: "/auth/login",
     error: "/auth/error",
@@ -55,13 +61,17 @@ export const handler = NextAuth({
     async signIn({ user, account }) {
       if (account.provider === "google") {
         try {
-          // Google 로그인 성공 후 백엔드로 사용자 정보 전송
           // await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/googlelogin`, {
           const res = await axios.post("http://127.0.0.1:5000/googlelogin", {
             email: user.email,
             name: user.name,
             image: user.image,
           });
+          if (res.status === 200) {
+            user.id = res.data.id;
+            user.message = res.data.message;
+            user.role = res.data.role;
+          }
         } catch (error) {
           console.error("Google 로그인 후 백엔드 전송 실패:", error);
           return false; // 로그인 중단
@@ -87,8 +97,12 @@ export const handler = NextAuth({
       session.user.role = token.role;
       return session;
     },
-    
+
   },
+
+
+
+
 });
 
 export { handler as GET, handler as POST };

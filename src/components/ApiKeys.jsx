@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { PlusCircle, RefreshCw, CheckCircle, XCircle } from 'lucide-react';
 
-const ApiKeys = ({ apiKeys: initialApiKeys }) => {
+const ApiKeys = ({ apiKeys: initialApiKeys, sessionData }) => {
   const [apiKeys, setApiKeys] = useState(initialApiKeys);
+  const filterApiKey = apiKeys.filter(apiKey => apiKey.user_id === sessionData.user.id);
+  // console.log(filterApiKey);
+
   const [isAddingKey, setIsAddingKey] = useState(false);
   const [newKeyData, setNewKeyData] = useState({
     name: '',
@@ -11,14 +14,6 @@ const ApiKeys = ({ apiKeys: initialApiKeys }) => {
     limit: 100000
   });
 
-  // API 키 활성화/비활성화 토글
-  const toggleKeyStatus = (keyId) => {
-    setApiKeys(keys => keys.map(key =>
-      key.id === keyId
-        ? { ...key, status: key.status === 'active' ? 'expired' : 'active' }
-        : key
-    ));
-  };
 
   // 새 API 키 추가
   const addNewKey = () => {
@@ -26,17 +21,18 @@ const ApiKeys = ({ apiKeys: initialApiKeys }) => {
     if (!newKeyData.name || !newKeyData.key) return;
     console.log(newKeyData);
 
-    const newKey = {
-      id: `key-${Date.now()}`,
-      name: newKeyData.name,
-      api_key: newKeyData.key,
-      provider: newKeyData.provider,
-      status: 'active',
-      lastUsed: '방금',
-      usage: { current: 0, limit: parseInt(newKeyData.limit) || 100000 }
-    };
+    // const newKey = {
+    //   id: `key-${Date.now()}`,
+    //   name: newKeyData.name,
+    //   api_key: newKeyData.key,
+    //   provider: newKeyData.provider,
+    //   usage_limit : newKeyData.limit,
+    //   status: 'active',
+    //   lastUsed: '방금',
+    //   usage: { current: 0, limit: parseInt(newKeyData.limit) || 100000 }
+    // };
 
-    setApiKeys([...apiKeys, newKey]);
+    setApiKeys([...apiKeys, newKeyData]);
     setIsAddingKey(false);
     setNewKeyData({
       name: '',
@@ -75,7 +71,7 @@ const ApiKeys = ({ apiKeys: initialApiKeys }) => {
             </div>
 
             <div className="grid grid-cols-2 gap-4 mb-6">
-              <div>
+              {/* <div>
                 <label className="block text-sm font-medium mb-2">API 키 이름</label>
                 <input
                   type="text"
@@ -84,7 +80,7 @@ const ApiKeys = ({ apiKeys: initialApiKeys }) => {
                   className="w-full px-4 py-2 border rounded-lg"
                   placeholder="예: OpenAI API"
                 />
-              </div>
+              </div> */}
 
               <div>
                 <label className="block text-sm font-medium mb-2">프로바이더</label>
@@ -99,6 +95,17 @@ const ApiKeys = ({ apiKeys: initialApiKeys }) => {
                   <option value="Google">Google</option>
                 </select>
               </div>
+              <div>
+                <label className="block text-sm font-medium mb-2">일일 사용량 한도 (토큰)</label>
+                <input
+                  type="number"
+                  value={newKeyData.limit}
+                  onChange={(e) => setNewKeyData({ ...newKeyData, limit: e.target.value })}
+                  className="w-full px-4 py-2 border rounded-lg"
+                  min="0"
+                  step="10000"
+                />
+              </div>
 
               <div className="col-span-2">
                 <label className="block text-sm font-medium mb-2">API 키</label>
@@ -111,17 +118,7 @@ const ApiKeys = ({ apiKeys: initialApiKeys }) => {
                 />
               </div>
 
-              <div>
-                <label className="block text-sm font-medium mb-2">일일 사용량 한도 (토큰)</label>
-                <input
-                  type="number"
-                  value={newKeyData.limit}
-                  onChange={(e) => setNewKeyData({ ...newKeyData, limit: e.target.value })}
-                  className="w-full px-4 py-2 border rounded-lg"
-                  min="0"
-                  step="10000"
-                />
-              </div>
+
             </div>
 
             <div className="flex justify-end gap-3">
@@ -147,23 +144,13 @@ const ApiKeys = ({ apiKeys: initialApiKeys }) => {
 
         {/* API 키 목록 */}
         <div className="space-y-6">
-          {apiKeys.map(apiKey => (
-            <div key={apiKey.id} className="bg-white rounded-lg border p-6">
+          {filterApiKey.map(apiKey => (
+            <div key={apiKey.api_key} className="bg-white rounded-lg border p-6">
               <div className="flex items-center justify-between mb-4">
                 <div>
                   <h2 className="text-lg font-medium">{apiKey.name}</h2>
                   <p className="text-sm text-gray-500">{apiKey.provider_name}</p>
                 </div>
-                {/* <div className={`flex items-center gap-2 px-3 py-1 rounded-full text-sm ${apiKey.status === 'ctive'
-                    ? 'bg-green-100 text-green-700'
-                    : 'bg-red-100 text-red-700'
-                  }`}>
-                  {apiKey.status === 'Active' ?
-                    <CheckCircle size={16} /> :
-                    <XCircle size={16} />
-                  }
-                  <span>{apiKey.status === 'Active' ? '활성' : '비활성'}</span>
-                </div> */}
               </div>
 
               <div className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg mb-6">
@@ -206,11 +193,6 @@ const ApiKeys = ({ apiKeys: initialApiKeys }) => {
                     {apiKey.usage_limit > 0 && <div className="text-sm text-gray-500 mb-1">토큰</div>}
                   </div>
                 </div>
-
-                {/* <div>
-                  <h3 className="text-sm font-medium mb-2">최근 사용</h3>
-                  <div className="text-2xl font-bold">{apiKey.lastUsed}</div>
-                </div> */}
               </div>
 
               <div className="flex justify-end gap-3 mt-6 pt-4 border-t">
@@ -218,23 +200,18 @@ const ApiKeys = ({ apiKeys: initialApiKeys }) => {
                   사용량 보기
                 </button>
                 <button className="px-3 py-1.5 text-sm border rounded hover:bg-gray-50">
-                  한도 설정
+                  수정
                 </button>
-                {/* <button
-                  onClick={() => toggleKeyStatus(apiKey.id)}
-                  className={`px-3 py-1.5 text-sm rounded ${apiKey.status === 'Active'
-                      ? 'bg-red-50 text-red-600 hover:bg-red-100'
-                      : 'bg-green-50 text-green-600 hover:bg-green-100'
-                    }`}
-                >
-                  {apiKey.status === 'Active' ? '비활성화' : '활성화'}
-                </button> */}
+                <button className="px-3 py-1.5 text-sm border rounded hover:bg-gray-50">
+                  삭제
+                </button>
+
               </div>
             </div>
           ))}
         </div>
 
-        {apiKeys.length === 0 && (
+        {filterApiKey.length === 0 && (
           <div className="text-center text-gray-500 py-6 bg-white rounded-lg border">
             등록된 API 키가 없습니다. 새 API 키를 등록해보세요.
           </div>
