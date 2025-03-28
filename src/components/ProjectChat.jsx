@@ -9,10 +9,11 @@ import {
 const ProjectChat = ({
   activeProject,
   models,
-  conversations,
+  sessionLogs,
   selectedModel,
   setSelectedModel,
-  setView
+  setView,
+  conversations
 }) => {
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState([]);
@@ -21,6 +22,8 @@ const ProjectChat = ({
   const [fileSource, setFileSource] = useState('local'); // 'local', 'drive', 'github', 'dropbox'
   const [files, setFiles] = useState([]);
 
+  const currentSession = useRef(sessionLogs.length + 1);
+  
   const fileInputRef = useRef(null);
   const messagesEndRef = useRef(null);
 
@@ -84,24 +87,30 @@ const ProjectChat = ({
     } else {
       alert("오류발생");
     }
-
-
-
-
-    // 응답 시뮬레이션
-    // setTimeout(() => {
-    //   const aiResponse = {
-    //     id: messages.length + 2,
-    //     role: 'assistant',
-    //     content: `${activeProject.project_name} 프로젝트에 대한 질문에 답변드립니다. 더 자세한 설명이 필요하시면 말씀해주세요.`,
-    //     model: selectedModel
-    //   };
-
-    //   setMessages(prev => [...prev, aiResponse]);
-    //   setIsLoading(false);
-    //   messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-    // }, 1000);
   };
+
+  const showConversations = (param) => {
+    if(currentSession.current === param.id){
+      alert("이미 같은 세션입니다.");
+      return;
+    }
+    setMessages([]);
+
+    const filteredConversations = conversations.filter(convo => convo.session_id === param.id);
+    filteredConversations.forEach((object, index) => {
+      setMessages(prevMessages => {
+        const newId = prevMessages.length + 1;  // 이전 상태의 길이를 사용
+        const updatedMessage = {
+          id: newId,
+          role: object.message_role,
+          content: object.conversation,
+          model: selectedModel
+        };
+        return [...prevMessages, updatedMessage];
+      });
+    });
+    currentSession.current = param.id;
+  }
 
   // 파일 업로드
   const handleFileUpload = () => {
@@ -203,14 +212,6 @@ const ProjectChat = ({
     }
   };
 
-  // 대화 저장
-  const saveConversation = () => {
-    alert("히스토리 클릭");
-    if (messages.length <= 1) return; // 시스템 메시지만 있는 경우 저장하지 않음
-
-    const title = messages.find(m => m.role === 'user')?.content.slice(0, 20) + '...';
-    alert(`대화가 "${title}" 이름으로 저장되었습니다.`);
-  };
 
   return (
     <div className="flex-1 flex">
@@ -287,32 +288,32 @@ const ProjectChat = ({
           )}
         </div>
 
+        <div className="p-3 border-b">
+          <button>
+            새 채팅
+          </button>
+        </div>
+
         {/* 대화 이력 */}
         <div className="p-3 flex-1 overflow-y-auto">
           <div className="flex items-center justify-between mb-2">
-            <h3 className="text-sm font-medium">대화 이력</h3>
-            {/* <button
-              onClick={saveConversation}
-              className="p-1 hover:bg-gray-100 rounded"
-              title="현재 대화 저장"
-            >
-              <History size={14} className="text-gray-500" />
-            </button> */}
+            <h3 className="text-sm font-medium">대화 기록</h3>
           </div>
-          {conversations
-            .filter(c => c.project === activeProject?.project_id)
+          {sessionLogs
+            .filter(c => c.project_id === activeProject?.project_id)
             .length > 0 ? (
             <div className="space-y-1">
-              {conversations
-                .filter(c => c.project === activeProject?.project_id)
+              {sessionLogs
+                .filter(c => c.project_id === activeProject?.project_id)
                 .map(conv => (
                   <div
-                    key={conv.id}
+                    key={conv.session_title}
                     className="p-2 text-xs hover:bg-gray-100 rounded cursor-pointer"
+                    onClick={() => showConversations(conv)}
                   >
-                    <div className="font-medium truncate">{conv.title}</div>
+                    <div className="font-medium truncate">{conv.session_title}</div>
                     <div className="flex justify-between text-gray-500 mt-1">
-                      <span>{conv.date}</span>
+                      <span>{conv.register_at}</span>
                       <span>{conv.messages}개 메시지</span>
                     </div>
                   </div>
@@ -403,7 +404,7 @@ const ProjectChat = ({
                     <div className="text-sm">
                       {message.role === 'user' ? '사용자' : message.role === 'system' ? '시스템' : 'AI 어시스턴트'}
                     </div>
-                    {message.model && (
+                    {message.model && message.role !== 'user' &&(
                       <div className="ml-auto text-xs bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded">
                         {models.find(m => m.id === message.model)?.name || message.model}
                       </div>

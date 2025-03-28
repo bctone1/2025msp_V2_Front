@@ -4,7 +4,7 @@ import { FolderOpen, Activity, MessageSquare, ChevronDown, FileText, Code, Bot }
 const Dashboard = ({
   projects,
   apiKeys,
-  conversations,
+  sessionLogs,
   recentActivities,
   selectProject,
   changeNavigation
@@ -48,12 +48,15 @@ const Dashboard = ({
               <MessageSquare size={20} className="text-blue-500" />
             </div>
             <div className="text-3xl font-bold">
-              {conversations.length}
+              {sessionLogs.length}
             </div>
             <div className="text-sm text-gray-500 mt-1">
               최근 30일
             </div>
           </div>
+
+
+          
         </div>
 
         {/* 최근 활동 및 프로젝트 */}

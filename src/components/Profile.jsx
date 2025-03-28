@@ -3,8 +3,8 @@ import React, { useState } from 'react';
 const Profile = ({ models, userInfo }) => {
 
   const [newProfileData, setNewProfileData] = useState({
-    name: '',
-    group: '',
+    name: userInfo.name,
+    group: userInfo.group,
   });
 
   const [newPasswordData, setNewPasswordData] = useState({
@@ -14,8 +14,7 @@ const Profile = ({ models, userInfo }) => {
   });
 
   const handleSaveProfile = async () => {
-    // console.log(newProfileData);
-    // console.log(userInfo.email);
+    console.log(newProfileData);
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/ChangeProfile`, {
       method: "POST",
       headers: {
@@ -24,9 +23,7 @@ const Profile = ({ models, userInfo }) => {
       body: JSON.stringify({ newProfileData: newProfileData, ProfileData: userInfo }),
     });
     if (response.ok) {
-      // const data = await response.json();
-      alert("변경되었습니다.!");
-      window.location.href = "/"
+      alert("변경되었습니다.");
     } else {
       console.error("Failed to fetch data");
     }

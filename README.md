@@ -81,6 +81,8 @@ UPDATE: AI-Models 테이블 추가, API요청 코드 작성(provider, apikey, pr
 
 7. 대시보드 데이터 정리</br>
 
+8. <s>프로젝트 채팅 대화세션 구현</s>
+
 
 
 

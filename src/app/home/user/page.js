@@ -26,6 +26,9 @@ const EnhancedMetaLLMInterface = () => {
   const [apiKeys, setApiKeys] = useState([]);
   const [providers, setProviders] = useState([]);
   const [userinfo, setUserinfo] = useState([]);
+  const [sessionLogs, setSessionLogs] = useState([]);
+  const [conversations, setconversations] = useState([]);
+
 
   useEffect(() => {
     if (status !== "authenticated") return;
@@ -33,8 +36,44 @@ const EnhancedMetaLLMInterface = () => {
       // console.log(session);
       fetchProjects(session.user.email);
       fetchUserInfo(session.user.email);
+      fetchSessions(session.user.email);
+      fetchConversations(session.user.email);
     }
   }, [session, status]); // session과 status가 변경될 때 실행
+
+  const fetchConversations = async (email) => {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/getConversations`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email: email }),
+    });
+    const data = await response.json();
+    if (response.ok) {
+      setconversations(data);
+      // console.log(data);
+    } else {
+      alert("대화세션 오류발생");
+    }
+  };
+
+  const fetchSessions = async (email) => {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/getSessions`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email: email }),
+    });
+    const data = await response.json();
+    if (response.ok) {
+      setSessionLogs(data);
+      // console.log(data);
+    } else {
+      alert("대화세션 오류발생");
+    }
+  };
 
   const fetchProjects = async (email) => {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/projectsList`, {
@@ -130,10 +169,10 @@ const EnhancedMetaLLMInterface = () => {
     { id: 'database', name: '데이터베이스' }
   ];
 
-  const conversations = [
-    { id: 'conv-1', title: '로그인 기능 구현', project: 3, date: '2024-03-10', messages: 24 },
-    { id: 'conv-2', title: 'DB 설계 논의', project: 3, date: '2024-03-12', messages: 15 }
-  ];
+  // const conversations = [
+  //   { id: 'conv-1', title: '로그인 기능 구현', project: 3, date: '2024-03-10', messages: 24 },
+  //   { id: 'conv-2', title: 'DB 설계 논의', project: 3, date: '2024-03-12', messages: 15 }
+  // ];
 
   // const apiKeys = [
   //   { id: 'key-1', name: 'OpenAI API', key: 'sk-abc...xyz', provider: 'OpenAI', status: 'active', lastUsed: '2시간 전', usage: { current: 45320, limit: 100000 } },
@@ -176,7 +215,7 @@ const EnhancedMetaLLMInterface = () => {
         <Dashboard
           projects={projects}
           apiKeys={apiKeys}
-          conversations={conversations}
+          sessionLogs={sessionLogs}
           recentActivities={recentActivities}
           selectProject={selectProject}
           changeNavigation={changeNavigation}
@@ -207,10 +246,11 @@ const EnhancedMetaLLMInterface = () => {
         <ProjectChat
           activeProject={activeProject}
           models={models}
-          conversations={conversations}
+          sessionLogs={sessionLogs}
           selectedModel={selectedModel}
           setSelectedModel={setSelectedModel}
           setView={setView}
+          conversations={conversations}
         />
       )}
 

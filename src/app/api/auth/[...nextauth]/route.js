@@ -44,9 +44,6 @@ export const handler = NextAuth({
         }
       },
     }),
-
-
-
   ],
 
 
