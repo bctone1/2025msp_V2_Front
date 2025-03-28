@@ -22,8 +22,18 @@ const ProjectChat = ({
   const [fileSource, setFileSource] = useState('local'); // 'local', 'drive', 'github', 'dropbox'
   const [files, setFiles] = useState([]);
 
-  const currentSession = useRef(sessionLogs.length + 1);
-  
+  const [currentSessionLogs, setcurrentSessionLogs] = useState(sessionLogs);
+  const now = new Date();
+  const currentTime = "msp_id" +
+    now.getFullYear().toString() +
+    (now.getMonth() + 1).toString().padStart(2, "0") +
+    now.getDate().toString().padStart(2, "0") +
+    now.getHours().toString().padStart(2, "0") +
+    now.getMinutes().toString().padStart(2, "0") +
+    now.getSeconds().toString().padStart(2, "0");
+
+  const currentSession = useRef(currentTime);
+
   const fileInputRef = useRef(null);
   const messagesEndRef = useRef(null);
 
@@ -46,28 +56,22 @@ const ProjectChat = ({
   // 메시지 전송
   const sendMessage = async () => {
     console.log(activeProject);
-
     if (!input.trim()) return;
-
     const userMessage = {
       id: messages.length + 1,
       role: 'user',
       content: input
     };
-
-
     setMessages([...messages, userMessage]);
-    // messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     setInput('');
     setIsLoading(true);
-
 
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/RequestMessage`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ messageInput: input, project_id: activeProject.project_id, user_email: activeProject.user_email }),
+      body: JSON.stringify({ messageInput: input, project_id: activeProject.project_id, user_email: activeProject.user_email, session: currentSession.current }),
     });
     const data = await response.json();
     if (response.ok) {
@@ -90,7 +94,8 @@ const ProjectChat = ({
   };
 
   const showConversations = (param) => {
-    if(currentSession.current === param.id){
+    console.log(param.id);
+    if (currentSession.current === param.id) {
       alert("이미 같은 세션입니다.");
       return;
     }
@@ -110,6 +115,42 @@ const ProjectChat = ({
       });
     });
     currentSession.current = param.id;
+  }
+
+  const newChat = async () => {
+    currentSession.current = currentTime;
+    setMessages([{
+      id: 1,
+      role: 'system',
+      content: `${activeProject.project_name} 프로젝트를 시작합니다. ${activeProject.description ? `설명: ${activeProject.description}` : ''} 어떤 도움이 필요하신가요?`
+    }]);
+
+    const newSessionLogs = {
+      id: currentSession.current,
+      project_id: activeProject.project_id,
+      session_title: 'New Chat!',
+      register_at: 'dd',
+      messages: 0,
+      user_email: activeProject.user_email,
+    };
+
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/newSession`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newSessionLogs),
+    });
+    const data = await response.json();
+    if (response.ok) {
+      console.log(data);
+      setcurrentSessionLogs([newSessionLogs, ...currentSessionLogs]);
+    } else {
+      alert("오류발생");
+    }
+
+    
+
   }
 
   // 파일 업로드
@@ -289,7 +330,9 @@ const ProjectChat = ({
         </div>
 
         <div className="p-3 border-b">
-          <button>
+          <button
+            onClick={() => newChat()}
+          >
             새 채팅
           </button>
         </div>
@@ -299,15 +342,15 @@ const ProjectChat = ({
           <div className="flex items-center justify-between mb-2">
             <h3 className="text-sm font-medium">대화 기록</h3>
           </div>
-          {sessionLogs
+          {currentSessionLogs
             .filter(c => c.project_id === activeProject?.project_id)
             .length > 0 ? (
             <div className="space-y-1">
-              {sessionLogs
+              {currentSessionLogs
                 .filter(c => c.project_id === activeProject?.project_id)
                 .map(conv => (
                   <div
-                    key={conv.session_title}
+                    key={conv.id}
                     className="p-2 text-xs hover:bg-gray-100 rounded cursor-pointer"
                     onClick={() => showConversations(conv)}
                   >
@@ -404,7 +447,7 @@ const ProjectChat = ({
                     <div className="text-sm">
                       {message.role === 'user' ? '사용자' : message.role === 'system' ? '시스템' : 'AI 어시스턴트'}
                     </div>
-                    {message.model && message.role !== 'user' &&(
+                    {message.model && message.role !== 'user' && (
                       <div className="ml-auto text-xs bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded">
                         {models.find(m => m.id === message.model)?.name || message.model}
                       </div>
