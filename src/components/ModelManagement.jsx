@@ -10,7 +10,6 @@ import {
   XCircle,
   ArrowUpDown,
   PlusCircle,
-  LogOut
 } from 'lucide-react';
 
 const ModelManagement = ({ models, providerData }) => {

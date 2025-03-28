@@ -3,7 +3,7 @@
 // AdminInterface.jsx
 import React, { useState, useEffect } from 'react';
 import { useSession, signOut } from "next-auth/react";
-import { LogOut } from 'lucide-react';
+import { Power } from 'lucide-react';
 
 import AdminNavigation from '@/components/AdminNavigation';
 import AdminDashboard from '@/components/AdminDashboard';
@@ -77,53 +77,6 @@ const AdminInterface = () => {
     fetchProvider();
     fetchModels();
   }, []);
-
-
-  // 샘플 데이터
-  // const providerData = {
-  //   providers: [
-  //     {
-  //       id: 'openai',
-  //       name: 'OpenAI',
-  //       status: 'active',
-  //       apiKey: 'sk-abc...xyz',
-  //       models: ['GPT-4', 'GPT-3.5 Turbo'],
-  //       usageStats: { current: 45320, limit: 100000, cost: 12.54 },
-  //       lastUsed: '2시간 전',
-  //       defaultParams: { temperature: 0.7, max_tokens: 4000 }
-  //     },
-  //     {
-  //       id: 'anthropic',
-  //       name: 'Anthropic',
-  //       status: 'active',
-  //       apiKey: 'sk-ant...def',
-  //       models: ['Claude 3 Opus', 'Claude 3 Sonnet'],
-  //       usageStats: { current: 12850, limit: 50000, cost: 8.92 },
-  //       lastUsed: '5시간 전',
-  //       defaultParams: { temperature: 0.5, max_tokens: 8000 }
-  //     },
-  //     {
-  //       id: 'deepseek',
-  //       name: 'DeepSeek',
-  //       status: 'inactive',
-  //       apiKey: 'sk-deep...ghi',
-  //       models: ['DeepSeek Coder', 'DeepSeek Chat'],
-  //       usageStats: { current: 0, limit: 0, cost: 0 },
-  //       lastUsed: '7일 전',
-  //       defaultParams: { temperature: 0.3, max_tokens: 4000 }
-  //     }
-  //   ]
-  // };
-
-  // console.log(providerData);
-
-  // const userData =
-  //   [
-  //     { id: 'user1', name: '김영희', email: 'kim@example.com', role: 'admin', status: 'active', lastActive: '1시간 전', projectCount: 5 },
-  //     { id: 'user2', name: '이철수', email: 'lee@example.com', role: 'user', status: 'active', lastActive: '3시간 전', projectCount: 3 },
-  //     { id: 'user3', name: '박지민', email: 'park@example.com', role: 'user', status: 'inactive', lastActive: '7일 전', projectCount: 0 }
-  //   ];
-
 
   const usageData = {
     summary: {
@@ -207,7 +160,7 @@ const AdminInterface = () => {
                 A
               </div>
               <button onClick={() => signOut({ callbackUrl: "/" })}>
-            <LogOut className="ml-3 text-red-300" />
+            <Power className="ml-3 text-red-300" />
           </button>
             </div>
           </div>

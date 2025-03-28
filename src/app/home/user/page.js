@@ -54,7 +54,7 @@ const EnhancedMetaLLMInterface = () => {
       setconversations(data);
       // console.log(data);
     } else {
-      alert("대화세션 오류발생");
+      alert("대화기록 오류발생");
     }
   };
 

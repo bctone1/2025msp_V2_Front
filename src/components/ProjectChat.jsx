@@ -125,11 +125,13 @@ const ProjectChat = ({
       content: `${activeProject.project_name} 프로젝트를 시작합니다. ${activeProject.description ? `설명: ${activeProject.description}` : ''} 어떤 도움이 필요하신가요?`
     }]);
 
+    const formattedDate = now.toLocaleString();
+
     const newSessionLogs = {
       id: currentSession.current,
       project_id: activeProject.project_id,
       session_title: 'New Chat!',
-      register_at: 'dd',
+      register_at: formattedDate,
       messages: 0,
       user_email: activeProject.user_email,
     };
@@ -148,9 +150,6 @@ const ProjectChat = ({
     } else {
       alert("오류발생");
     }
-
-    
-
   }
 
   // 파일 업로드
@@ -204,7 +203,7 @@ const ProjectChat = ({
     if (response.ok) {
       console.log(data);
     } else {
-      alert("공급자 오류발생");
+      alert("파일 업로드 오류발생");
     }
 
 

@@ -5,7 +5,7 @@ import {
 } from 'lucide-react';
 
 import { useSession, signOut } from "next-auth/react";
-import { LogOut } from 'lucide-react';
+import { Power } from 'lucide-react';
 
 
 
@@ -85,7 +85,7 @@ const Navigation = ({ navView, changeNavigation }) => {
           </div>
 
           <button onClick={() => signOut({ callbackUrl: "/" })}>
-            <LogOut className="text-red-300" />
+            <Power className="text-red-300 ml-4" />
           </button>
         </div>
 
