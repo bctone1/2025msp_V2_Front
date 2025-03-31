@@ -56,15 +56,8 @@ UPDATE: AI-Models 테이블 추가, API요청 코드 작성(provider, apikey, pr
 
 
 
-
-
-
-
-
-
-
-
 <h2>TO DO LIST</h2>
+<h3>2025-03-28</h3>
 <p style="color:red; font-size=17px">===PUBLIC===</p>
 
 1. 프로젝트 관리 / 프로젝트 상세 / 대화이력을 누르면 대화 세션이 바뀌면서 대화 기록 출력하기 </br>
@@ -111,4 +104,7 @@ UPDATE: AI-Models 테이블 추가, API요청 코드 작성(provider, apikey, pr
 11. 시스템 설정 / 데이터 연결 및 기획</br>
 
 
+<h3>4월 1주차 TO DO LIST</h3>
 
+1. 각 공급사별 모델 연동 및 로직처리
+2. API 토큰, 사용량, 비용 조회 방법 확인
