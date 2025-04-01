@@ -28,6 +28,7 @@ const EnhancedMetaLLMInterface = () => {
   const [userinfo, setUserinfo] = useState([]);
   const [sessionLogs, setSessionLogs] = useState([]);
   const [conversations, setconversations] = useState([]);
+  const [ModelsData, setModelsData] = useState([]);
 
 
   useEffect(() => {
@@ -51,8 +52,8 @@ const EnhancedMetaLLMInterface = () => {
     });
     const data = await response.json();
     if (response.ok) {
+      console.log(data);
       setconversations(data);
-      // console.log(data);
     } else {
       alert("대화기록 오류발생");
     }
@@ -109,6 +110,23 @@ const EnhancedMetaLLMInterface = () => {
   };
 
   useEffect(() => {
+
+    const fetchModels = async () => {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/modelsList`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await response.json();
+      if (response.ok) {
+        console.log(data);
+        setModelsData(data.models);
+      } else {
+        alert("공급자 오류발생");
+      }
+    };
+
     const fetchProvider = async () => {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/providerList`, {
         method: "POST",
@@ -134,13 +152,14 @@ const EnhancedMetaLLMInterface = () => {
       });
       const data = await response.json();
       if (response.ok) {
-        // console.log(data);
-        setApiKeys(data);
+        console.log(data);
+        setApiKeys(data.api_keys);
       } else {
         alert("APIkey 오류발생");
       }
     };
 
+    fetchModels();
     fetchProvider();
     fetchAPIKey();
   }, []);
@@ -235,7 +254,7 @@ const EnhancedMetaLLMInterface = () => {
       {view === 'new-project' && (
         <NewProject
           categories={categories}
-          models={models}
+          models={ModelsData}
           setView={setView}
           setActiveProject={setActiveProject}
           sessionemail={session.user.email}
@@ -245,7 +264,7 @@ const EnhancedMetaLLMInterface = () => {
       {view === 'project-detail' && (
         <ProjectChat
           activeProject={activeProject}
-          models={models}
+          models={ModelsData}
           sessionLogs={sessionLogs}
           selectedModel={selectedModel}
           setSelectedModel={setSelectedModel}

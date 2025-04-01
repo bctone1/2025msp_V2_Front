@@ -109,16 +109,16 @@ const NewProject = ({
                 <div
                   key={model.id}
                   onClick={() => {
-                    setSelectedModel(model.id);
-                    setSelectedProvider(model.provider);
+                    setSelectedModel(model.model_name);
+                    setSelectedProvider(model.provider_name);
                   }}
-                  className={`p-3 border rounded-lg cursor-pointer ${selectedModel === model.id
+                  className={`p-3 border rounded-lg cursor-pointer ${selectedModel === model.model_name
                     ? 'border-blue-500 bg-blue-50'
                     : 'hover:bg-gray-50'
                     }`}
                 >
-                  <div className="font-medium">{model.name}</div>
-                  <div className="text-xs text-gray-500">{model.provider}</div>
+                  <div className="font-medium">{model.model_name}</div>
+                  <div className="text-xs text-gray-500">{model.provider_name}</div>
                 </div>
               ))}
             </div>

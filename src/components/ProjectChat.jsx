@@ -46,12 +46,15 @@ const ProjectChat = ({
 
   // 컴포넌트 마운트 시 초기 메시지 설정
   useEffect(() => {
+    console.log(activeProject);
     setMessages([{
       id: 1,
       role: 'system',
       content: `${activeProject.project_name} 프로젝트를 시작합니다. ${activeProject.description ? `설명: ${activeProject.description}` : ''} 어떤 도움이 필요하신가요?`
     }]);
   }, [activeProject]);
+
+  
 
   // 메시지 전송
   const sendMessage = async () => {
@@ -71,7 +74,7 @@ const ProjectChat = ({
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ messageInput: input, project_id: activeProject.project_id, user_email: activeProject.user_email, session: currentSession.current }),
+      body: JSON.stringify({ messageInput: input, project_id: activeProject.project_id, user_email: activeProject.user_email, session: currentSession.current, selected_model: selectedModel}),
     });
     const data = await response.json();
     if (response.ok) {
@@ -390,7 +393,7 @@ const ProjectChat = ({
                     <div
                       key={model.id}
                       onClick={() => {
-                        setSelectedModel(model.id);
+                        setSelectedModel(model.model_name);
                         setShowModelSelector(false);
                       }}
                       className={`flex items-center gap-2 p-2 rounded cursor-pointer ${selectedModel === model.id ? 'bg-blue-50 text-blue-600' : 'hover:bg-gray-50'
@@ -398,8 +401,8 @@ const ProjectChat = ({
                     >
                       <Bot size={14} className={selectedModel === model.id ? "text-blue-500" : "text-gray-500"} />
                       <div>
-                        <div className="text-sm font-medium">{model.name}</div>
-                        <div className="text-xs text-gray-500">{model.provider}</div>
+                        <div className="text-sm font-medium">{model.model_name}</div>
+                        <div className="text-xs text-gray-500">{model.provider_name}</div>
                       </div>
                     </div>
                   ))}

@@ -4,6 +4,8 @@ import { PlusCircle, RefreshCw, CheckCircle, XCircle } from 'lucide-react';
 const ApiKeys = ({ apiKeys: initialApiKeys, sessionData }) => {
   const [apiKeys, setApiKeys] = useState(initialApiKeys);
   const filterApiKey = apiKeys.filter(apiKey => apiKey.user_id === sessionData.user.id);
+  console.log(sessionData);
+
   // console.log(filterApiKey);
 
   const [isAddingKey, setIsAddingKey] = useState(false);
