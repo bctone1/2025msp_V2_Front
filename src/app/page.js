@@ -59,6 +59,21 @@ export default function LoginPage({ className }) {
     });
   };
 
+  const handleNaverLogin = () => {
+    signIn("naver", {
+      callbackUrl: "/home/user",
+    });
+
+  };
+
+  const handleKakaoLogin = () => {
+    signIn("kakao", {
+      callbackUrl: "/home/user",
+    });
+
+  };
+
+
 
 
   return (
@@ -78,15 +93,33 @@ export default function LoginPage({ className }) {
 
               <div className="grid gap-6">
                 <div className="flex flex-col gap-4">
-                  <Button variant="outline" className="w-full">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+
+                  <Button variant="outline" className="hover:bg-[#ffe600]" onClick={handleKakaoLogin}>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      className="w-5 h-5 mr-2 fill-black"
+                    >
+                      <path d="M12 2C6.48 2 2 5.94 2 10.5c0 2.74 1.84 5.17 4.62 6.61-.2.71-.72 2.55-.82 2.97 0 0-.02.17.09.24.11.07.25.02.25.02.33-.05 3.84-2.52 4.53-2.98.45.06.91.09 1.38.09 5.52 0 10-3.94 10-8.5S17.52 2 12 2z" />
+                    </svg>
+                    Login with Kakao
+                  </Button>
+
+
+                  <Button variant="outline" className="w-full" onClick={handleNaverLogin}>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" className="w-5 h-5 mr-2">
                       <path
-                        d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"
-                        fill="currentColor"
+                        d="M0 32C0 14.33 14.33 0 32 0h448c17.7 0 32 14.33 32 32v448c0 17.7-14.3 32-32 32H32c-17.67 0-32-14.3-32-32V32z"
+                        fill="#03c75a"
+                      />
+                      <path
+                        d="M151 147h66l85 128V147h59v218h-66l-85-128v128h-59V147z"
+                        fill="#fff"
                       />
                     </svg>
-                    Login with Apple
+                    Login with Naver
                   </Button>
+
 
 
                   <Button variant="outline" className="w-full" onClick={handleGoogleLogin}>
