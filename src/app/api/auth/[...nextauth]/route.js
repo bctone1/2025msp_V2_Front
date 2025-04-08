@@ -23,7 +23,7 @@ export const handler = NextAuth({
       async authorize(credentials) {
         try {
           // const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/login`, {
-          const res = await axios.post("http://52.78.61.53:8000/login", {
+          const res = await axios.post("http://54.180.98.62:5000/login", {
             email: credentials.email,
             password: credentials.password,
           });
@@ -58,8 +58,8 @@ export const handler = NextAuth({
     async signIn({ user, account }) {
       if (account.provider === "google") {
         try {
-          await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/googlelogin`, {
-          // const res = await axios.post("http://127.0.0.1:5000/googlelogin", {
+          // await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/googlelogin`, {
+          const res = await axios.post("http://54.180.98.62:5000/googlelogin", {
             email: user.email,
             name: user.name,
             image: user.image,
