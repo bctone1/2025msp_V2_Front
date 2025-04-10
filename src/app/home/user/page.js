@@ -53,7 +53,7 @@ const EnhancedMetaLLMInterface = () => {
     const data = await response.json();
     if (response.ok) {
       console.log(data);
-      setconversations(data);
+      setconversations(data.response);
     } else {
       alert("대화기록 오류발생");
     }

@@ -154,7 +154,14 @@ const ProjectChat = ({
       alert("오류발생");
     }
   }
-
+  const initialized = useRef(false);
+  useEffect(() => {
+    if (!initialized.current) {
+      initialized.current = true;
+      newChat();
+    }
+  }, []);
+  
   // 파일 업로드
   const handleFileUpload = () => {
     if (fileSource === 'local') {
