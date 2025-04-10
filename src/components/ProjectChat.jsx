@@ -46,7 +46,7 @@ const ProjectChat = ({
 
   // 컴포넌트 마운트 시 초기 메시지 설정
   useEffect(() => {
-    console.log(activeProject);
+    // console.log(activeProject);
     setMessages([{
       id: 1,
       role: 'system',
@@ -54,11 +54,12 @@ const ProjectChat = ({
     }]);
   }, [activeProject]);
 
-  
+
 
   // 메시지 전송
   const sendMessage = async () => {
-    console.log(activeProject);
+    console.log(currentSession.current);
+
     if (!input.trim()) return;
     const userMessage = {
       id: messages.length + 1,
@@ -74,7 +75,7 @@ const ProjectChat = ({
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ messageInput: input, project_id: activeProject.project_id, user_email: activeProject.user_email, session: currentSession.current, selected_model: selectedModel}),
+      body: JSON.stringify({ messageInput: input, project_id: activeProject.project_id, user_email: activeProject.user_email, session: currentSession.current, selected_model: selectedModel }),
     });
     const data = await response.json();
     if (response.ok) {
@@ -96,14 +97,15 @@ const ProjectChat = ({
     }
   };
 
+
   const showConversations = (param) => {
-    console.log(param.id);
+    // console.log(conversations);
+    // console.log(param.id);
     if (currentSession.current === param.id) {
       alert("이미 같은 세션입니다.");
       return;
     }
     setMessages([]);
-
     const filteredConversations = conversations.filter(convo => convo.session_id === param.id);
     filteredConversations.forEach((object, index) => {
       setMessages(prevMessages => {
@@ -121,6 +123,7 @@ const ProjectChat = ({
   }
 
   const newChat = async () => {
+    console.log(currentSession.current);
     currentSession.current = currentTime;
     setMessages([{
       id: 1,
@@ -154,6 +157,7 @@ const ProjectChat = ({
       alert("오류발생");
     }
   }
+
   const initialized = useRef(false);
   useEffect(() => {
     if (!initialized.current) {
@@ -161,7 +165,9 @@ const ProjectChat = ({
       newChat();
     }
   }, []);
-  
+
+
+
   // 파일 업로드
   const handleFileUpload = () => {
     if (fileSource === 'local') {

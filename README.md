@@ -105,6 +105,12 @@ UPDATE: AI-Models 테이블 추가, API요청 코드 작성(provider, apikey, pr
 
 
 <h3>4월 1주차 TO DO LIST</h3>
-
-1. 각 공급사별 모델 연동 및 로직처리
+0. <s>Backend 서버 데이터 요청 코드 문서화</s>
+1. <s>각 공급사별 모델 연동 및 로직처리</s>
 2. API 토큰, 사용량, 비용 조회 방법 확인
+
+<h3>4월 1주차</h3>
+1. 네이버, 카카오 로그인 구현
+
+<h3>참고문서</h3>
+<a href="https://drive.google.com/file/d/1cX9CS6eWQ5zYUcVpFhsKs8N--n04V1O8/view?usp=sharing">프로젝트 스택정리 및 Backend 서버 데이터 요청 정리</a>

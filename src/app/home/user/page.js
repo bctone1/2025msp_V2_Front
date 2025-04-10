@@ -103,6 +103,7 @@ const EnhancedMetaLLMInterface = () => {
     });
     const data = await response.json();
     if (response.ok) {
+      // console.log(data);
       setUserinfo(data);
     } else {
       alert("사용자정보 오류발생");
@@ -136,7 +137,8 @@ const EnhancedMetaLLMInterface = () => {
       });
       const data = await response.json();
       if (response.ok) {
-        setProviders(data);
+        console.log(data);
+        setProviders(data.providers);
       } else {
         alert("공급자 오류발생");
       }
@@ -238,6 +240,9 @@ const EnhancedMetaLLMInterface = () => {
           recentActivities={recentActivities}
           selectProject={selectProject}
           changeNavigation={changeNavigation}
+          providerData = {providers}
+          sessionData = {session}
+          models={ModelsData}
         />
       )}
 
@@ -269,7 +274,7 @@ const EnhancedMetaLLMInterface = () => {
           selectedModel={selectedModel}
           setSelectedModel={setSelectedModel}
           setView={setView}
-          conversations={conversations}
+          conversations={conversations.response}
         />
       )}
 

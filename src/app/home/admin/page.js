@@ -22,6 +22,7 @@ const AdminInterface = () => {
   const [providerData, setproviderData] = useState([]);
   const [ModelsData, setModelsData] = useState([]);
   const [userData, setuserData] = useState([]);
+  const [projects, setProjects] = useState([]);
 
 
   useEffect(() => {
@@ -34,7 +35,7 @@ const AdminInterface = () => {
       });
       const data = await response.json();
       if (response.ok) {
-        // console.log(data);
+        console.log(data);
         setproviderData(data.providers);
       } else {
         alert("공급자 오류발생");
@@ -52,7 +53,7 @@ const AdminInterface = () => {
       const data = await response.json();
       if (response.ok) {
         // console.log(data);
-        setModelsData(data.models);
+        setModelsData(data);
       } else {
         alert("공급자 오류발생");
       }
@@ -68,11 +69,30 @@ const AdminInterface = () => {
       const data = await response.json();
       if (response.ok) {
         // console.log(data);
-        setuserData(data.members);
+        setuserData(data);
       } else {
         alert("맴버 오류발생");
       }
     };
+
+    const fetchProjects = async () => {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/projectsList`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email: 'admin' }),
+      });
+      const data = await response.json();
+      if (response.ok) {
+        setProjects(data);
+        console.log(data);
+      } else {
+        alert("프로젝트 오류발생");
+      }
+    };
+
+    fetchProjects();
     fetchUser();
     fetchProvider();
     fetchModels();
@@ -80,15 +100,15 @@ const AdminInterface = () => {
 
   const usageData = {
     summary: {
-      totalCalls: 12450,
-      totalTokens: 1845200,
-      totalCost: 28.76,
-      activeProjects: 8
+      totalCalls: 5555,
+      totalTokens: 5555,
+      totalCost: 555,
     },
     providerUsage: [
-      { provider: 'OpenAI', calls: 8230, tokens: 1245000, cost: 18.54 },
-      { provider: 'Anthropic', calls: 3610, tokens: 582000, cost: 9.82 },
-      { provider: 'DeepSeek', calls: 610, tokens: 18200, cost: 0.40 }
+      { provider: '5555', calls: 5555, tokens: 5555, cost: 5555 },
+      { provider: '5555', calls: 5555, tokens: 5555, cost: 5555 },
+      { provider: '5555', calls: 5555, tokens: 5555, cost: 5555 },
+      { provider: '5555', calls: 5555, tokens: 5555, cost: 5555 },
     ],
     recentActivity: [
       { time: '14:25', user: '김영희', action: 'API 호출', details: 'OpenAI GPT-4, 토큰: 3250' },
@@ -116,7 +136,7 @@ const AdminInterface = () => {
   const renderCurrentView = () => {
     switch (currentView) {
       case 'dashboard':
-        return <AdminDashboard usageData={usageData} providerData={providerData} userData={userData} />;
+        return <AdminDashboard usageData={usageData} providerData={providerData} userData={userData} projects={projects}/>;
       case 'providers':
         return <ProviderManagement providers={providerData} />;
       case 'models':
