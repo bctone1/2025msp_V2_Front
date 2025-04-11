@@ -274,7 +274,7 @@ const EnhancedMetaLLMInterface = () => {
           selectedModel={selectedModel}
           setSelectedModel={setSelectedModel}
           setView={setView}
-          conversations={conversations.response}
+          conversations={conversations}
         />
       )}
 

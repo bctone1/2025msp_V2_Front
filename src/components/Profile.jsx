@@ -30,13 +30,11 @@ const Profile = ({ models, userInfo }) => {
   }
 
   const handleSavePassword = async () => {
-    if (newPasswordData.password != userInfo.password) {
-      alert("현재 비밀번호가 틀립니다.");
-      return;
-    } else if (newPasswordData.newpassword != newPasswordData.confirmPassword) {
+    if (newPasswordData.newpassword != newPasswordData.confirmPassword) {
       alert("새로운 비밀번호를 확인해주세요.");
       return;
     };
+
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/ChangePassword`, {
       method: "POST",
       headers: {
@@ -45,7 +43,8 @@ const Profile = ({ models, userInfo }) => {
       body: JSON.stringify({ newPasswordData: newPasswordData, ProfileData: userInfo }),
     });
     if (response.ok) {
-      alert("변경되었습니다.!");
+      const data = await response.json(); // 응답 파싱
+      alert(data.message);
       // window.location.href = "/"
     } else {
       console.error("Failed to fetch data");

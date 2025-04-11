@@ -82,7 +82,8 @@ const UserManagement = ({ users: initialUsers }) => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(userEmail),
+        body: JSON.stringify({ email: userEmail }),
+        // body: JSON.stringify(userEmail),
       });
       if (response.ok) {
         // const data = await response.json();

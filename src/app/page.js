@@ -26,7 +26,7 @@ export default function LoginPage({ className }) {
   const router = useRouter();
 
 
-
+  
   const handleLogin = async () => {
     const result = await signIn("credentials", {
       redirect: false,
@@ -47,10 +47,6 @@ export default function LoginPage({ className }) {
         router.push("/home/user");
       }
     }
-  };
-  const handleSignup = () => {
-    console.log("Redirect to signup page");
-    router.push("/register")
   };
 
   const handleGoogleLogin = () => {
@@ -154,7 +150,7 @@ export default function LoginPage({ className }) {
                     <div className="flex items-center">
                       <Label htmlFor="password">Password</Label>
                       <a
-                        href="#"
+                        href="/getpassword"
                         className="ml-auto text-sm underline-offset-4 hover:underline"
                       >
                         Forgot your password?
@@ -177,7 +173,7 @@ export default function LoginPage({ className }) {
                   Don&apos;t have an account?{" "}
                   <a
                     className="underline underline-offset-4 cursor-pointer"
-                    onClick={handleSignup}
+                    onClick={() => window.location = "/register"}
                   >
                     Sign up
                   </a>
