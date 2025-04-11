@@ -55,7 +55,7 @@ const EnhancedMetaLLMInterface = () => {
       console.log(data);
       setconversations(data.response);
     } else {
-      alert("대화기록 오류발생");
+      // alert("대화기록 오류발생");
     }
   };
 
@@ -89,7 +89,7 @@ const EnhancedMetaLLMInterface = () => {
       setProjects(data);
       // console.log(data);
     } else {
-      alert("프로젝트 오류발생");
+      // alert("프로젝트 오류발생");
     }
   };
 
@@ -137,7 +137,7 @@ const EnhancedMetaLLMInterface = () => {
       });
       const data = await response.json();
       if (response.ok) {
-        // console.log(data);
+        console.log(data);
         setProviders(data.providers);
       } else {
         alert("공급자 오류발생");
@@ -282,6 +282,7 @@ const EnhancedMetaLLMInterface = () => {
         <ApiKeys
           apiKeys={apiKeys}
           sessionData = {session}
+          providers = {providers}
         />
       )}
 
