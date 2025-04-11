@@ -121,7 +121,7 @@ const EnhancedMetaLLMInterface = () => {
       });
       const data = await response.json();
       if (response.ok) {
-        console.log(data);
+        // console.log(data);
         setModelsData(data.models);
       } else {
         alert("공급자 오류발생");
@@ -137,7 +137,7 @@ const EnhancedMetaLLMInterface = () => {
       });
       const data = await response.json();
       if (response.ok) {
-        console.log(data);
+        // console.log(data);
         setProviders(data.providers);
       } else {
         alert("공급자 오류발생");
@@ -154,7 +154,7 @@ const EnhancedMetaLLMInterface = () => {
       });
       const data = await response.json();
       if (response.ok) {
-        console.log(data);
+        // console.log(data);
         setApiKeys(data.api_keys);
       } else {
         alert("APIkey 오류발생");
@@ -274,7 +274,7 @@ const EnhancedMetaLLMInterface = () => {
           selectedModel={selectedModel}
           setSelectedModel={setSelectedModel}
           setView={setView}
-          conversations={conversations.response}
+          conversations={conversations}
         />
       )}
 

@@ -16,8 +16,8 @@ const Dashboard = ({
   const [filterApiKey, setFilterApiKey] = useState([]);
 
   useEffect(() => {
-    console.log(sessionData);
-    console.log(apiKeys);
+    // console.log(sessionData);
+    // console.log(apiKeys);
     setApiKeys(apiKeys);
     if (sessionData?.user) {
       setFilterApiKey(apiKeys.filter(apiKey => apiKey.user_id === sessionData.user.id));

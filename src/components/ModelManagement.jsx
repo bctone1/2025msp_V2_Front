@@ -13,7 +13,7 @@ import {
 } from 'lucide-react';
 
 const ModelManagement = ({ models, providerData }) => {
-  // console.log(models);
+  console.log(models);
   // 프로바이더별 모델 정보를 추출
   const extractModels = (models) => {
     let modelsList = [];
@@ -40,7 +40,7 @@ const ModelManagement = ({ models, providerData }) => {
   };
 
   const [Currentmodels, setCurrentmodels] = useState(extractModels(models));
-  // console.log(Currentmodels);
+  console.log(Currentmodels);
 
   const [isAddingModel, setIsAddingModel] = useState(false);
   const [editingModel, setEditingModel] = useState(null);

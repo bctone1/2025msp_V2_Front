@@ -53,7 +53,7 @@ const AdminInterface = () => {
       const data = await response.json();
       if (response.ok) {
         // console.log(data);
-        setModelsData(data);
+        setModelsData(data.models);
       } else {
         alert("공급자 오류발생");
       }
@@ -69,7 +69,7 @@ const AdminInterface = () => {
       const data = await response.json();
       if (response.ok) {
         // console.log(data);
-        setuserData(data);
+        setuserData(data.members);
       } else {
         alert("맴버 오류발생");
       }

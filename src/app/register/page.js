@@ -83,41 +83,59 @@ export default function Register() {
     };
 
     return (
-        <div className="flex min-h-screen items-center justify-center p-6 bg-muted">
-            <Card className="w-full max-w-md">
-                <CardHeader>
-                    <CardTitle className="text-center text-xl">Create an Account</CardTitle>
-                    <CardDescription className="text-center">Sign up to get started</CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <form onSubmit={handleSubmit} className="space-y-4">
-                        <div>
-                            <Label>Name</Label>
-                            <Input type="text" name="name" value={formData.name} onChange={handleChange} required />
-                        </div>
-                        <div>
-                            <Label>Email</Label>
-                            <Input type="email" name="email" value={formData.email} onChange={handleChange} required />
-                        </div>
-                        <Button type="button" onClick={handleEmailVerification} disabled={emailVerified} className="w-full">
-                            {emailVerified ? 'Email Verified' : 'Verify Email'}
-                        </Button>
-                        <div>
-                            <Label>Email Verification Code</Label>
-                            <Input type="text" name="emailCode" value={formData.emailCode} onChange={handleChange} />
-                        </div>
-                        <div>
-                            <Label>Password</Label>
-                            <Input type="password" name="password" value={formData.password} onChange={handleChange} required />
-                        </div>
-                        <div>
-                            <Label>Confirm Password</Label>
-                            <Input type="password" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} required />
-                        </div>
-                        <Button type="submit" className="w-full">Register</Button>
-                    </form>
-                </CardContent>
-            </Card>
+        <div className="flex min-h-svh flex-col items-center justify-center gap-6 bg-muted p-6 md:p-10">
+            <div className="flex w-full max-w-sm flex-col gap-6">
+                <CardTitle className="flex items-center gap-2 self-center font-large">META LLM MSP</CardTitle>
+
+
+
+                <Card className="w-full max-w-md">
+                    <CardHeader>
+                        <CardTitle className="text-center text-xl">Create an Account</CardTitle>
+                        <CardDescription className="text-center">Sign up to get started</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <form onSubmit={handleSubmit} className="space-y-4">
+                            <div>
+                                <Label>Name</Label>
+                                <Input type="text" name="name" value={formData.name} onChange={handleChange} required />
+                            </div>
+                            <div>
+                                <Label>Email</Label>
+                                <Input type="email" name="email" value={formData.email} onChange={handleChange} required />
+                            </div>
+                            <Button type="button" onClick={handleEmailVerification} disabled={emailVerified} className="w-full">
+                                {emailVerified ? 'Email Verified' : 'Verify Email'}
+                            </Button>
+                            <div>
+                                <Label>Email Verification Code</Label>
+                                <Input type="text" name="emailCode" value={formData.emailCode} onChange={handleChange} />
+                            </div>
+                            <div>
+                                <Label>Password</Label>
+                                <Input type="password" name="password" value={formData.password} onChange={handleChange} required />
+                            </div>
+                            <div>
+                                <Label>Confirm Password</Label>
+                                <Input type="password" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} required />
+                            </div>
+                            <Button type="submit" className="w-full">Register</Button>
+                            {/* <Button type="button" className="w-full" onClick={() => window.location = "/"}>Login</Button> */}
+
+                            <div className="text-center text-sm">
+                                Already have an account?{" "}
+                                <a
+                                    className="underline underline-offset-4 cursor-pointer"
+                                    onClick={() => window.location = "/"}
+                                >
+                                    Login
+                                </a>
+                            </div>
+                        </form>
+                    </CardContent>
+                </Card>
+
+            </div>
         </div>
     );
 }
