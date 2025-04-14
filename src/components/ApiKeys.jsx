@@ -1,47 +1,61 @@
 import React, { useState } from 'react';
 import { PlusCircle, RefreshCw, CheckCircle, XCircle } from 'lucide-react';
 
-const ApiKeys = ({ apiKeys: initialApiKeys, sessionData, providers }) => {
-  const [apiKeys, setApiKeys] = useState(initialApiKeys);
-  const filterApiKey = apiKeys.filter(apiKey => apiKey.user_id === sessionData.user.id);
-  // console.log(sessionData);
-  // console.log(filterApiKey);
+const ApiKeys = ({ apiKeys, sessionData, providers }) => {
   // console.log(providers);
+  const [currentapiKeys, setCurrentApiKeys] = useState(apiKeys);
+  // const filterApiKey = apiKeys.filter(apiKey => apiKey.user_id === sessionData.user.id);
+  // console.log(currentapiKeys);
 
   const [isAddingKey, setIsAddingKey] = useState(false);
   const [newKeyData, setNewKeyData] = useState({
-    name: '',
-    key: '',
-    provider: 'OpenAI',
-    limit: 100000
+    // name: '',
+    api_key: '',
+    provider_id: 4,
+    provider_name: 'OpenAI',
+    usage_limit: 100000,
+    usage_count: 0
   });
 
 
   // 새 API 키 추가
-  const addNewKey = () => {
-    // alert("Add new api key handler");
-    if (!newKeyData.key) return;
+  const addNewKey = async () => {
+    if (!newKeyData.api_key) return;
+    console.log(sessionData.user);
     console.log(newKeyData);
 
-    // const newKey = {
-    //   id: `key-${Date.now()}`,
-    //   name: newKeyData.name,
-    //   api_key: newKeyData.key,
-    //   provider: newKeyData.provider,
-    //   usage_limit : newKeyData.limit,
-    //   status: 'active',
-    //   lastUsed: '방금',
-    //   usage: { current: 0, limit: parseInt(newKeyData.limit) || 100000 }
-    // };
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/AddNewAPIkey`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ...newKeyData,
+        user: sessionData.user
+      })
+      
+    });
+    if (response.ok) {
+      const data = await response.json();
+      console.log(data);
 
-    setApiKeys([...apiKeys, newKeyData]);
+    } else {
+      console.error("Failed to fetch data");
+    }
+
+
+    // console.log(newKeyData);
+    setCurrentApiKeys([...currentapiKeys, newKeyData]);
     setIsAddingKey(false);
     setNewKeyData({
-      name: '',
-      key: '',
-      provider: 'OpenAI',
-      limit: 100000
+      // name: '',
+      api_key: '',
+      provider_id: 4,
+      provider_name: 'OpenAI',
+      usage_limit: 100000,
+      usage_count: 0
     });
+
   };
 
   return (
@@ -87,8 +101,17 @@ const ApiKeys = ({ apiKeys: initialApiKeys, sessionData, providers }) => {
               <div>
                 <label className="block text-sm font-medium mb-2">프로바이더</label>
                 <select
-                  value={newKeyData.provider}
-                  onChange={(e) => setNewKeyData({ ...newKeyData, provider: e.target.value })}
+                  value={newKeyData.provider_name}
+                  onChange={(e) => {
+                    const selectedName = e.target.value;
+                    const selectedProvider = providers.find(p => p.name === selectedName);
+
+                    setNewKeyData({
+                      ...newKeyData,
+                      provider_name: selectedName,
+                      provider_id: selectedProvider ? selectedProvider.id : null
+                    });
+                  }}
                   className="w-full px-4 py-2 border rounded-lg"
                 >
                   {providers.map(provider => (
@@ -97,13 +120,14 @@ const ApiKeys = ({ apiKeys: initialApiKeys, sessionData, providers }) => {
                     </option>
                   ))}
                 </select>
+
               </div>
               <div>
                 <label className="block text-sm font-medium mb-2">일일 사용량 한도 (토큰)</label>
                 <input
                   type="number"
-                  value={newKeyData.limit}
-                  onChange={(e) => setNewKeyData({ ...newKeyData, limit: e.target.value })}
+                  value={newKeyData.usage_limit}
+                  onChange={(e) => setNewKeyData({ ...newKeyData, usage_limit: e.target.value })}
                   className="w-full px-4 py-2 border rounded-lg"
                   min="0"
                   step="10000"
@@ -114,8 +138,8 @@ const ApiKeys = ({ apiKeys: initialApiKeys, sessionData, providers }) => {
                 <label className="block text-sm font-medium mb-2">API 키</label>
                 <input
                   type="text"
-                  value={newKeyData.key}
-                  onChange={(e) => setNewKeyData({ ...newKeyData, key: e.target.value })}
+                  value={newKeyData.api_key}
+                  onChange={(e) => setNewKeyData({ ...newKeyData, api_key: e.target.value })}
                   className="w-full px-4 py-2 border rounded-lg font-mono"
                   placeholder="sk-..."
                 />
@@ -133,8 +157,8 @@ const ApiKeys = ({ apiKeys: initialApiKeys, sessionData, providers }) => {
               </button>
               <button
                 onClick={addNewKey}
-                disabled={!newKeyData.key}
-                className={`px-4 py-2 rounded-lg ${!newKeyData.key
+                disabled={!newKeyData.api_key}
+                className={`px-4 py-2 rounded-lg ${!newKeyData.api_key
                   ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
                   : 'bg-blue-500 text-white hover:bg-blue-600'
                   }`}
@@ -147,12 +171,12 @@ const ApiKeys = ({ apiKeys: initialApiKeys, sessionData, providers }) => {
 
         {/* API 키 목록 */}
         <div className="space-y-6">
-          {filterApiKey.map(apiKey => (
+          {currentapiKeys.map(apiKey => (
             <div key={apiKey.api_key} className="bg-white rounded-lg border p-6">
               <div className="flex items-center justify-between mb-4">
                 <div>
-                  <h2 className="text-lg font-medium">{apiKey.name}</h2>
-                  <p className="text-sm text-gray-500">{apiKey.provider_name}</p>
+                  <h2 className="text-lg font-medium">{apiKey.provider_name}</h2>
+                  {/* <p className="text-sm text-gray-500">{apiKey.provider_name}</p> */}
                 </div>
               </div>
 
@@ -199,9 +223,9 @@ const ApiKeys = ({ apiKeys: initialApiKeys, sessionData, providers }) => {
               </div>
 
               <div className="flex justify-end gap-3 mt-6 pt-4 border-t">
-                <button className="px-3 py-1.5 text-sm border rounded hover:bg-gray-50">
+                {/* <button className="px-3 py-1.5 text-sm border rounded hover:bg-gray-50">
                   사용량 보기
-                </button>
+                </button> */}
                 <button className="px-3 py-1.5 text-sm border rounded hover:bg-gray-50">
                   수정
                 </button>
@@ -214,7 +238,7 @@ const ApiKeys = ({ apiKeys: initialApiKeys, sessionData, providers }) => {
           ))}
         </div>
 
-        {filterApiKey.length === 0 && (
+        {currentapiKeys.length === 0 && (
           <div className="text-center text-gray-500 py-6 bg-white rounded-lg border">
             등록된 API 키가 없습니다. 새 API 키를 등록해보세요.
           </div>

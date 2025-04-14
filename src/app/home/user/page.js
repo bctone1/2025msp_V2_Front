@@ -39,6 +39,7 @@ const EnhancedMetaLLMInterface = () => {
       fetchUserInfo(session.user.email);
       fetchSessions(session.user.email);
       fetchConversations(session.user.email);
+      fetchAPIKey(session.user.email);
     }
   }, [session, status]); // session과 status가 변경될 때 실행
 
@@ -110,6 +111,24 @@ const EnhancedMetaLLMInterface = () => {
     }
   };
 
+  const fetchAPIKey = async (email) => {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/APIkeyList`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email: email }),
+    });
+    const data = await response.json();
+    if (response.ok) {
+      // console.log(data);
+      setApiKeys(data.api_keys);
+    } else {
+      alert("APIkey 오류발생");
+    }
+  };
+
+
   useEffect(() => {
 
     const fetchModels = async () => {
@@ -143,27 +162,8 @@ const EnhancedMetaLLMInterface = () => {
         alert("공급자 오류발생");
       }
     };
-
-
-    const fetchAPIKey = async () => {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/APIkeyList`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      const data = await response.json();
-      if (response.ok) {
-        // console.log(data);
-        setApiKeys(data.api_keys);
-      } else {
-        alert("APIkey 오류발생");
-      }
-    };
-
     fetchModels();
     fetchProvider();
-    fetchAPIKey();
   }, []);
 
 

@@ -124,7 +124,7 @@ export default function GetpasswordPage({ className }) {
                     {step === 1 && (
                         <div className={cn("flex flex-col", className)}>
                             <CardHeader className="text-center">
-                                <CardDescription>비밀번호를 찾고자하는 이메일을 입력해주세요</CardDescription>
+                                <CardDescription>Please enter your email</CardDescription>
                             </CardHeader>
 
                             <CardContent>
