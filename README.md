@@ -112,5 +112,8 @@ UPDATE: AI-Models 테이블 추가, API요청 코드 작성(provider, apikey, pr
 <h3>4월 1주차</h3>
 1. 네이버, 카카오 로그인 구현
 
+<h3>4월 2주차</h3>
+1. 비밀번호 찾기 구현
+
 <h3>참고문서</h3>
 <a href="https://drive.google.com/file/d/1cX9CS6eWQ5zYUcVpFhsKs8N--n04V1O8/view?usp=sharing">프로젝트 스택정리 및 Backend 서버 데이터 요청 정리</a>

@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { PlusCircle, RefreshCw, CheckCircle, XCircle } from 'lucide-react';
 
-const ApiKeys = ({ apiKeys: initialApiKeys, sessionData }) => {
+const ApiKeys = ({ apiKeys: initialApiKeys, sessionData, providers }) => {
   const [apiKeys, setApiKeys] = useState(initialApiKeys);
   const filterApiKey = apiKeys.filter(apiKey => apiKey.user_id === sessionData.user.id);
-  console.log(sessionData);
-
+  // console.log(sessionData);
   // console.log(filterApiKey);
+  // console.log(providers);
 
   const [isAddingKey, setIsAddingKey] = useState(false);
   const [newKeyData, setNewKeyData] = useState({
@@ -19,8 +19,8 @@ const ApiKeys = ({ apiKeys: initialApiKeys, sessionData }) => {
 
   // 새 API 키 추가
   const addNewKey = () => {
-    alert("Add new api key handler");
-    if (!newKeyData.name || !newKeyData.key) return;
+    // alert("Add new api key handler");
+    if (!newKeyData.key) return;
     console.log(newKeyData);
 
     // const newKey = {
@@ -91,10 +91,11 @@ const ApiKeys = ({ apiKeys: initialApiKeys, sessionData }) => {
                   onChange={(e) => setNewKeyData({ ...newKeyData, provider: e.target.value })}
                   className="w-full px-4 py-2 border rounded-lg"
                 >
-                  <option value="OpenAI">OpenAI</option>
-                  <option value="Anthropic">Anthropic</option>
-                  <option value="DeepSeek">DeepSeek</option>
-                  <option value="Google">Google</option>
+                  {providers.map(provider => (
+                    <option key={provider.name} value={provider.name}>
+                      {provider.name}
+                    </option>
+                  ))}
                 </select>
               </div>
               <div>
@@ -132,8 +133,8 @@ const ApiKeys = ({ apiKeys: initialApiKeys, sessionData }) => {
               </button>
               <button
                 onClick={addNewKey}
-                disabled={!newKeyData.name || !newKeyData.key}
-                className={`px-4 py-2 rounded-lg ${!newKeyData.name || !newKeyData.key
+                disabled={!newKeyData.key}
+                className={`px-4 py-2 rounded-lg ${!newKeyData.key
                   ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
                   : 'bg-blue-500 text-white hover:bg-blue-600'
                   }`}
