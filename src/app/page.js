@@ -82,7 +82,7 @@ export default function LoginPage({ className }) {
           <Card>
             <CardHeader className="text-center">
               <CardTitle className="text-xl">Welcome back</CardTitle>
-              <CardDescription>Login with your Apple or Google account</CardDescription>
+              <CardDescription> Login with your Kakao or Naver or Google account </CardDescription>
             </CardHeader>
 
             <CardContent>
