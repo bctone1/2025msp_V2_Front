@@ -197,6 +197,7 @@ const ProjectChat = ({
     // formData.append("files[]", selectedFiles);
     formData.append("project_id", activeProject.project_id);
     formData.append("user_email", activeProject.user_email);
+    formData.append("session_id", currentSession.current);
     selectedFiles.forEach(file => {
       formData.append("files[]", file);
     });
