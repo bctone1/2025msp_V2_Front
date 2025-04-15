@@ -5,7 +5,9 @@ const NewProject = ({
   models,
   setView,
   setActiveProject,
-  sessionemail
+  sessionemail,
+  fetchProjects,
+  selectProject
 }) => {
   const [projectName, setProjectName] = useState('');
   const [projectDesc, setProjectDesc] = useState('');
@@ -37,12 +39,12 @@ const NewProject = ({
       },
       body: JSON.stringify({ projectInfo: newProject }),
     });
-    // const data = await response.json();
+    const data = await response.json();
     if (response.ok) {
       alert("생성되었습니다.");
-      // 새 프로젝트 설정 및 화면 전환
-      setActiveProject(newProject);
-      setView('project-detail');
+      window.location.href="/home/user";
+      // fetchProjects(sessionemail);
+      // selectProject(data.project_id);
     } else {
       alert("프로젝트 생성 실패");
       console.error("프로젝트 생성 실패:", response.statusText);

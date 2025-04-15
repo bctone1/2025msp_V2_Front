@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const Profile = ({ models, userInfo }) => {
+const Profile = ({  userInfo }) => {
 
   const [newProfileData, setNewProfileData] = useState({
     name: userInfo.name,

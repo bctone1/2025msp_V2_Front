@@ -11,7 +11,7 @@ import ProjectChat from '@/components/ProjectChat';
 import ApiKeys from '@/components/ApiKeys';
 import Profile from '@/components/Profile';
 
-
+import { useSearchParams } from 'next/navigation';
 
 const EnhancedMetaLLMInterface = () => {
   // 핵심 상태
@@ -20,9 +20,13 @@ const EnhancedMetaLLMInterface = () => {
   const [activeProject, setActiveProject] = useState(null);
   const [selectedModel, setSelectedModel] = useState('gpt-4');
 
+
+
+
   // 샘플 데이터
   const { data: session, status } = useSession();
   const [projects, setProjects] = useState([]);
+  // const [projects, setProjects] = [];
   const [apiKeys, setApiKeys] = useState([]);
   const [providers, setProviders] = useState([]);
   const [userinfo, setUserinfo] = useState([]);
@@ -88,11 +92,12 @@ const EnhancedMetaLLMInterface = () => {
     const data = await response.json();
     if (response.ok) {
       setProjects(data);
-      // console.log(data);
+      // console.log(projects);
     } else {
-      // alert("프로젝트 오류발생");
+      alert("프로젝트 오류발생");
     }
   };
+
 
   const fetchUserInfo = async (email) => {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/getUserInfo`, {
@@ -167,22 +172,6 @@ const EnhancedMetaLLMInterface = () => {
   }, []);
 
 
-
-
-
-  // const projects = [
-  //   { id: 'proj-1', name: '웹사이트 개발', category: 'web', desc: '회사 웹사이트', model: 'gpt-4', lastActive: '오늘', progress: 65, status: 'active' },
-  //   { id: 'proj-2', name: '모바일 앱', category: 'mobile', desc: '주문 관리 앱', model: 'claude-3', lastActive: '어제', progress: 30, status: 'active' },
-  //   { id: 'proj-3', name: 'DB 마이그레이션', category: 'database', desc: 'NoSQL 마이그레이션', model: 'deepseek-coder', lastActive: '3일 전', progress: 100, status: 'completed' }
-  // ];
-
-  const models = [
-    { id: 'gpt-4', name: 'GPT-4', provider: 'OpenAI' },
-    { id: 'claude-3', name: 'Claude 3', provider: 'Anthropic' },
-    { id: 'deepseek-coder', name: 'DeepSeek Coder', provider: 'Local' },
-    { id: 'gemini-pro', name: 'Gemini Pro', provider: 'Google' }
-  ];
-
   const categories = [
     { id: 'web', name: '웹 개발' },
     { id: 'mobile', name: '모바일 앱' },
@@ -190,16 +179,6 @@ const EnhancedMetaLLMInterface = () => {
     { id: 'database', name: '데이터베이스' }
   ];
 
-  // const conversations = [
-  //   { id: 'conv-1', title: '로그인 기능 구현', project: 3, date: '2024-03-10', messages: 24 },
-  //   { id: 'conv-2', title: 'DB 설계 논의', project: 3, date: '2024-03-12', messages: 15 }
-  // ];
-
-  // const apiKeys = [
-  //   { id: 'key-1', name: 'OpenAI API', key: 'sk-abc...xyz', provider: 'OpenAI', status: 'active', lastUsed: '2시간 전', usage: { current: 45320, limit: 100000 } },
-  //   { id: 'key-2', name: 'Claude API', key: 'sk-ant...def', provider: 'Anthropic', status: 'active', lastUsed: '5시간 전', usage: { current: 12850, limit: 50000 } },
-  //   { id: 'key-3', name: 'DeepSeek API', key: 'sk-deep...ghi', provider: 'DeepSeek', status: 'expired', lastUsed: '7일 전', usage: { current: 0, limit: 0 } }
-  // ];
 
   const recentActivities = [
     { id: 'act-1', type: 'message', project: 'proj-1', title: '인증 서비스 설계', time: '3시간 전', description: '사용자 인증 플로우 논의' },
@@ -209,9 +188,10 @@ const EnhancedMetaLLMInterface = () => {
 
   // 프로젝트 선택
   const selectProject = (projectId) => {
-    // console.log(projectId);
+    console.log(projects);
+    console.log(projectId);
     const project = projects.find(p => p.project_id === projectId);
-    // console.log(project);
+    console.log(project);
     setActiveProject(project);
     setSelectedModel(project.ai_model);
     setView('project-detail');
@@ -240,8 +220,8 @@ const EnhancedMetaLLMInterface = () => {
           recentActivities={recentActivities}
           selectProject={selectProject}
           changeNavigation={changeNavigation}
-          providerData = {providers}
-          sessionData = {session}
+          providerData={providers}
+          sessionData={session}
           models={ModelsData}
         />
       )}
@@ -249,8 +229,6 @@ const EnhancedMetaLLMInterface = () => {
       {view === 'projects' && (
         <ProjectsList
           projects={projects}
-          categories={categories}
-          models={providers}
           selectProject={selectProject}
           setView={setView}
         />
@@ -263,6 +241,8 @@ const EnhancedMetaLLMInterface = () => {
           setView={setView}
           setActiveProject={setActiveProject}
           sessionemail={session.user.email}
+          fetchProjects={fetchProjects}
+          selectProject={selectProject}
         />
       )}
 
@@ -281,14 +261,14 @@ const EnhancedMetaLLMInterface = () => {
       {view === 'apikeys' && (
         <ApiKeys
           apiKeys={apiKeys}
-          sessionData = {session}
-          providers = {providers}
+          sessionData={session}
+          providers={providers}
         />
       )}
 
       {view === 'profile' && (
         <Profile
-          models={models} userInfo={userinfo}
+          userInfo={userinfo}
         />
       )}
     </div>

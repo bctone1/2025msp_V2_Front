@@ -31,28 +31,34 @@ const ProjectChat = ({
     now.getHours().toString().padStart(2, "0") +
     now.getMinutes().toString().padStart(2, "0") +
     now.getSeconds().toString().padStart(2, "0");
-
   const currentSession = useRef(currentTime);
 
   const fileInputRef = useRef(null);
   const messagesEndRef = useRef(null);
 
+  const initialized = useRef(false);
+  useEffect(() => {
+    if (!initialized.current) {
+      initialized.current = true;
+      newChat();
+    }
+  }, []);
+
   useEffect(() => {
     if (messagesEndRef.current) {
-      messagesEndRef.current.scrollTop = messagesEndRef.current.scrollHeight + 50; // 50px 더 아래로 이동
+      messagesEndRef.current.scrollTop = messagesEndRef.current.scrollHeight + 50;
     }
-  }, [messages]); // messages가 변경될 때마다 실행
+  }, [messages]);
 
-
-  // 컴포넌트 마운트 시 초기 메시지 설정
   useEffect(() => {
-    // console.log(activeProject);
     setMessages([{
       id: 1,
       role: 'system',
       content: `${activeProject.project_name} 프로젝트를 시작합니다. ${activeProject.description ? `설명: ${activeProject.description}` : ''} 어떤 도움이 필요하신가요?`
     }]);
   }, [activeProject]);
+
+
 
 
 
@@ -93,7 +99,7 @@ const ProjectChat = ({
         // messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
       }, 1000);
     } else {
-      alert("오류발생");
+      alert("오류발생1");
     }
   };
 
@@ -123,8 +129,18 @@ const ProjectChat = ({
   }
 
   const newChat = async () => {
-    console.log(currentSession.current);
+
+    const now = new Date();
+    const currentTime = "msp_id" +
+      now.getFullYear().toString() +
+      (now.getMonth() + 1).toString().padStart(2, "0") +
+      now.getDate().toString().padStart(2, "0") +
+      now.getHours().toString().padStart(2, "0") +
+      now.getMinutes().toString().padStart(2, "0") +
+      now.getSeconds().toString().padStart(2, "0");
+
     currentSession.current = currentTime;
+
     setMessages([{
       id: 1,
       role: 'system',
@@ -134,13 +150,16 @@ const ProjectChat = ({
     const formattedDate = now.toLocaleString();
 
     const newSessionLogs = {
-      id: currentSession.current,
+      // id: currentSession.current,
+      id: currentTime,
       project_id: activeProject.project_id,
       session_title: 'New Chat!',
       register_at: formattedDate,
       messages: 0,
       user_email: activeProject.user_email,
     };
+
+    console.log(newSessionLogs);
 
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/newSession`, {
       method: "POST",
@@ -154,17 +173,11 @@ const ProjectChat = ({
       console.log(data);
       setcurrentSessionLogs([newSessionLogs, ...currentSessionLogs]);
     } else {
-      alert("오류발생");
+      alert("오류발생2");
     }
   }
 
-  const initialized = useRef(false);
-  useEffect(() => {
-    if (!initialized.current) {
-      initialized.current = true;
-      newChat();
-    }
-  }, []);
+
 
 
 

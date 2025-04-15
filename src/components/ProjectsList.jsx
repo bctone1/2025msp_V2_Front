@@ -5,8 +5,6 @@ import { PlusCircle, Search, Bot, Clock } from 'lucide-react';
 
 const ProjectsList = ({
   projects,
-  categories,
-  models,
   selectProject,
   setView
 }) => {
