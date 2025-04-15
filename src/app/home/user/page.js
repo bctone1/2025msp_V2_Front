@@ -60,7 +60,7 @@ const EnhancedMetaLLMInterface = () => {
       console.log(data);
       setconversations(data.response);
     } else {
-      // alert("대화기록 오류발생");
+      console.log("대화기록 오류발생");
     }
   };
 
@@ -77,7 +77,7 @@ const EnhancedMetaLLMInterface = () => {
       setSessionLogs(data);
       // console.log(data);
     } else {
-      alert("대화세션 오류발생");
+      console.log("대화세션 오류발생");
     }
   };
 
@@ -94,7 +94,7 @@ const EnhancedMetaLLMInterface = () => {
       setProjects(data);
       // console.log(projects);
     } else {
-      alert("프로젝트 오류발생");
+      console.log("프로젝트 오류발생");
     }
   };
 
@@ -112,7 +112,7 @@ const EnhancedMetaLLMInterface = () => {
       // console.log(data);
       setUserinfo(data);
     } else {
-      alert("사용자정보 오류발생");
+      console.log("사용자정보 오류발생");
     }
   };
 
@@ -126,10 +126,10 @@ const EnhancedMetaLLMInterface = () => {
     });
     const data = await response.json();
     if (response.ok) {
-      // console.log(data);
+      console.log(data);
       setApiKeys(data.api_keys);
     } else {
-      alert("APIkey 오류발생");
+      console.log("APIkey 오류발생");
     }
   };
 
@@ -148,7 +148,7 @@ const EnhancedMetaLLMInterface = () => {
         // console.log(data);
         setModelsData(data.models);
       } else {
-        alert("공급자 오류발생");
+        console.log("공급자 오류발생");
       }
     };
 
@@ -164,7 +164,7 @@ const EnhancedMetaLLMInterface = () => {
         console.log(data);
         setProviders(data.providers);
       } else {
-        alert("공급자 오류발생");
+        console.log("공급자 오류발생");
       }
     };
     fetchModels();

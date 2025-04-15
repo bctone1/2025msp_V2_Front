@@ -26,7 +26,7 @@ export default function LoginPage({ className }) {
   const router = useRouter();
 
 
-  
+
   const handleLogin = async () => {
     const result = await signIn("credentials", {
       redirect: false,
@@ -137,7 +137,15 @@ export default function LoginPage({ className }) {
 
                 <div className="grid gap-6">
                   <div className="grid gap-2">
-                    <Label htmlFor="email">Email</Label>
+                    <div className="flex items-center">
+                      <Label htmlFor="email">Email</Label>
+                      <a
+                        href="/getemail"
+                        className="ml-auto text-sm underline-offset-4 hover:underline"
+                      >
+                        Forgot your Email?
+                      </a>
+                    </div>
                     <Input
                       id="email"
                       type="email"

@@ -33,7 +33,7 @@ const ApiKeys = ({ apiKeys, sessionData, providers }) => {
         ...newKeyData,
         user: sessionData.user
       })
-      
+
     });
     if (response.ok) {
       const data = await response.json();
@@ -87,17 +87,6 @@ const ApiKeys = ({ apiKeys, sessionData, providers }) => {
             </div>
 
             <div className="grid grid-cols-2 gap-4 mb-6">
-              {/* <div>
-                <label className="block text-sm font-medium mb-2">API 키 이름</label>
-                <input
-                  type="text"
-                  value={newKeyData.name}
-                  onChange={(e) => setNewKeyData({ ...newKeyData, name: e.target.value })}
-                  className="w-full px-4 py-2 border rounded-lg"
-                  placeholder="예: OpenAI API"
-                />
-              </div> */}
-
               <div>
                 <label className="block text-sm font-medium mb-2">프로바이더</label>
                 <select
@@ -114,14 +103,21 @@ const ApiKeys = ({ apiKeys, sessionData, providers }) => {
                   }}
                   className="w-full px-4 py-2 border rounded-lg"
                 >
-                  {providers.map(provider => (
-                    <option key={provider.name} value={provider.name}>
-                      {provider.name}
-                    </option>
-                  ))}
+                  {providers.map(provider => {
+                    const isAlreadyUsed = currentapiKeys.some(apiKey => apiKey.provider_name === provider.name);
+                    return (
+                      <option
+                        key={provider.name}
+                        value={provider.name}
+                        disabled={isAlreadyUsed}
+                      >
+                        {provider.name} {isAlreadyUsed ? '(이미 등록됨)' : ''}
+                      </option>
+                    );
+                  })}
                 </select>
-
               </div>
+
               <div>
                 <label className="block text-sm font-medium mb-2">일일 사용량 한도 (토큰)</label>
                 <input
@@ -144,8 +140,6 @@ const ApiKeys = ({ apiKeys, sessionData, providers }) => {
                   placeholder="sk-..."
                 />
               </div>
-
-
             </div>
 
             <div className="flex justify-end gap-3">
