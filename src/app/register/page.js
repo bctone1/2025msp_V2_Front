@@ -23,10 +23,14 @@ export default function Register() {
         password: '',
         confirmPassword: '',
         emailCode: '',
+        phone: '',
+        phoneCode:'',
     });
 
     const [emailVerified, setEmailVerified] = useState(false);
+    const [phoneVerified, setPhoneVerified] = useState(false);
     const [secretCode, setSecretCode] = useState('');
+    const [secretCodePhone, setSecretCodePhone] = useState('');
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -37,6 +41,7 @@ export default function Register() {
         try {
             const code = Math.floor(100000 + Math.random() * 900000).toString();
             setSecretCode(code);
+            console.log(code);
             const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/sendEmail`, {
                 email: formData.email,
                 secretCode: code,
@@ -51,10 +56,29 @@ export default function Register() {
         }
     };
 
+    const handlePhoneVerification = async () => {
+        try {
+            const code = Math.floor(100000 + Math.random() * 900000).toString();
+            setSecretCodePhone(code);
+            console.log(code);
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/Phonerequest`, {
+                phone_number: formData.phone,
+                phoneCode: code,
+            });
+            if (response.status === 200) {
+                alert(response.data.message);
+                setPhoneVerified(true);
+            }
+        } catch (error) {
+            console.error('Error sending Phone:', error);
+            alert('An error occurred while sending the verification Phone.');
+        }
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const { name, email, password, confirmPassword, emailCode } = formData;
-        if (!name || !email || !password || !confirmPassword) {
+        const { name, email, password, confirmPassword, emailCode, phone, phoneCode } = formData;
+        if (!name || !email || !password || !confirmPassword ) {
             alert('All fields are required.');
             return;
         }
@@ -70,6 +94,18 @@ export default function Register() {
             alert('Invalid email verification code.');
             return;
         }
+
+        if (!phoneVerified) {
+            alert('Please verify your phone.');
+            return;
+        }
+        if (phoneCode !== secretCodePhone) {
+            alert('Invalid Phone verification code.');
+            return;
+        }
+
+
+
         try {
             const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/register`, formData);
             if (response.status === 200) {
@@ -111,6 +147,20 @@ export default function Register() {
                                 <Label>Email Verification Code</Label>
                                 <Input type="text" name="emailCode" value={formData.emailCode} onChange={handleChange} />
                             </div>
+
+                            <div>
+                                <Label>Phone</Label>
+                                <Input type="phone" name="phone" value={formData.phone} onChange={handleChange} required />
+                            </div>
+                            <Button type="button" onClick={handlePhoneVerification} disabled={phoneVerified} className="w-full">
+                                {phoneVerified ? 'Phone Verified' : 'Verify Phone'}
+                            </Button>
+
+                            <div>
+                                <Label>Phone Verification Code</Label>
+                                <Input type="text" name="phoneCode" value={formData.phoneCode} onChange={handleChange} />
+                            </div>
+
                             <div>
                                 <Label>Password</Label>
                                 <Input type="password" name="password" value={formData.password} onChange={handleChange} required />
