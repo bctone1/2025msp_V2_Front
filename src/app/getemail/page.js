@@ -83,7 +83,7 @@ export default function GetEmailwordPage({ className }) {
             if (response.status === 200) {
                 if(data.message=="성공"){
                     setPhoneVerified(true);
-                    alert(data.message);
+                    // alert(data.message);
                     setCurrentEmail(data.email);
                 }else{
                     alert(data.email);

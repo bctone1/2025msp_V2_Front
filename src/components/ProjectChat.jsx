@@ -38,6 +38,7 @@ const ProjectChat = ({
 
   const initialized = useRef(false);
   useEffect(() => {
+    console.log(activeProject);
     if (!initialized.current) {
       initialized.current = true;
       newChat();
@@ -50,13 +51,13 @@ const ProjectChat = ({
     }
   }, [messages]);
 
-  useEffect(() => {
-    setMessages([{
-      id: 1,
-      role: 'system',
-      content: `${activeProject.project_name} 프로젝트를 시작합니다. ${activeProject.description ? `설명: ${activeProject.description}` : ''} 어떤 도움이 필요하신가요?`
-    }]);
-  }, [activeProject]);
+  // useEffect(() => {
+  //   setMessages([{
+  //     id: 1,
+  //     role: 'system',
+  //     content: `${activeProject.project_name} 프로젝트를 시작합니다. ${activeProject.description ? `설명: ${activeProject.description}` : ''} 어떤 도움이 필요하신가요?`
+  //   }]);
+  // }, [activeProject]);
 
 
 
@@ -159,7 +160,7 @@ const ProjectChat = ({
       user_email: activeProject.user_email,
     };
 
-    console.log(newSessionLogs);
+    // console.log(newSessionLogs);
 
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/newSession`, {
       method: "POST",
@@ -170,7 +171,7 @@ const ProjectChat = ({
     });
     const data = await response.json();
     if (response.ok) {
-      console.log(data);
+      // console.log(data);
       setcurrentSessionLogs([newSessionLogs, ...currentSessionLogs]);
     } else {
       alert("오류발생2");
@@ -189,14 +190,12 @@ const ProjectChat = ({
     } else {
       // 외부 스토리지 연동 시뮬레이션
       alert(`${fileSource} 연동을 시작합니다.`);
-
       // 외부에서 가져온 파일 시뮬레이션
       setTimeout(() => {
         const externalFiles = [
           { name: `${fileSource}_문서1.pdf`, source: fileSource },
           { name: `${fileSource}_문서2.docx`, source: fileSource }
         ];
-
         setFiles([...files, ...externalFiles]);
         alert(`${fileSource}에서 2개의 파일을 가져왔습니다.`);
       }, 1000);
@@ -316,7 +315,7 @@ const ProjectChat = ({
               >
                 <FileText size={14} />
               </button>
-              <button
+              {/* <button
                 onClick={() => setFileSource('drive')}
                 className={`p-1 rounded ${fileSource === 'drive' ? 'bg-blue-100 text-blue-700' : 'hover:bg-gray-100'}`}
                 title="Google Drive"
@@ -329,7 +328,7 @@ const ProjectChat = ({
                 title="GitHub"
               >
                 <Github size={14} />
-              </button>
+              </button> */}
             </div>
           </div>
           <button

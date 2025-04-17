@@ -5,6 +5,7 @@ const Profile = ({  userInfo }) => {
   const [newProfileData, setNewProfileData] = useState({
     name: userInfo.name,
     group: userInfo.group,
+    phone_number : userInfo.phone_number
   });
 
   const [newPasswordData, setNewPasswordData] = useState({
@@ -90,6 +91,16 @@ const Profile = ({  userInfo }) => {
                 className="w-full px-4 py-2 border rounded-lg"
                 defaultValue={userInfo.group}
                 onChange={(e) => setNewProfileData({ ...newProfileData, group: e.target.value })}
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-2">연락처</label>
+              <input
+                type="text"
+                className="w-full px-4 py-2 border rounded-lg"
+                defaultValue={userInfo.phone_number}
+                onChange={(e) => setNewProfileData({ ...newProfileData, phone_number: e.target.value })}
               />
             </div>
           </div>
