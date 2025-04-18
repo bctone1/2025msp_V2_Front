@@ -3,7 +3,8 @@ import {
   Bot, User, Send, FileText,
   Upload, Settings, Cloud,
   Folder, Github, History,
-  ChevronDown, Database
+  ChevronDown, Database, Trash2,
+  Trash
 } from 'lucide-react';
 
 const ProjectChat = ({
@@ -71,7 +72,8 @@ const ProjectChat = ({
           console.log(data);
           const newFiles = data.map(f => ({
             name: f.file_url,
-            source: 'local'
+            source: 'local',
+            id: f.id
           }));
           setFiles([...files, ...newFiles]);
 
@@ -84,7 +86,7 @@ const ProjectChat = ({
         alert("오류발생2");
       }
     };
-    console.log(activeProject);
+    // console.log(activeProject);
     if (!initialized.current) {
       initialized.current = true;
       fetchGetInfoBase();
@@ -284,7 +286,7 @@ const ProjectChat = ({
     if (selectedFiles.length > 0) {
       const newFiles = selectedFiles.map(f => ({
         name: f.name,
-        source: 'local'
+        source: 'local',
       }));
 
       setFiles([...files, ...newFiles]);
@@ -304,7 +306,7 @@ const ProjectChat = ({
         const response = {
           id: messages.length + 2,
           role: 'assistant',
-          content: '파일이 지식 베이스에 추가되었습니다. 어떤 도움이 필요하신가요?' + data.message,
+          content: data.message,
           model: selectedModel
         };
 
@@ -324,6 +326,51 @@ const ProjectChat = ({
       default: return <FileText size={14} />;
     }
   };
+
+  const handleDeleteFile = async (file) => {
+    // console.log(files);
+    console.log(file);
+    console.log(activeProject);
+
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/DeleteFile`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+
+      body: JSON.stringify({ activeProject, file }),
+    });
+    const data = await response.json();
+    if (response.ok) {
+      // console.log(data);
+      setFiles(files.filter(pre => pre.name !== file.name));
+
+    } else {
+      alert("지식베이스 삭제 오류발생");
+    }
+  }
+
+  const handleDeleteSession = async (session_id) => {
+    console.log(session_id);
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/DeleteSession`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+
+      body: JSON.stringify({ session_id: session_id })
+    });
+    const data = await response.json();
+    if (response.ok) {
+      // console.log(data);
+      setcurrentSessionLogs(currentSessionLogs.filter(pre=>pre.id !==session_id))
+      // setFiles(files.filter(pre => pre.name !== file.name));
+
+    } else {
+      alert("세션 삭제 오류발생");
+    }
+
+  }
 
 
 
@@ -359,6 +406,8 @@ const ProjectChat = ({
                 title="로컬 파일"
               >
                 <FileText size={14} />
+
+
               </button>
               {/* <button
                 onClick={() => setFileSource('drive')}
@@ -382,16 +431,18 @@ const ProjectChat = ({
           >
             <Upload size={14} />
             <span>{fileSource === 'local' ? '파일 업로드' : `${fileSource} 연동`}</span>
+
           </button>
           {files.length > 0 ? (
             <div className="space-y-1 max-h-40 overflow-y-auto">
               {files.map((file, idx) => (
                 <div
                   key={idx}
-                  className="flex items-center p-1.5 text-xs hover:bg-gray-100 rounded"
+                  className="flex items-center p-1.5 text-xs "
                 >
                   {getFileSourceIcon(file.source)}
                   <span className="ml-1.5 truncate">{file.name}</span>
+                  <Trash2 size={14} className="ml-5 text-red-500 float-right cursor-pointer" onClick={() => handleDeleteFile(file)} />
                 </div>
               ))}
             </div>
@@ -424,15 +475,15 @@ const ProjectChat = ({
                 .map(conv => (
                   <div
                     key={conv.id}
-                    className="p-2 text-xs hover:bg-gray-100 rounded cursor-pointer"
-                    onClick={() => showConversations(conv)}
+                    className="flex justify-between items-center"
                   >
-                    <div className="font-medium truncate">{conv.session_title}</div>
-                    <div className="flex justify-between text-gray-500 mt-1">
-                      <span>{conv.register_at}</span>
-                      <span>{conv.messages}개 메시지</span>
+                    <div className="p-2 text-xs flex flex-col rounded cursor-pointer hover:bg-gray-100 w-[80%]" onClick={() => showConversations(conv)}>
+                      <div className="font-medium truncate">{conv.session_title}</div>
+                      <div className="text-gray-500 mt-1 text-[10px]">{conv.register_at}</div>
                     </div>
+                    <Trash2 size={14} className="text-red-500 ml-2 cursor-pointer" onClick={() => handleDeleteSession(conv.id)} />
                   </div>
+
                 ))
               }
             </div>
