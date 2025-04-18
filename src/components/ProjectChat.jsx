@@ -35,15 +35,67 @@ const ProjectChat = ({
 
   const fileInputRef = useRef(null);
   const messagesEndRef = useRef(null);
-
   const initialized = useRef(false);
+
+
+  const textareaRef = useRef(null);
+  // const [input, setInput] = useState("");
+
+  const handleInput = () => {
+    const textarea = textareaRef.current;
+    if (textarea) {
+      textarea.style.height = "auto"; // 높이 초기화
+      if (textarea.scrollHeight > textarea.clientHeight) {
+        textarea.style.height = "200px";
+        messagesEndRef.current.scrollTop = messagesEndRef.current.scrollHeight + 50;
+      }
+    }
+  };
+
   useEffect(() => {
+    const fetchGetInfoBase = async () => {
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/getInfoBase`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            activeProject
+          }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          console.log(data);
+          const newFiles = data.map(f => ({
+            name: f.file_url,
+            source: 'local'
+          }));
+          setFiles([...files, ...newFiles]);
+
+        } else {
+          alert("오류발생1");
+        }
+
+      } catch (error) {
+        console.error('요청 중 오류 발생:', error);
+        alert("오류발생2");
+      }
+    };
     console.log(activeProject);
     if (!initialized.current) {
       initialized.current = true;
+      fetchGetInfoBase();
       newChat();
     }
   }, []);
+
+
+
+
+
 
   useEffect(() => {
     if (messagesEndRef.current) {
@@ -51,20 +103,12 @@ const ProjectChat = ({
     }
   }, [messages]);
 
-  // useEffect(() => {
-  //   setMessages([{
-  //     id: 1,
-  //     role: 'system',
-  //     content: `${activeProject.project_name} 프로젝트를 시작합니다. ${activeProject.description ? `설명: ${activeProject.description}` : ''} 어떤 도움이 필요하신가요?`
-  //   }]);
-  // }, [activeProject]);
-
-
-
 
 
   // 메시지 전송
   const sendMessage = async () => {
+    const textarea = textareaRef.current;
+    textarea.style.height = "auto"; // 높이 초기화
     console.log(currentSession.current);
 
     if (!input.trim()) return;
@@ -260,7 +304,7 @@ const ProjectChat = ({
         const response = {
           id: messages.length + 2,
           role: 'assistant',
-          content: '파일이 지식 베이스에 추가되었습니다. 어떤 도움이 필요하신가요?',
+          content: '파일이 지식 베이스에 추가되었습니다. 어떤 도움이 필요하신가요?' + data.message,
           model: selectedModel
         };
 
@@ -280,6 +324,7 @@ const ProjectChat = ({
       default: return <FileText size={14} />;
     }
   };
+
 
 
   return (
@@ -531,14 +576,25 @@ const ProjectChat = ({
               />
             </button>
 
-            <input
-              type="text"
+            <textarea
+              ref={textareaRef}
               value={input}
               onChange={(e) => setInput(e.target.value)}
+              onInput={handleInput}
               placeholder="메시지를 입력하세요..."
-              className="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
+              className="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none overflow-auto"
+              rows={1}
+              onKeyDown={(e) => {
+                if ((e.key === 'Enter') && (e.shiftKey || e.ctrlKey)) {
+                  // 줄바꿈: 기본 동작 유지
+                  return;
+                } else if (e.key === 'Enter') {
+                  e.preventDefault();
+                  sendMessage();
+                }
+              }}
             />
+
 
             <button
               onClick={sendMessage}
