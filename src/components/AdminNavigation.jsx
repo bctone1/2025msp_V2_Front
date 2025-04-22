@@ -55,7 +55,7 @@ const AdminNavigation = ({ currentView, setCurrentView }) => {
 
       {/* 버전 정보 */}
       <div className="p-4 border-t">
-        <p className="text-xs text-gray-500">META LLM MSP Front : {process.env.NEXT_PUBLIC_META_FRONT_VER} </p>
+        <p className="text-xs text-gray-500">META LLM MSP Frontend : {process.env.NEXT_PUBLIC_META_FRONT_VER} </p>
         <p className="text-xs text-gray-500">META LLM MSP Backend : {process.env.NEXT_PUBLIC_META_BACKEND_VER} </p>
         {/* <p className="text-xs text-gray-400">© 2024 META LLM Inc.</p> */}
       </div>
