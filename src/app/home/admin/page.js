@@ -35,7 +35,7 @@ const AdminInterface = () => {
       });
       const data = await response.json();
       if (response.ok) {
-        console.log(data);
+        console.log(data.providers);
         setproviderData(data.providers);
       } else {
         alert("공급자 오류발생");

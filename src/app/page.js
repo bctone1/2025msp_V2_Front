@@ -195,6 +195,12 @@ export default function LoginPage({ className }) {
             By clicking continue, you agree to our <a href="#">Terms of Service</a>{" "}
             and <a href="#">Privacy Policy</a>.
           </div>
+
+          <div className="text-balance text-center text-xs text-muted-foreground [&_a]:underline [&_a]:underline-offset-4 [&_a]:hover:text-primary  ">
+            Front Ver : {process.env.NEXT_PUBLIC_META_FRONT_VER} <br />
+            Backend Ver : {process.env.NEXT_PUBLIC_META_BACKEND_VER}
+
+          </div>
         </div>
 
       </div>

@@ -27,13 +27,30 @@ const ProviderManagement = ({ providers: initialProviders }) => {
   });
 
   // 프로바이더 활성화/비활성화 토글
-  const toggleProviderStatus = (providerName) => {
-    setProviders(items => items.map(item =>
-      item.name === providerName
-        ? { ...item, status: item.status === 'Active' ? 'Inactive' : 'Active' }
-        : item
-    ));
+  const toggleProviderStatus = async (provider) => {
+    console.log(provider.id);
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/changeProviderStatus`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      // body: JSON.stringify(provider.id),
+      body: JSON.stringify({
+        provider_id: provider.id
+      })
+    });
+    if (response.ok) {
+      console.log(`Provider with ID ${provider.name} status changed.`);
+      setProviders(items => items.map(item =>
+        item.name === provider.name
+          ? { ...item, status: item.status === 'Active' ? 'Inactive' : 'Active' }
+          : item
+      ));
+    } else {
+      console.error("Failed to fetch data");
+    }
   };
+
   const deleteProvider = async (param) => {
     if (window.confirm('정말로 삭제하시겠습니까?')) {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/DeleteProvider`, {
@@ -192,7 +209,7 @@ const ProviderManagement = ({ providers: initialProviders }) => {
                 {/* 설정 및 액션 */}
                 <div className="flex justify-end gap-3 mt-6 pt-4 border-t">
                   <button
-                    onClick={() => toggleProviderStatus(provider.name)}
+                    onClick={() => toggleProviderStatus(provider)}
                     className={`px-3 py-1.5 text-sm rounded ${provider.status === 'Active'
                       ? 'bg-red-50 text-red-600 hover:bg-red-100'
                       : 'bg-green-50 text-green-600 hover:bg-green-100'
