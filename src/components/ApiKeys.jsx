@@ -8,6 +8,10 @@ const ApiKeys = ({ apiKeys, sessionData, providers }) => {
   // console.log(currentapiKeys);
 
   const [isAddingKey, setIsAddingKey] = useState(false);
+  const [editingKey, seteditingKey] = useState(null);
+  const [keySettings, setKeySettings] = useState({});
+
+
   const [newKeyData, setNewKeyData] = useState({
     // name: '',
     api_key: '',
@@ -42,8 +46,6 @@ const ApiKeys = ({ apiKeys, sessionData, providers }) => {
     } else {
       console.error("Failed to fetch data");
     }
-
-
     // console.log(newKeyData);
     setCurrentApiKeys([...currentapiKeys, newKeyData]);
     setIsAddingKey(false);
@@ -55,8 +57,74 @@ const ApiKeys = ({ apiKeys, sessionData, providers }) => {
       usage_limit: 100000,
       usage_count: 0
     });
-
   };
+
+  const startEditingKey = (Key) => {
+    console.log(Key);
+    seteditingKey(Key.provider_name);
+    setKeySettings({ ...Key });
+    // console.log(keySettings);
+  };
+
+  const handleCopy = (apikey) => {
+    navigator.clipboard.writeText(apikey)
+      .then(() => {
+        alert("API 키가 복사되었습니다!");
+      })
+      .catch((err) => {
+        console.error("복사 실패:", err);
+        alert("복사에 실패했습니다.");
+      });
+  };
+
+
+  const saveKeySettings = async (param) => {
+    console.log(param);
+    console.log(keySettings);
+
+
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/ChangeKey`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ key_before: param, new_key: keySettings }),
+    });
+    if (response.ok) {
+      const data = await response.json();
+      setCurrentApiKeys(prevKeys =>
+        prevKeys.map(key =>
+          key.provider_name === param.provider_name ? { ...keySettings } : key
+        )
+      );
+
+
+      seteditingKey(null);
+    } else {
+      console.error("Failed to fetch data");
+    }
+  }
+
+  const deleteKey = async (param) => {
+    console.log(param);
+    if (window.confirm('정말로 삭제하시겠습니까?')) {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/DeleteKey`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(param),
+      });
+      if (response.ok) {
+        // const data = await response.json();
+        console.log(`Provider with ID ${param.name} deleted.`);
+        setCurrentApiKeys(currentapiKeys.filter(pre => pre.provider_name !== param.provider_name));
+      } else {
+        console.error("Failed to fetch data");
+      }
+    }
+  }
+
 
   return (
     <div className="flex-1 p-6 bg-gray-50 overflow-y-auto">
@@ -78,12 +146,12 @@ const ApiKeys = ({ apiKeys, sessionData, providers }) => {
           <div className="bg-white rounded-lg border p-6 mb-6">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-medium">새 API 키 등록</h2>
-              <button
+              {/* <button
                 onClick={() => setIsAddingKey(false)}
                 className="text-gray-500 hover:text-gray-700"
               >
                 &times;
-              </button>
+              </button> */}
             </div>
 
             <div className="grid grid-cols-2 gap-4 mb-6">
@@ -175,8 +243,22 @@ const ApiKeys = ({ apiKeys, sessionData, providers }) => {
               </div>
 
               <div className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg mb-6">
-                <code className="flex-1 font-mono text-sm truncate">{apiKey.api_key}</code>
-                <button className="px-3 py-1 bg-blue-50 text-blue-600 rounded hover:bg-blue-100">
+                {editingKey === apiKey.provider_name ? (
+                  <input
+                    type="text"
+                    className="mt-1 p-1 border rounded text-sm flex-1 font-mono text-sm truncate"
+                    value={keySettings.api_key}
+                    onChange={(e) => setKeySettings({ ...keySettings, api_key: e.target.value })}
+
+                  />
+                ) : (
+                  <code className="flex-1 font-mono text-sm truncate">{apiKey.api_key}</code>
+                )}
+
+                <button
+                  className="px-3 py-1 bg-blue-50 text-blue-600 rounded hover:bg-blue-100"
+                  onClick={() => handleCopy(apiKey.api_key)}
+                >
                   복사
                 </button>
                 <button className="px-3 py-1 bg-gray-100 text-gray-600 rounded hover:bg-gray-200">
@@ -215,17 +297,40 @@ const ApiKeys = ({ apiKeys, sessionData, providers }) => {
                   </div>
                 </div>
               </div>
-
               <div className="flex justify-end gap-3 mt-6 pt-4 border-t">
-                {/* <button className="px-3 py-1.5 text-sm border rounded hover:bg-gray-50">
-                  사용량 보기
-                </button> */}
-                <button className="px-3 py-1.5 text-sm border rounded hover:bg-gray-50">
-                  수정
-                </button>
-                <button className="px-3 py-1.5 text-sm border rounded hover:bg-gray-50">
-                  삭제
-                </button>
+
+                {editingKey === apiKey.provider_name ? (
+                  <div>
+                    <button
+                      className="px-3 py-1.5 text-sm border rounded hover:bg-gray-50"
+                      onClick={() => saveKeySettings(apiKey)}
+
+                    >
+                      저장
+                    </button>
+                    <button
+                      onClick={() => seteditingKey(null)}
+                      className="px-3 py-1.5 text-sm border rounded hover:bg-gray-50"
+                    >
+                      취소
+                    </button>
+                  </div>
+                ) : (
+                  <div>
+                    <button
+                      className="px-3 py-1.5 text-sm border rounded hover:bg-gray-50"
+                      onClick={() => startEditingKey(apiKey)}
+                    >
+                      수정
+                    </button>
+                    <button
+                      className="px-3 py-1.5 text-sm border rounded hover:bg-gray-50"
+                      onClick={() => deleteKey(apiKey)}
+                    >
+                      삭제
+                    </button>
+                  </div>
+                )}
 
               </div>
             </div>

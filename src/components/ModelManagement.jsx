@@ -101,7 +101,7 @@ const ModelManagement = ({ models, providerData }) => {
     setModelSettings({ ...model });
   };
 
-  // 모델 설정 변경
+  
   const saveModelSettings = async (param) => {
     // console.log(param);
     // console.log(modelSettings);
@@ -123,10 +123,7 @@ const ModelManagement = ({ models, providerData }) => {
     } else {
       console.error("Failed to fetch data");
     }
-
   };
-
-
   const deleteModel = async (param) => {
     if (window.confirm('정말로 삭제하시겠습니까?')) {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/DeleteModel`, {
@@ -240,10 +237,6 @@ const ModelManagement = ({ models, providerData }) => {
                   프로바이더
                 </th>
 
-                {/* <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  기본값
-                </th> */}
-
                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   파라미터
                 </th>
@@ -253,11 +246,10 @@ const ModelManagement = ({ models, providerData }) => {
 
               </tr>
             </thead>
+
             <tbody className="divide-y divide-gray-200">
               {Currentmodels.map(model => (
                 <tr key={model.name}>
-
-
                   <td className="px-6 py-4 whitespace-nowrap">
                     {editingModel === model.name ? (
                       <input
@@ -287,12 +279,7 @@ const ModelManagement = ({ models, providerData }) => {
                         ))}
                       </select>
 
-                      // <input
-                      //   type="text"
-                      //   className="mt-1 p-1 border rounded text-sm"
-                      //   value={modelSettings.provider_name}
-                      //   onChange={(e) => setModelSettings({ ...modelSettings, provider_name: e.target.value })}
-                      // />
+
                     ) : (
                       <div className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800`}>
                         {model.provider_name}
