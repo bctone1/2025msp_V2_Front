@@ -15,14 +15,15 @@ import {
 
 const UserManagement = ({ users: initialUsers }) => {
   const [users, setUsers] = useState(initialUsers);
-  console.log(users);
+  // console.log(users);
   const [searchTerm, setSearchTerm] = useState('');
   const [isAddingUser, setIsAddingUser] = useState(false);
   const [newUser, setNewUser] = useState({
     name: '',
     email: '',
     role: 'user',
-    group: ''
+    group: '',
+    phone_number: '',
   });
   const [editingUserId, setEditingUserId] = useState(null);
   const [editData, setEditData] = useState({});
@@ -54,7 +55,8 @@ const UserManagement = ({ users: initialUsers }) => {
         name: '',
         email: '',
         role: 'user',
-        group: ''
+        group: '',
+        phone_number: '',
       });
     } else {
       console.error("Failed to fetch data");
@@ -68,7 +70,8 @@ const UserManagement = ({ users: initialUsers }) => {
       name: user.name,
       email: user.email,
       role: user.role,
-      group: user.group
+      group: user.group,
+      phone_number: user.phone_number
     });
   };
 
@@ -214,6 +217,18 @@ const UserManagement = ({ users: initialUsers }) => {
                   placeholder="BCTONE"
                 />
               </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-2">연락처</label>
+                <input
+                  type="text"
+                  value={newUser.phone_number}
+                  onChange={(e) => setNewUser({ ...newUser, phone_number: e.target.value })}
+                  className="w-full px-4 py-2 border rounded-lg"
+                  placeholder="01012345678"
+                />
+              </div>
+
             </div>
 
             <div className="flex justify-end gap-3">
@@ -247,6 +262,9 @@ const UserManagement = ({ users: initialUsers }) => {
                 </th>
                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   역할
+                </th>
+                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  연락처
                 </th>
                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   소속그룹
@@ -298,6 +316,23 @@ const UserManagement = ({ users: initialUsers }) => {
                         )}
                         <span className="text-sm text-gray-900">
                           {user.role === 'admin' ? '관리자' : '일반 사용자'}
+                        </span>
+                      </div>
+                    )}
+                  </td>
+
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    {editingUserId === user.email ? (
+                      <input
+                        type="text"
+                        value={editData.phone_number ?? ""}
+                        onChange={(e) => setEditData({ ...editData, phone_number: e.target.value })}
+                        className="w-full px-3 py-1 border rounded"
+                      />
+                    ) : (
+                      <div className="flex items-center">
+                        <span className="text-sm text-gray-900">
+                          {user.phone_number}
                         </span>
                       </div>
                     )}

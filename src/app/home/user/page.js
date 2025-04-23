@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState, useRef, useEffect } from 'react';
-import { useSession } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 
 import Navigation from '@/components/Navigation';
 import Dashboard from '@/components/Dashboard';
@@ -12,6 +12,8 @@ import ApiKeys from '@/components/ApiKeys';
 import Profile from '@/components/Profile';
 
 import { useSearchParams } from 'next/navigation';
+
+import { Power } from 'lucide-react';
 
 const EnhancedMetaLLMInterface = () => {
   // 핵심 상태
@@ -204,73 +206,96 @@ const EnhancedMetaLLMInterface = () => {
   };
 
   return (
-    <div className="h-screen flex">
+    <div className="flex h-screen bg-gray-100">
+
       {/* 네비게이션 메뉴 */}
       <Navigation
         navView={navView}
         changeNavigation={changeNavigation}
       />
+      <div className="flex-1 flex flex-col overflow-hidden">
 
-      {/* 메인 컨텐츠 영역 */}
-      {view === 'dashboard' && (
-        <Dashboard
-          projects={projects}
-          apiKeys={apiKeys}
-          sessionLogs={sessionLogs}
-          recentActivities={recentActivities}
-          selectProject={selectProject}
-          changeNavigation={changeNavigation}
-          providerData={providers}
-          sessionData={session}
-          models={ModelsData}
-        />
-      )}
+        {/* 헤더 */}
+        <header className="bg-white border-b px-6 py-4">
+          <div className="flex items-center justify-between">
+            <h1 className="text-xl font-semibold">
+              {view === 'dashboard' && '대시보드'}
+              {view === 'projects' && '프로젝트 관리'}
+              {view === 'apikeys' && 'API 키 관리'}
+              {view === 'profile' && '내 정보'}
+            </h1>
 
-      {view === 'projects' && (
-        <ProjectsList
-          projects={projects}
-          selectProject={selectProject}
-          setView={setView}
-        />
-      )}
+            <div className="flex items-center gap-4">
+              <span className="text-sm text-gray-500">{session?.user?.email || "정보 없음"}</span>
+              
+              <button onClick={() => signOut({ callbackUrl: "/" })}>
+                <Power className="ml-3 text-red-300" />
+              </button>
+            </div>
+          </div>
+        </header>
 
-      {view === 'new-project' && (
-        <NewProject
-          categories={categories}
-          models={ModelsData}
-          setView={setView}
-          setActiveProject={setActiveProject}
-          sessionemail={session.user.email}
-          fetchProjects={fetchProjects}
-          selectProject={selectProject}
-        />
-      )}
+        {/* 메인 컨텐츠 영역 */}
+        {view === 'dashboard' && (
+          <Dashboard
+            projects={projects}
+            apiKeys={apiKeys}
+            sessionLogs={sessionLogs}
+            recentActivities={recentActivities}
+            selectProject={selectProject}
+            changeNavigation={changeNavigation}
+            providerData={providers}
+            sessionData={session}
+            models={ModelsData}
+          />
+        )}
 
-      {view === 'project-detail' && (
-        <ProjectChat
-          activeProject={activeProject}
-          models={ModelsData}
-          sessionLogs={sessionLogs}
-          selectedModel={selectedModel}
-          setSelectedModel={setSelectedModel}
-          setView={setView}
-          conversations={conversations}
-        />
-      )}
+        {view === 'projects' && (
+          <ProjectsList
+            projects={projects}
+            selectProject={selectProject}
+            setView={setView}
+          />
+        )}
 
-      {view === 'apikeys' && (
-        <ApiKeys
-          apiKeys={apiKeys}
-          sessionData={session}
-          providers={providers}
-        />
-      )}
+        {view === 'new-project' && (
+          <NewProject
+            categories={categories}
+            models={ModelsData}
+            setView={setView}
+            setActiveProject={setActiveProject}
+            sessionemail={session.user.email}
+            fetchProjects={fetchProjects}
+            selectProject={selectProject}
+          />
+        )}
 
-      {view === 'profile' && (
-        <Profile
-          userInfo={userinfo}
-        />
-      )}
+        {view === 'project-detail' && (
+          <ProjectChat
+            activeProject={activeProject}
+            models={ModelsData}
+            sessionLogs={sessionLogs}
+            selectedModel={selectedModel}
+            setSelectedModel={setSelectedModel}
+            setView={setView}
+            conversations={conversations}
+          />
+        )}
+
+        {view === 'apikeys' && (
+          <ApiKeys
+            apiKeys={apiKeys}
+            sessionData={session}
+            providers={providers}
+          />
+        )}
+
+        {view === 'profile' && (
+          <Profile
+            userInfo={userinfo}
+          />
+        )}
+      </div>
     </div>
   );
 };

@@ -117,18 +117,31 @@ export default function LoginPage({ className }) {
                   </Button>
 
 
-
                   <Button variant="outline" className="w-full" onClick={handleGoogleLogin}>
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 533.5 544.3"
+                      className="w-5 h-5 mr-2"
+                    >
                       <path
-                        d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z"
-                        fill="currentColor"
+                        fill="#4285F4"
+                        d="M533.5 278.4c0-17.4-1.6-34-4.6-50.2H272v95h146.9c-6.3 34-25 62.8-53.6 82.2v68h86.7c50.7-46.7 81.5-115.6 81.5-194.9z"
+                      />
+                      <path
+                        fill="#34A853"
+                        d="M272 544.3c72.6 0 133.6-24.1 178.1-65.6l-86.7-68c-24.1 16.1-55 25.5-91.4 25.5-70 0-129.3-47.3-150.5-111.1H33v69.8c44.4 88.1 135.3 149.4 239 149.4z"
+                      />
+                      <path
+                        fill="#FBBC05"
+                        d="M121.5 325.1c-10.4-30.9-10.4-64.2 0-95.1V160.2H33c-39.8 78.8-39.8 171.1 0 249.9l88.5-69z"
+                      />
+                      <path
+                        fill="#EA4335"
+                        d="M272 107.1c39.5-.6 77.5 13.8 106.7 39.8l79.6-79.6C406.5 24.1 345.4 0 272 0 168.3 0 77.4 61.3 33 149.4l88.5 69C142.7 154.4 202 107.1 272 107.1z"
                       />
                     </svg>
                     Login with Google
                   </Button>
-
-
                 </div>
 
                 <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
@@ -197,7 +210,7 @@ export default function LoginPage({ className }) {
           </div>
 
           <div className="text-balance text-center text-xs text-muted-foreground [&_a]:underline [&_a]:underline-offset-4 [&_a]:hover:text-primary  ">
-            Front Ver : {process.env.NEXT_PUBLIC_META_FRONT_VER} <br />
+            Frontend Ver : {process.env.NEXT_PUBLIC_META_FRONT_VER} <br />
             Backend Ver : {process.env.NEXT_PUBLIC_META_BACKEND_VER}
 
           </div>

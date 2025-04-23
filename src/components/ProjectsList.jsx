@@ -28,14 +28,28 @@ const ProjectsList = ({
   };
 
 
+  const [selectedProjects, setSelectedProjects] = useState([]);
+
+  const handleCheckboxChange = (projectId) => {
+    setSelectedProjects((prev) =>
+      prev.includes(projectId)
+        ? prev.filter((id) => id !== projectId)
+        : [...prev, projectId]
+    );
+  };
+  const handleDeleteSelected = () => {
+    // 실제 삭제 로직은 백엔드 API 호출 등으로 처리
+    console.log("삭제할 프로젝트 ID들:", selectedProjects);
+  };
+
 
 
 
   return (
     <div className="flex-1 p-6 bg-gray-50 overflow-y-auto">
       <div className="max-w-6xl mx-auto">
-        <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-semibold">프로젝트 관리</h1>
+        <div className="flex items-center justify-end mb-6">
+          <h1 className="text-2xl font-semibold"></h1>
 
           <button
             onClick={() => setView('new-project')}
@@ -44,6 +58,16 @@ const ProjectsList = ({
             <PlusCircle size={16} />
             <span>새 프로젝트</span>
           </button>
+
+          {selectedProjects.length > 0 && (
+            <button
+              onClick={handleDeleteSelected}
+              className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 ml-3"
+            >
+              선택 항목 삭제
+            </button>
+          )}
+
         </div>
 
         {/* 검색 및 필터 */}
@@ -78,33 +102,41 @@ const ProjectsList = ({
         {/* 프로젝트 목록 */}
         <div className="grid grid-cols-2 gap-6">
           {currentProjects.map(project => (
-            <div
-              key={project.project_id}
-              onClick={() => selectProject(project.project_id)}
-              className="bg-white rounded-lg border p-4 hover:border-blue-300 hover:shadow-sm cursor-pointer"
-            >
-              <div className="flex justify-between items-start">
-                <div>
-                  <h3 className="font-medium text-lg">{project.project_name}</h3>
-                  {project.description && (
-                    <p className="text-sm text-gray-600 mt-1">{project.description}</p>
-                  )}
-                </div>
-              </div>
+            <div key={project.project_id} className="relative bg-white rounded-lg border p-4">
+              <input
+                type="checkbox"
+                className="absolute top-2 right-2"
+                checked={selectedProjects.includes(project.project_id)}
+                onChange={() => handleCheckboxChange(project.project_id)}
+              />
 
-              <div className="flex items-center mt-3 text-xs text-gray-500 space-x-3 p-2 border rounded-lg shadow-sm bg-white">
-                <div className="flex items-center space-x-1">
-                  <span className="font-semibold text-gray-600">모델 :</span>
-                  <Bot size={14} className="mr-2 text-blue-500" />
-                  <span className="font-medium">{project.ai_model}</span>
+              <div
+                onClick={() => selectProject(project.project_id)}
+                className="bg-white rounded-lg border p-4 hover:border-blue-300 hover:shadow-sm cursor-pointer"
+              >
+                <div className="flex justify-between items-start">
+                  <div>
+                    <h3 className="font-medium text-lg">{project.project_name}</h3>
+                    <p className="text-sm text-gray-600 mt-1">
+                      {project.description ? project.description : "Description"}
+                    </p>
+                  </div>
                 </div>
 
-                <div className="flex items-center space-x-1">
-                  <span className="font-semibold text-gray-600">카테고리 :</span>
-                  <span className="text-gray-700">{project.category}</span>
+                <div className="flex items-center mt-3 text-xs text-gray-500 space-x-3 p-2 border rounded-lg shadow-sm bg-white">
+                  <div className="flex items-center space-x-1">
+                    <span className="font-semibold text-gray-600">모델 :</span>
+                    <Bot size={14} className="mr-2 text-blue-500" />
+                    <span className="font-medium">{project.ai_model}</span>
+                  </div>
+                  <div className="flex items-center space-x-1">
+                    <span className="font-semibold text-gray-600">카테고리 :</span>
+                    <span className="text-gray-700">{project.category}</span>
+                  </div>
                 </div>
               </div>
             </div>
+
           ))}
         </div>
 
@@ -113,6 +145,8 @@ const ProjectsList = ({
             생성된 프로젝트가 없습니다. 새 프로젝트를 시작해보세요.
           </div>
         )}
+
+
 
         {/* 페이지네이션 */}
         <div className="mt-6 flex justify-center items-center space-x-2">

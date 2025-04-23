@@ -130,7 +130,7 @@ const ApiKeys = ({ apiKeys, sessionData, providers }) => {
     <div className="flex-1 p-6 bg-gray-50 overflow-y-auto">
       <div className="max-w-6xl mx-auto">
         <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-semibold">API 키 관리</h1>
+          <h1 className="text-2xl font-semibold"></h1>
 
           <button
             onClick={() => setIsAddingKey(true)}

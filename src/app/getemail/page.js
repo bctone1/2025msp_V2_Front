@@ -81,19 +81,19 @@ export default function GetEmailwordPage({ className }) {
             });
             const data = response.data;
             if (response.status === 200) {
-                if(data.message=="성공"){
+                if (data.message == "성공") {
                     setPhoneVerified(true);
                     // alert(data.message);
                     setCurrentEmail(data.email);
-                }else{
+                } else {
                     alert(data.email);
                 }
-                
+
             } else {
                 alert("가입되지 않은 번호입니다.");
             }
 
-            
+
         } catch (error) {
             console.error('Error sending email:', error);
             alert('An error occurred while sending the verification email.');
@@ -146,7 +146,17 @@ export default function GetEmailwordPage({ className }) {
                                 >
                                     Sign up
                                 </a>
-                                
+
+                                <p>or</p>
+
+                                Already have an account?{" "}
+                                <a
+                                    className="underline underline-offset-4 cursor-pointer"
+                                    onClick={() => window.location = "/"}
+                                >
+                                    Login
+                                </a>
+
                             </div>
                         </div>
 

@@ -35,7 +35,7 @@ const AdminInterface = () => {
       });
       const data = await response.json();
       if (response.ok) {
-        console.log(data.providers);
+        // console.log(data.providers);
         setproviderData(data.providers);
       } else {
         alert("공급자 오류발생");
@@ -68,7 +68,7 @@ const AdminInterface = () => {
       });
       const data = await response.json();
       if (response.ok) {
-        // console.log(data);
+        console.log(data);
         setuserData(data.members);
       } else {
         alert("맴버 오류발생");
@@ -86,7 +86,7 @@ const AdminInterface = () => {
       const data = await response.json();
       if (response.ok) {
         setProjects(data);
-        console.log(data);
+        // console.log(data);
       } else {
         alert("프로젝트 오류발생");
       }
@@ -162,6 +162,8 @@ const AdminInterface = () => {
 
       {/* 메인 콘텐츠 영역 */}
       <div className="flex-1 flex flex-col overflow-hidden">
+
+        
         {/* 헤더 */}
         <header className="bg-white border-b px-6 py-4">
           <div className="flex items-center justify-between">

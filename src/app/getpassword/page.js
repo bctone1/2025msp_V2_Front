@@ -186,6 +186,16 @@ export default function GetpasswordPage({ className }) {
                         >
                             Sign up
                         </a>
+
+                        <p>or</p>
+
+                        Already have an account?{" "}
+                        <a
+                            className="underline underline-offset-4 cursor-pointer"
+                            onClick={() => window.location = "/"}
+                        >
+                            Login
+                        </a>
                     </div>
                 </Card>
 

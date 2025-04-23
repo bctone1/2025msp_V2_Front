@@ -27,7 +27,7 @@ const Dashboard = ({
   return (
     <div className="flex-1 p-6 bg-gray-50 overflow-y-auto">
       <div className="max-w-6xl mx-auto">
-        <h1 className="text-2xl font-semibold mb-6">대시보드</h1>
+        <h1 className="text-2xl font-semibold mb-6"></h1>
 
         {/* 요약 정보 */}
         <div className="grid grid-cols-2 gap-6 mb-6">
