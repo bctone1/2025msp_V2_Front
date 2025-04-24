@@ -102,17 +102,12 @@ const ProjectsList = ({
         {/* 프로젝트 목록 */}
         <div className="grid grid-cols-2 gap-6">
           {currentProjects.map(project => (
-            <div key={project.project_id} className="relative bg-white rounded-lg border p-4">
-              <input
-                type="checkbox"
-                className="absolute top-2 right-2"
-                checked={selectedProjects.includes(project.project_id)}
-                onChange={() => handleCheckboxChange(project.project_id)}
-              />
+            <div key={project.project_id} className="bg-white rounded-lg border p-4 flex justify-between">
+
 
               <div
                 onClick={() => selectProject(project.project_id)}
-                className="bg-white rounded-lg border p-4 hover:border-blue-300 hover:shadow-sm cursor-pointer"
+                className="bg-white rounded-lg border p-4 hover:border-blue-300 hover:shadow-sm cursor-pointer w-[90%]"
               >
                 <div className="flex justify-between items-start">
                   <div>
@@ -135,6 +130,16 @@ const ProjectsList = ({
                   </div>
                 </div>
               </div>
+
+              <div
+                onClick={() => handleCheckboxChange(project.project_id)}
+                className={`w-[7%] h-[100%] border-2 rounded cursor-pointer flex items-center justify-center transition-colors 
+                ${selectedProjects.includes(project.project_id) ? "bg-blue-100 border-blue-400" : "bg-white border-gray-300"}`}
+              >
+                {/* 내부 내용 */}
+              </div>
+
+
             </div>
 
           ))}

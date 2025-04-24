@@ -72,6 +72,8 @@ export default function LoginPage({ className }) {
 
 
 
+
+
   return (
     <div className="flex min-h-svh flex-col items-center justify-center gap-6 bg-muted p-6 md:p-10">
       <div className="flex w-full max-w-sm flex-col gap-6">
@@ -148,6 +150,7 @@ export default function LoginPage({ className }) {
                   <span className="relative z-10 bg-white px-2 text-muted-foreground">Or continue with</span>
                 </div>
 
+
                 <div className="grid gap-6">
                   <div className="grid gap-2">
                     <div className="flex items-center">
@@ -165,6 +168,11 @@ export default function LoginPage({ className }) {
                       placeholder="m@example.com"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          handleLogin();
+                        }
+                      }}
                     />
                   </div>
                   <div className="grid gap-2">
@@ -182,7 +190,11 @@ export default function LoginPage({ className }) {
                       placeholder="Enter your password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          handleLogin();
+                        }
+                      }}
                     />
 
                   </div>
@@ -190,6 +202,11 @@ export default function LoginPage({ className }) {
                     Login
                   </Button>
                 </div>
+
+
+
+
+
                 <div className="text-center text-sm">
                   Don&apos;t have an account?{" "}
                   <a

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Eye, EyeOff } from "lucide-react";
 
 const Profile = ({ userInfo }) => {
-  // console.log(userInfo);
+  // console.log(userInfo.role);
 
 
   const [show, setShow] = useState({
@@ -130,80 +130,84 @@ const Profile = ({ userInfo }) => {
 
 
         {/* 비밀번호 변경 */}
-        <div className="bg-white rounded-lg border p-6 mb-6">
-          <h2 className="text-lg font-medium mb-4">비밀번호 변경</h2>
+        {userInfo.role !== "googleUser" && (
 
-          <div className="space-y-4">
-            {/* 현재 비밀번호 */}
-            <div>
-              <label className="block text-sm font-medium mb-2">현재 비밀번호</label>
-              <div className="relative">
-                <input
-                  type={show.current ? "text" : "password"}
-                  className="w-full px-4 py-2 border rounded-lg pr-10"
-                  onChange={(e) => setNewPasswordData({ ...newPasswordData, password: e.target.value })}
-                />
-                <button
-                  type="button"
-                  onClick={() => toggleVisibility("current")}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
-                >
-                  {show.current ? <EyeOff size={18} /> : <Eye size={18} />}
-                </button>
+          <div className="bg-white rounded-lg border p-6 mb-6">
+            <h2 className="text-lg font-medium mb-4">비밀번호 변경</h2>
+
+            <div className="space-y-4">
+              {/* 현재 비밀번호 */}
+              <div>
+                <label className="block text-sm font-medium mb-2">현재 비밀번호</label>
+                <div className="relative">
+                  <input
+                    type={show.current ? "text" : "password"}
+                    className="w-full px-4 py-2 border rounded-lg pr-10"
+                    onChange={(e) => setNewPasswordData({ ...newPasswordData, password: e.target.value })}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => toggleVisibility("current")}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
+                  >
+                    {show.current ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </div>
+              </div>
+
+              {/* 새 비밀번호 */}
+              <div>
+                <label className="block text-sm font-medium mb-2">새 비밀번호</label>
+                <div className="relative">
+                  <input
+                    type={show.new ? "text" : "password"}
+                    className="w-full px-4 py-2 border rounded-lg pr-10"
+                    onChange={(e) => setNewPasswordData({ ...newPasswordData, newpassword: e.target.value })}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => toggleVisibility("new")}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
+                  >
+                    {show.new ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </div>
+                <p className="text-xs text-gray-500 mt-1">
+                  8자 이상, 영문, 숫자, 특수문자를 포함해야 합니다.
+                </p>
+              </div>
+
+              {/* 새 비밀번호 확인 */}
+              <div>
+                <label className="block text-sm font-medium mb-2">새 비밀번호 확인</label>
+                <div className="relative">
+                  <input
+                    type={show.confirm ? "text" : "password"}
+                    className="w-full px-4 py-2 border rounded-lg pr-10"
+                    onChange={(e) => setNewPasswordData({ ...newPasswordData, confirmPassword: e.target.value })}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => toggleVisibility("confirm")}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
+                  >
+                    {show.confirm ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </div>
               </div>
             </div>
 
-            {/* 새 비밀번호 */}
-            <div>
-              <label className="block text-sm font-medium mb-2">새 비밀번호</label>
-              <div className="relative">
-                <input
-                  type={show.new ? "text" : "password"}
-                  className="w-full px-4 py-2 border rounded-lg pr-10"
-                  onChange={(e) => setNewPasswordData({ ...newPasswordData, newpassword: e.target.value })}
-                />
-                <button
-                  type="button"
-                  onClick={() => toggleVisibility("new")}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
-                >
-                  {show.new ? <EyeOff size={18} /> : <Eye size={18} />}
-                </button>
-              </div>
-              <p className="text-xs text-gray-500 mt-1">
-                8자 이상, 영문, 숫자, 특수문자를 포함해야 합니다.
-              </p>
-            </div>
-
-            {/* 새 비밀번호 확인 */}
-            <div>
-              <label className="block text-sm font-medium mb-2">새 비밀번호 확인</label>
-              <div className="relative">
-                <input
-                  type={show.confirm ? "text" : "password"}
-                  className="w-full px-4 py-2 border rounded-lg pr-10"
-                  onChange={(e) => setNewPasswordData({ ...newPasswordData, confirmPassword: e.target.value })}
-                />
-                <button
-                  type="button"
-                  onClick={() => toggleVisibility("confirm")}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
-                >
-                  {show.confirm ? <EyeOff size={18} /> : <Eye size={18} />}
-                </button>
-              </div>
+            <div className="flex justify-end mt-6">
+              <button
+                className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                onClick={() => handleSavePassword()}
+              >
+                비밀번호 변경
+              </button>
             </div>
           </div>
 
-          <div className="flex justify-end mt-6">
-            <button
-              className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
-              onClick={() => handleSavePassword()}
-            >
-              비밀번호 변경
-            </button>
-          </div>
-        </div>
+        )}
 
         {/* 알림 설정 */}
         <div className="bg-white rounded-lg border p-6">
