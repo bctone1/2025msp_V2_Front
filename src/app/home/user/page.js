@@ -190,8 +190,8 @@ const EnhancedMetaLLMInterface = () => {
 
   // 프로젝트 선택
   const selectProject = (projectId) => {
-    // console.log(projects);
-    // console.log(projectId);
+    console.log(projects);
+    console.log(projectId);
     const project = projects.find(p => p.project_id === projectId);
     // console.log(project);
     setActiveProject(project);
@@ -253,6 +253,7 @@ const EnhancedMetaLLMInterface = () => {
         {view === 'projects' && (
           <ProjectsList
             projects={projects}
+            setProjects={setProjects}
             selectProject={selectProject}
             setView={setView}
           />
@@ -265,7 +266,7 @@ const EnhancedMetaLLMInterface = () => {
             setView={setView}
             setActiveProject={setActiveProject}
             sessionemail={session.user.email}
-            fetchProjects={fetchProjects}
+            setProjects={setProjects}
             selectProject={selectProject}
           />
         )}

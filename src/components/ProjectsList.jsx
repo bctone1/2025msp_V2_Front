@@ -5,9 +5,13 @@ import { PlusCircle, Search, Bot, Clock } from 'lucide-react';
 
 const ProjectsList = ({
   projects,
+  setProjects,
   selectProject,
   setView
 }) => {
+
+
+
 
   const [searchTerm, setSearchTerm] = useState(""); // 검색어
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
@@ -20,7 +24,7 @@ const ProjectsList = ({
 
   const indexOfLastProject = currentPage * projectsPerPage;
   const indexOfFirstProject = indexOfLastProject - projectsPerPage;
-  const currentProjects = filteredProjects.slice(indexOfFirstProject, indexOfLastProject);
+  // const currentProjects = filteredProjects.slice(indexOfFirstProject, indexOfLastProject);
   const totalPages = Math.ceil(filteredProjects.length / projectsPerPage);
 
   const handlePageChange = (page) => {
@@ -37,10 +41,46 @@ const ProjectsList = ({
         : [...prev, projectId]
     );
   };
-  const handleDeleteSelected = () => {
-    // 실제 삭제 로직은 백엔드 API 호출 등으로 처리
-    console.log("삭제할 프로젝트 ID들:", selectedProjects);
+  const handleDeleteSelected = async () => {
+    if (window.confirm('정말로 삭제하시겠습니까?')) {
+      console.log(projects);
+      console.log("삭제할 프로젝트 ID들:", selectedProjects);
+
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/DeleteProject`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ project_ids: selectedProjects }),
+      });
+      if (response.ok) {
+        setProjects(projects.filter(pre => !selectedProjects.includes(pre.project_id)));
+      } else {
+        console.error("Failed to fetch data");
+      }
+    }
   };
+
+
+  const [sortBy, setSortBy] = useState("recent"); // 기본 정렬: 최근 생성
+
+  const sortedProjects = [...filteredProjects].sort((a, b) => {
+    if (sortBy === "recent") {
+      return b.project_id - a.project_id; // id 큰 순 → 최근 생성
+    } else if (sortBy === "oldest") {
+      return a.project_id - b.project_id; // id 작은 순 → 오래된 생성
+    } else if (sortBy === "model") {
+      return a.ai_model.localeCompare(b.ai_model); // 모델 이름순
+    } else if (sortBy === "category") {
+      return a.category.localeCompare(b.category); // 카테고리 이름순
+    }
+    return 0;
+  });
+
+
+
+  const currentProjects = sortedProjects.slice(indexOfFirstProject, indexOfLastProject);
+
 
 
 
@@ -70,34 +110,31 @@ const ProjectsList = ({
 
         </div>
 
-        {/* 검색 및 필터 */}
-        <div className="bg-white rounded-lg border p-4 mb-6">
-          <div className="flex gap-4">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-              <input
-                type="text"
-                placeholder="프로젝트 검색..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 pr-4 py-2 border rounded-lg w-full"
-              />
-            </div>
-
-            {/* <select className="px-4 py-2 border rounded-lg">
-              <option value="all">모든 카테고리</option>
-              {categories.map(category => (
-                <option key={category.id} value={category.id}>{category.name}</option>
-              ))}
-            </select>
-
-            <select className="px-4 py-2 border rounded-lg">
-              <option value="all">모든 상태</option>
-              <option value="active">진행중</option>
-              <option value="completed">완료</option>
-            </select> */}
+        <div className="flex gap-4 mb-5">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <input
+              type="text"
+              placeholder="프로젝트 검색..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-10 pr-4 py-2 border rounded-lg w-full"
+            />
           </div>
+
+          <select
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value)}
+            className="px-4 py-2 border rounded-lg"
+          >
+            <option value="recent">최근순</option>
+            <option value="oldest">오래된순</option>
+            <option value="model">모델</option>
+            <option value="category">카테고리</option>
+          </select>
+
         </div>
+
 
         {/* 프로젝트 목록 */}
         <div className="grid grid-cols-2 gap-6">

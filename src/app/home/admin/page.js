@@ -13,17 +13,13 @@ import UserManagement from '@/components/UserManagement';
 import SystemSettings from '@/components/SystemSettings';
 import UsageAnalytics from '@/components/UsageAnalytics';
 
-
-
 const AdminInterface = () => {
-  // 메인 상태
   const [currentView, setCurrentView] = useState('dashboard');
   const { data: session } = useSession();
   const [providerData, setproviderData] = useState([]);
   const [ModelsData, setModelsData] = useState([]);
   const [userData, setuserData] = useState([]);
   const [projects, setProjects] = useState([]);
-
 
   useEffect(() => {
     const fetchProvider = async () => {
@@ -41,7 +37,6 @@ const AdminInterface = () => {
         alert("공급자 오류발생");
       }
     };
-
 
     const fetchModels = async () => {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/modelsList`, {
@@ -136,7 +131,7 @@ const AdminInterface = () => {
   const renderCurrentView = () => {
     switch (currentView) {
       case 'dashboard':
-        return <AdminDashboard usageData={usageData} providerData={providerData} userData={userData} projects={projects}/>;
+        return <AdminDashboard usageData={usageData} providerData={providerData} userData={userData} projects={projects} />;
       case 'providers':
         return <ProviderManagement providers={providerData} />;
       case 'models':
@@ -163,7 +158,7 @@ const AdminInterface = () => {
       {/* 메인 콘텐츠 영역 */}
       <div className="flex-1 flex flex-col overflow-hidden">
 
-        
+
         {/* 헤더 */}
         <header className="bg-white border-b px-6 py-4">
           <div className="flex items-center justify-between">
@@ -182,8 +177,8 @@ const AdminInterface = () => {
                 A
               </div>
               <button onClick={() => signOut({ callbackUrl: "/" })}>
-            <Power className="ml-3 text-red-300" />
-          </button>
+                <Power className="ml-3 text-red-300" />
+              </button>
             </div>
           </div>
         </header>

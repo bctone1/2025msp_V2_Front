@@ -3,8 +3,7 @@ import {
   Bot, User, Send, FileText,
   Upload, Settings, Cloud,
   Folder, Github, History,
-  ChevronDown, Database, Trash2,
-  Trash
+  ChevronDown, Database, Trash2, File
 } from 'lucide-react';
 
 const ProjectChat = ({
@@ -133,18 +132,18 @@ const ProjectChat = ({
     const data = await response.json();
     if (response.ok) {
       console.log(data);
-      setTimeout(() => {
-        const aiResponse = {
-          id: messages.length + 2,
-          role: 'assistant',
-          content: data,
-          model: selectedModel
-        };
+      // setTimeout(() => {
+      const aiResponse = {
+        id: messages.length + 2,
+        role: 'assistant',
+        content: data,
+        model: selectedModel
+      };
 
-        setMessages(prev => [...prev, aiResponse]);
-        setIsLoading(false);
-        // messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-      }, 1000);
+      setMessages(prev => [...prev, aiResponse]);
+      setIsLoading(false);
+      // messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+      // }, 1000);
     } else {
       alert("오류발생1");
     }
@@ -176,7 +175,6 @@ const ProjectChat = ({
   }
 
   const newChat = async () => {
-
     const now = new Date();
     const currentTime = "msp_id" +
       now.getFullYear().toString() +
@@ -232,7 +230,7 @@ const ProjectChat = ({
   const handleFileUpload = () => {
     if (fileSource === 'local') {
       fileInputRef.current?.click();
-
+      setShowOptions(false); // 옵션 목록 표시
     } else {
       // 외부 스토리지 연동 시뮬레이션
       alert(`${fileSource} 연동을 시작합니다.`);
@@ -363,7 +361,7 @@ const ProjectChat = ({
     const data = await response.json();
     if (response.ok) {
       // console.log(data);
-      setcurrentSessionLogs(currentSessionLogs.filter(pre=>pre.id !==session_id))
+      setcurrentSessionLogs(currentSessionLogs.filter(pre => pre.id !== session_id))
       // setFiles(files.filter(pre => pre.name !== file.name));
 
     } else {
@@ -372,10 +370,21 @@ const ProjectChat = ({
 
   }
 
+  const [showOptions, setShowOptions] = useState(false);
+
+  const handleShowUpload = () => {
+    if (showOptions) {
+      setShowOptions(false);
+    } else {
+      setShowOptions(true);
+    }
+
+  };
+
 
 
   return (
-    <div className="flex-1 flex">
+    <div className="flex-1 flex overflow-x-auto">
       {/* 왼쪽: 지식 베이스 및 대화 이력 패널 */}
       <div className="w-64 bg-white border-r flex flex-col">
         {/* 프로젝트 정보 */}
@@ -406,8 +415,6 @@ const ProjectChat = ({
                 title="로컬 파일"
               >
                 <FileText size={14} />
-
-
               </button>
               {/* <button
                 onClick={() => setFileSource('drive')}
@@ -441,7 +448,7 @@ const ProjectChat = ({
                   className="flex items-center p-1.5 text-xs "
                 >
                   {getFileSourceIcon(file.source)}
-                  <span className="ml-1.5 truncate">{file.name}</span>
+                  <span className="ml-1.5 truncate">{file.name.split("\\").pop()}</span> {/* 파일명만 표시 */}
                   <Trash2 size={14} className="ml-5 text-red-500 float-right cursor-pointer" onClick={() => handleDeleteFile(file)} />
                 </div>
               ))}
@@ -612,20 +619,47 @@ const ProjectChat = ({
 
         {/* 입력 영역 */}
         <div className="p-3 bg-white border-t">
-          <div className="max-w-3xl mx-auto flex items-center gap-2">
+          <div className="max-w-3xl mx-auto flex items-center gap-2 relative">
             <button
-              onClick={handleFileUpload}
+              // onClick={handleFileUpload}
+              onClick={handleShowUpload}
               className="p-2 text-gray-500 hover:bg-gray-100 rounded-lg"
             >
               <Upload size={18} />
-              <input
-                type="file"
-                ref={fileInputRef}
-                className="hidden"
-                multiple
-                onChange={handleFileSelect}
-              />
             </button>
+
+            {showOptions && (
+              <div className="absolute bottom-full mb-2 bg-white border rounded-lg shadow-lg mt-2 p-3 w-60">
+                <div
+                  onClick={handleFileUpload}
+                  className="p-2 cursor-pointer hover:bg-gray-200 flex items-center gap-2"
+                >
+                  <File size={16} />
+                  <span>내 컴퓨터에서 추가</span>
+                </div>
+                <div
+                  className="p-2 cursor-pointer hover:bg-gray-200 flex items-center gap-2"
+                >
+                  <Cloud size={16} />
+                  <span>Google Drive에서 추가</span>
+                </div>
+                <div
+                  className="p-2 cursor-pointer hover:bg-gray-200 flex items-center gap-2"
+                >
+                  <Github size={16} />
+                  <span>GitHub에서 추가</span>
+                </div>
+              </div>
+            )}
+
+            <input
+              type="file"
+              ref={fileInputRef}
+              className="hidden"
+              multiple
+              onChange={handleFileSelect}
+            />
+
 
             <textarea
               ref={textareaRef}

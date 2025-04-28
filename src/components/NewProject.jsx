@@ -6,7 +6,7 @@ const NewProject = ({
   setView,
   setActiveProject,
   sessionemail,
-  fetchProjects,
+  setProjects,
   selectProject
 }) => {
   const [projectName, setProjectName] = useState('');
@@ -42,9 +42,13 @@ const NewProject = ({
     const data = await response.json();
     if (response.ok) {
       alert("생성되었습니다.");
-      window.location.href="/home/user";
-      // fetchProjects(sessionemail);
-      // selectProject(data.project_id);
+      console.log(data);
+      // window.location.href="/home/user";
+      setProjects(prevProjects => [...prevProjects, data]);
+      setActiveProject(data); // <- 바로 data
+      setSelectedModel(data.ai_model); // <- 바로 data
+      setView('project-detail');
+
     } else {
       alert("프로젝트 생성 실패");
       console.error("프로젝트 생성 실패:", response.statusText);

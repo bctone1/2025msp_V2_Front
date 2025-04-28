@@ -42,21 +42,22 @@ const ApiKeys = ({ apiKeys, sessionData, providers }) => {
     if (response.ok) {
       const data = await response.json();
       console.log(data);
-
+      setCurrentApiKeys([...currentapiKeys, newKeyData]);
+      setIsAddingKey(false);
+      setNewKeyData({
+        // name: '',
+        api_key: '',
+        provider_id: 4,
+        provider_name: 'OpenAI',
+        usage_limit: 100000,
+        usage_count: 0
+      });
     } else {
       console.error("Failed to fetch data");
+      alert("key를 확인해주세요.");
     }
     // console.log(newKeyData);
-    setCurrentApiKeys([...currentapiKeys, newKeyData]);
-    setIsAddingKey(false);
-    setNewKeyData({
-      // name: '',
-      api_key: '',
-      provider_id: 4,
-      provider_name: 'OpenAI',
-      usage_limit: 100000,
-      usage_count: 0
-    });
+
   };
 
   const startEditingKey = (Key) => {
@@ -83,7 +84,7 @@ const ApiKeys = ({ apiKeys, sessionData, providers }) => {
     console.log(keySettings);
 
 
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/ChangeKey`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/ChangeAPIKey`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -108,7 +109,7 @@ const ApiKeys = ({ apiKeys, sessionData, providers }) => {
   const deleteKey = async (param) => {
     console.log(param);
     if (window.confirm('정말로 삭제하시겠습니까?')) {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/DeleteKey`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/DeleteAPIKey`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
