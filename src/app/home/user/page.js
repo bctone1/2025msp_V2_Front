@@ -77,7 +77,7 @@ const EnhancedMetaLLMInterface = () => {
     const data = await response.json();
     if (response.ok) {
       setSessionLogs(data);
-      // console.log(data);
+      console.log(data);
     } else {
       console.log("대화세션 오류발생");
     }
@@ -280,6 +280,7 @@ const EnhancedMetaLLMInterface = () => {
             setSelectedModel={setSelectedModel}
             setView={setView}
             conversations={conversations}
+            setSessionLogs={setSessionLogs}
           />
         )}
 
@@ -288,6 +289,7 @@ const EnhancedMetaLLMInterface = () => {
             apiKeys={apiKeys}
             sessionData={session}
             providers={providers}
+            setApiKeys={setApiKeys}
           />
         )}
 

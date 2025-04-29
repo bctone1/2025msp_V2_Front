@@ -13,13 +13,14 @@ const ProjectChat = ({
   selectedModel,
   setSelectedModel,
   setView,
-  conversations
+  conversations,
+  setSessionLogs
 }) => {
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [showModelSelector, setShowModelSelector] = useState(false);
-  const [fileSource, setFileSource] = useState('local'); // 'local', 'drive', 'github', 'dropbox'
+  const [fileSource, setFileSource] = useState('local');
   const [files, setFiles] = useState([]);
 
   const [currentSessionLogs, setcurrentSessionLogs] = useState(sessionLogs);
@@ -217,6 +218,7 @@ const ProjectChat = ({
     if (response.ok) {
       // console.log(data);
       setcurrentSessionLogs([newSessionLogs, ...currentSessionLogs]);
+      setSessionLogs(pre => [...pre, newSessionLogs])
     } else {
       alert("오류발생2");
     }

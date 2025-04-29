@@ -1,11 +1,8 @@
 import React, { useState } from 'react';
 import { PlusCircle, RefreshCw, CheckCircle, XCircle } from 'lucide-react';
 
-const ApiKeys = ({ apiKeys, sessionData, providers }) => {
-  // console.log(providers);
+const ApiKeys = ({ apiKeys, sessionData, providers, setApiKeys }) => {
   const [currentapiKeys, setCurrentApiKeys] = useState(apiKeys);
-  // const filterApiKey = apiKeys.filter(apiKey => apiKey.user_id === sessionData.user.id);
-  // console.log(currentapiKeys);
 
   const [isAddingKey, setIsAddingKey] = useState(false);
   const [editingKey, seteditingKey] = useState(null);
@@ -15,8 +12,8 @@ const ApiKeys = ({ apiKeys, sessionData, providers }) => {
   const [newKeyData, setNewKeyData] = useState({
     // name: '',
     api_key: '',
-    provider_id: 4,
-    provider_name: 'OpenAI',
+    provider_id: 0,
+    provider_name: '',
     usage_limit: 100000,
     usage_count: 0
   });
@@ -42,13 +39,16 @@ const ApiKeys = ({ apiKeys, sessionData, providers }) => {
     if (response.ok) {
       const data = await response.json();
       console.log(data);
-      setCurrentApiKeys([...currentapiKeys, newKeyData]);
+      setCurrentApiKeys([...currentapiKeys, data]);
+
+      setApiKeys(pre => [...pre, data])
+
       setIsAddingKey(false);
       setNewKeyData({
         // name: '',
         api_key: '',
-        provider_id: 4,
-        provider_name: 'OpenAI',
+        provider_id: 0,
+        provider_name: '',
         usage_limit: 100000,
         usage_count: 0
       });
