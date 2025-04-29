@@ -3,7 +3,7 @@ import {
   Bot, User, Send, FileText,
   Upload, Settings, Cloud,
   Folder, Github, History,
-  ChevronDown, Database, Trash2, File
+  ChevronDown, Database, Trash2, File, MailPlus, ChevronRight, ChevronLeft
 } from 'lucide-react';
 
 const ProjectChat = ({
@@ -383,42 +383,86 @@ const ProjectChat = ({
 
   };
 
+  const [collapsed, setCollapsed] = useState(false);
+
 
 
   return (
     <div className="flex-1 flex overflow-x-auto">
-      {/* 왼쪽: 지식 베이스 및 대화 이력 패널 */}
-      <div className="w-64 bg-white border-r flex flex-col">
-        {/* 프로젝트 정보 */}
-        <div className="p-3 border-b">
-          <div className="flex items-center justify-between">
-            <div className="font-medium truncate">{activeProject.project_name}</div>
-            <button
-              onClick={() => setView('projects')}
-              className="p-1 hover:bg-gray-100 rounded"
-              title="프로젝트 목록"
-            >
-              <Folder size={16} className="text-gray-500" />
-            </button>
-          </div>
-          {activeProject.description && (
-            <p className="text-xs text-gray-500 mt-1 truncate">{activeProject.description}</p>
-          )}
-        </div>
 
-        {/* 지식 베이스 */}
-        <div className="p-3 border-b">
-          <div className="flex items-center justify-between mb-2">
-            <h3 className="text-sm font-medium">지식 베이스</h3>
-            <div className="flex">
-              <button
-                onClick={() => setFileSource('local')}
-                className={`p-1 rounded ${fileSource === 'local' ? 'bg-blue-100 text-blue-700' : 'hover:bg-gray-100'}`}
-                title="로컬 파일"
-              >
-                <FileText size={14} />
-              </button>
-              {/* <button
+
+
+
+
+
+      {/* 왼쪽: 지식 베이스 및 대화 이력 패널 축소*/}
+      {collapsed ? (
+        <div className="w-10 bg-white border-r flex flex-col pt-3">
+          <button
+            onClick={() => setCollapsed(false)}
+            className="w-full flex items-center justify-center gap-1 py-1.5 px-3 text-sm rounded-lg hover:bg-gray-50 mb-2"
+          >
+            <ChevronRight size={16} className="text-gray-500" />
+          </button>
+
+          <button
+            onClick={handleFileUpload}
+            className="w-full flex items-center justify-center gap-1 py-1.5 px-3 text-sm border border-dashed rounded-lg hover:bg-gray-50 mb-2"
+          >
+            <Upload size={14} />
+          </button>
+
+          <button
+            onClick={() => newChat()}
+            className="w-full flex items-center justify-center gap-1 py-1.5 px-3 text-sm border border-dashed rounded-lg hover:bg-gray-50 mb-2"
+          >
+            <MailPlus size={14} />
+          </button>
+
+        </div>
+      ) : (
+        < div className="w-64 bg-white border-r flex flex-col ">
+          {/* 프로젝트 정보 */}
+          <div className="p-3 border-b">
+            <div className="flex items-center justify-between">
+              <div className="font-medium truncate">{activeProject.project_name}</div>
+
+              <div>
+                <button
+                  onClick={() => setView('projects')}
+                  className="p-1 hover:bg-gray-100 rounded"
+                  title="프로젝트 목록"
+                >
+                  <Folder size={16} className="text-gray-500" />
+                </button>
+
+                <button
+                  onClick={() => setCollapsed(true)}
+                  className="p-1 hover:bg-gray-100 rounded"
+                >
+                  <ChevronLeft size={16} className="text-gray-500" />
+                </button>
+              </div>
+
+            </div>
+            {activeProject.description && (
+              <p className="text-xs text-gray-500 mt-1 truncate">{activeProject.description}</p>
+            )}
+          </div>
+
+          {/* 지식 베이스 */}
+          <div className="p-3 border-b">
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="text-sm font-medium">지식 베이스</h3>
+              <div className="flex">
+                <button
+                  onClick={() => setFileSource('local')}
+                  className={`p-1 rounded ${fileSource === 'local' ? 'bg-blue-100 text-blue-700' : 'hover:bg-gray-100'}`}
+                  title="로컬 파일"
+                >
+                  <FileText size={14} />
+                </button>
+                {/* <button
                 onClick={() => setFileSource('drive')}
                 className={`p-1 rounded ${fileSource === 'drive' ? 'bg-blue-100 text-blue-700' : 'hover:bg-gray-100'}`}
                 title="Google Drive"
@@ -432,117 +476,150 @@ const ProjectChat = ({
               >
                 <Github size={14} />
               </button> */}
-            </div>
-          </div>
-          <button
-            onClick={handleFileUpload}
-            className="w-full flex items-center justify-center gap-1 py-1.5 px-3 text-sm border border-dashed rounded-lg hover:bg-gray-50 mb-2"
-          >
-            <Upload size={14} />
-            <span>{fileSource === 'local' ? '파일 업로드' : `${fileSource} 연동`}</span>
-
-          </button>
-          {files.length > 0 ? (
-            <div className="space-y-1 max-h-40 overflow-y-auto">
-              {files.map((file, idx) => (
-                <div
-                  key={idx}
-                  className="flex items-center p-1.5 text-xs "
-                >
-                  {getFileSourceIcon(file.source)}
-                  <span className="ml-1.5 truncate">{file.name.split("\\").pop()}</span> {/* 파일명만 표시 */}
-                  <Trash2 size={14} className="ml-5 text-red-500 float-right cursor-pointer" onClick={() => handleDeleteFile(file)} />
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="text-xs text-gray-400 text-center py-2">
-              파일이 없습니다
-            </div>
-          )}
-        </div>
-
-        <div className="p-3 border-b">
-          <button
-            onClick={() => newChat()}
-          >
-            새 채팅
-          </button>
-        </div>
-
-        {/* 대화 이력 */}
-        <div className="p-3 flex-1 overflow-y-auto">
-          <div className="flex items-center justify-between mb-2">
-            <h3 className="text-sm font-medium">대화 기록</h3>
-          </div>
-          {currentSessionLogs
-            .filter(c => c.project_id === activeProject?.project_id)
-            .length > 0 ? (
-            <div className="space-y-1">
-              {currentSessionLogs
-                .filter(c => c.project_id === activeProject?.project_id)
-                .map(conv => (
-                  <div
-                    key={conv.id}
-                    className="flex justify-between items-center"
-                  >
-                    <div className="p-2 text-xs flex flex-col rounded cursor-pointer hover:bg-gray-100 w-[80%]" onClick={() => showConversations(conv)}>
-                      <div className="font-medium truncate">{conv.session_title}</div>
-                      <div className="text-gray-500 mt-1 text-[10px]">{conv.register_at}</div>
-                    </div>
-                    <Trash2 size={14} className="text-red-500 ml-2 cursor-pointer" onClick={() => handleDeleteSession(conv.id)} />
-                  </div>
-
-                ))
-              }
-            </div>
-          ) : (
-            <div className="text-xs text-gray-400 text-center py-2">
-              저장된 대화가 없습니다
-            </div>
-          )}
-        </div>
-
-        {/* 모델 선택 */}
-        <div className="p-3 border-t">
-          <div className="relative">
-            <button
-              className="w-full flex items-center justify-between p-2 border rounded hover:bg-gray-50"
-              onClick={() => setShowModelSelector(!showModelSelector)}
-            >
-              <div className="flex items-center gap-2">
-                <Bot size={14} className="text-blue-500" />
-                <span className="text-sm">{models.find(m => m.id === selectedModel)?.name || selectedModel}</span>
               </div>
-              <ChevronDown size={16} />
-            </button>
+            </div>
+            <button
+              onClick={handleFileUpload}
+              className="w-full flex items-center justify-center gap-1 py-1.5 px-3 text-sm border border-dashed rounded-lg hover:bg-gray-50 mb-2"
+            >
+              <Upload size={14} />
+              <span>{fileSource === 'local' ? '파일 업로드' : `${fileSource} 연동`}</span>
 
-            {showModelSelector && (
-              <div className="absolute bottom-full left-0 right-0 mb-1 bg-white border rounded-lg shadow-lg z-10">
-                <div className="p-2">
-                  {models.map(model => (
-                    <div
-                      key={model.id}
-                      onClick={() => {
-                        setSelectedModel(model.model_name);
-                        setShowModelSelector(false);
-                      }}
-                      className={`flex items-center gap-2 p-2 rounded cursor-pointer ${selectedModel === model.id ? 'bg-blue-50 text-blue-600' : 'hover:bg-gray-50'
-                        }`}
-                    >
-                      <Bot size={14} className={selectedModel === model.id ? "text-blue-500" : "text-gray-500"} />
-                      <div>
-                        <div className="text-sm font-medium">{model.model_name}</div>
-                        <div className="text-xs text-gray-500">{model.provider_name}</div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+            </button>
+            {files.length > 0 ? (
+              <div className="space-y-1 max-h-40 overflow-y-auto">
+                {files.map((file, idx) => (
+                  <div
+                    key={idx}
+                    className="flex items-center p-1.5 text-xs "
+                  >
+                    {getFileSourceIcon(file.source)}
+                    <span className="ml-1.5 truncate">{file.name.split("\\").pop()}</span> {/* 파일명만 표시 */}
+                    <Trash2 size={14} className="ml-5 text-red-500 float-right cursor-pointer" onClick={() => handleDeleteFile(file)} />
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-xs text-gray-400 text-center py-2">
+                파일이 없습니다
               </div>
             )}
           </div>
+
+          <div className="p-3 border-b">
+            <button
+              onClick={() => newChat()}
+            >
+              새 채팅
+            </button>
+          </div>
+
+          {/* 대화 이력 */}
+          <div className="p-3 flex-1 overflow-y-auto">
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="text-sm font-medium">대화 기록</h3>
+            </div>
+            {currentSessionLogs
+              .filter(c => c.project_id === activeProject?.project_id)
+              .length > 0 ? (
+              <div className="space-y-1">
+                {currentSessionLogs
+                  .filter(c => c.project_id === activeProject?.project_id)
+                  .map(conv => (
+                    <div
+                      key={conv.id}
+                      className="flex justify-between items-center"
+                    >
+                      <div className="p-2 text-xs flex flex-col rounded cursor-pointer hover:bg-gray-100 w-[80%]" onClick={() => showConversations(conv)}>
+                        <div className="font-medium truncate">{conv.session_title}</div>
+
+                        {Date.parse(conv.register_at) ? (
+                          <div className="text-gray-500 mt-1 text-[10px]">
+                            {new Date(conv.register_at).toLocaleString('ko-KR', {
+                              year: 'numeric',
+                              month: 'numeric',
+                              day: 'numeric',
+                              hour: 'numeric',
+                              minute: 'numeric',
+                              second: 'numeric',
+                              hour12: true,
+                            })}
+                          </div>
+                        ) : (
+                          <div className="text-gray-500 mt-1 text-[10px]">{conv.register_at}</div>
+                        )}
+
+
+                      </div>
+                      <Trash2 size={14} className="text-red-500 ml-2 cursor-pointer" onClick={() => handleDeleteSession(conv.id)} />
+                    </div>
+
+                  ))
+                }
+              </div>
+            ) : (
+              <div className="text-xs text-gray-400 text-center py-2">
+                저장된 대화가 없습니다
+              </div>
+            )}
+          </div>
+
+          {/* 모델 선택 */}
+          <div className="p-3 border-t">
+            <div className="relative">
+              <button
+                className="w-full flex items-center justify-between p-2 border rounded hover:bg-gray-50"
+                onClick={() => setShowModelSelector(!showModelSelector)}
+              >
+                <div className="flex items-center gap-2">
+                  <Bot size={14} className="text-blue-500" />
+                  <span className="text-sm">{models.find(m => m.id === selectedModel)?.name || selectedModel}</span>
+                </div>
+                <ChevronDown size={16} />
+              </button>
+
+              {showModelSelector && (
+                <div className="absolute bottom-full left-0 right-0 mb-1 bg-white border rounded-lg shadow-lg z-10">
+                  <div className="p-2">
+                    {models.map(model => (
+                      <div
+                        key={model.id}
+                        onClick={() => {
+                          setSelectedModel(model.model_name);
+                          setShowModelSelector(false);
+                        }}
+                        className={`flex items-center gap-2 p-2 rounded cursor-pointer ${selectedModel === model.id ? 'bg-blue-50 text-blue-600' : 'hover:bg-gray-50'
+                          }`}
+                      >
+                        <Bot size={14} className={selectedModel === model.id ? "text-blue-500" : "text-gray-500"} />
+                        <div>
+                          <div className="text-sm font-medium">{model.model_name}</div>
+                          <div className="text-xs text-gray-500">{model.provider_name}</div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
-      </div>
+
+
+
+
+
+
+
+      )
+      }
+
+
+
+
+
+
+
 
       {/* 오른쪽: 채팅 인터페이스 */}
       <div className="flex-1 flex flex-col bg-gray-50">
@@ -696,7 +773,7 @@ const ProjectChat = ({
           </div>
         </div>
       </div>
-    </div>
+    </div >
   );
 };
 

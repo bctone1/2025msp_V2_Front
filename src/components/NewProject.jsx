@@ -103,6 +103,7 @@ const NewProject = ({
                     }`}
                 >
                   <div className="text-sm">{category.name}</div>
+                  <span className="text-xs text-gray-500">{category.example}</span>
                 </div>
               ))}
             </div>

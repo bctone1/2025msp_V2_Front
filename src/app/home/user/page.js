@@ -175,10 +175,10 @@ const EnhancedMetaLLMInterface = () => {
 
 
   const categories = [
-    { id: 'web', name: '웹 개발' },
-    { id: 'mobile', name: '모바일 앱' },
-    { id: 'ai', name: 'AI/ML' },
-    { id: 'database', name: '데이터베이스' }
+    { id: 'web', name: '웹 개발', example:'웹사이트, 웹앱' },
+    { id: 'mobile', name: '모바일 개발', example:'iOS, Android' },
+    { id: 'design', name: '디자인', example:'UI/UX, 그래픽' },
+    { id: 'other', name: '기타', example:'다른 유형의 프로젝트' }
   ];
 
 
@@ -223,6 +223,7 @@ const EnhancedMetaLLMInterface = () => {
               {view === 'projects' && '프로젝트 관리'}
               {view === 'apikeys' && 'API 키 관리'}
               {view === 'profile' && '내 정보'}
+              {view === 'project-detail' && '프로젝트'}
             </h1>
 
             <div className="flex items-center gap-4">
