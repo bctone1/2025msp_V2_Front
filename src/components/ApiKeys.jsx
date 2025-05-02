@@ -39,9 +39,9 @@ const ApiKeys = ({ apiKeys, sessionData, providers, setApiKeys }) => {
     if (response.ok) {
       const data = await response.json();
       console.log(data);
-      setCurrentApiKeys([...currentapiKeys, data]);
+      setCurrentApiKeys([...currentapiKeys, newKeyData]);
 
-      setApiKeys(pre => [...pre, data])
+      setApiKeys(pre => [...pre, newKeyData])
 
       setIsAddingKey(false);
       setNewKeyData({
@@ -53,7 +53,7 @@ const ApiKeys = ({ apiKeys, sessionData, providers, setApiKeys }) => {
         usage_count: 0
       });
     } else {
-      console.error("Failed to fetch data");
+      console.log("Failed to fetch data");
       alert("key를 확인해주세요.");
     }
     // console.log(newKeyData);
@@ -120,6 +120,7 @@ const ApiKeys = ({ apiKeys, sessionData, providers, setApiKeys }) => {
         // const data = await response.json();
         console.log(`Provider with ID ${param.name} deleted.`);
         setCurrentApiKeys(currentapiKeys.filter(pre => pre.provider_name !== param.provider_name));
+        setApiKeys(apiKeys.filter(pre => pre.provider_name !== param.provider_name));
       } else {
         console.error("Failed to fetch data");
       }
@@ -250,7 +251,6 @@ const ApiKeys = ({ apiKeys, sessionData, providers, setApiKeys }) => {
                     className="mt-1 p-1 border rounded text-sm flex-1 font-mono text-sm truncate"
                     value={keySettings.api_key}
                     onChange={(e) => setKeySettings({ ...keySettings, api_key: e.target.value })}
-
                   />
                 ) : (
                   <code className="flex-1 font-mono text-sm truncate">{apiKey.api_key}</code>

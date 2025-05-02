@@ -127,12 +127,7 @@ const ProviderManagement = ({ providers: initialProviders }) => {
           <div className="bg-white rounded-lg shadow-sm border p-6 mb-6">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-medium">새 AI 프로바이더 연결</h2>
-              <button
-                onClick={() => setIsAddingProvider(false)}
-                className="text-gray-500 hover:text-gray-700"
-              >
-                &times;
-              </button>
+              
             </div>
 
             <div className="grid gap-4 mb-6">

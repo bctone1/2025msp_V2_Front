@@ -282,6 +282,7 @@ const EnhancedMetaLLMInterface = () => {
             setView={setView}
             conversations={conversations}
             setSessionLogs={setSessionLogs}
+
           />
         )}
 

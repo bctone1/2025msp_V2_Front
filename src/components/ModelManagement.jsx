@@ -12,8 +12,8 @@ import {
   PlusCircle,
 } from 'lucide-react';
 
-const ModelManagement = ({ models, providerData }) => {
-  console.log(models);
+const ModelManagement = ({ models, providerData,setModelsData }) => {
+  // console.log(models);
   // 프로바이더별 모델 정보를 추출
   const extractModels = (models) => {
     let modelsList = [];
@@ -24,14 +24,14 @@ const ModelManagement = ({ models, providerData }) => {
         provider_name: model.provider_name,
         name: model.model_name,
 
-        settings: {
-          temperature: 0.7,
-          maxTokens: 4000,
-          topP: 1,
-          frequencyPenalty: 0,
-          presencePenalty: 0,
-          isDefault: model.model_name === 'GPT-4' && model.provider_name === 'OpenAI'
-        }
+        // settings: {
+        //   temperature: 0.7,
+        //   maxTokens: 4000,
+        //   topP: 1,
+        //   frequencyPenalty: 0,
+        //   presencePenalty: 0,
+        //   isDefault: model.model_name === 'GPT-4' && model.provider_name === 'OpenAI'
+        // }
 
       });
 
@@ -40,7 +40,7 @@ const ModelManagement = ({ models, providerData }) => {
   };
 
   const [Currentmodels, setCurrentmodels] = useState(extractModels(models));
-  console.log(Currentmodels);
+  // console.log(Currentmodels);
 
   const [isAddingModel, setIsAddingModel] = useState(false);
   const [editingModel, setEditingModel] = useState(null);
@@ -50,18 +50,18 @@ const ModelManagement = ({ models, providerData }) => {
     id: '',
     provider_name: 'OpenAI',
     name: '',
-    settings: {
-      temperature: 0.7,
-      maxTokens: 4000,
-      topP: 1,
-      frequencyPenalty: 0,
-      presencePenalty: 0,
-    }
+    // settings: {
+    //   temperature: 0.7,
+    //   maxTokens: 4000,
+    //   topP: 1,
+    //   frequencyPenalty: 0,
+    //   presencePenalty: 0,
+    // }
   });
 
   const addNewModel = async () => {
     console.log(newModelData);
-    if (!newModelData.name || !newModelData.provider_name || !newModelData.parameter) {
+    if (!newModelData.name || !newModelData.provider_name) {
       alert("빈칸이 있습니다.");
       return;
     };
@@ -80,14 +80,14 @@ const ModelManagement = ({ models, providerData }) => {
       setNewModelData({
         name: '',
         provider_name: '',
-        parameter: '',
-        settings: {
-          temperature: 0.7,
-          maxTokens: 4000,
-          topP: 1,
-          frequencyPenalty: 0,
-          presencePenalty: 0,
-        }
+        // parameter: '',
+        // settings: {
+        //   temperature: 0.7,
+        //   maxTokens: 4000,
+        //   topP: 1,
+        //   frequencyPenalty: 0,
+        //   presencePenalty: 0,
+        // }
       });
     } else {
       console.error("Failed to fetch data");
@@ -137,6 +137,7 @@ const ModelManagement = ({ models, providerData }) => {
         // const data = await response.json();
         console.log(`Provider with ID ${param.name} deleted.`);
         setCurrentmodels(Currentmodels.filter(pre => pre.name !== param.name));
+        setModelsData(models.filter(pre => pre.model_name !== param.name));
       } else {
         console.error("Failed to fetch data");
       }
@@ -151,7 +152,7 @@ const ModelManagement = ({ models, providerData }) => {
         <div className="flex justify-between items-center mb-6">
           <div className="mb-6">
             <h2 className="text-lg font-medium">모델 설정</h2>
-            <p className="text-sm text-gray-500">AI 모델의 기본 설정 및 파라미터를 관리합니다</p>
+            {/* <p className="text-sm text-gray-500">AI 모델의 기본 설정 및 파라미터를 관리합니다</p> */}
           </div>
 
           <button
@@ -168,12 +169,7 @@ const ModelManagement = ({ models, providerData }) => {
           <div className="bg-white rounded-lg shadow-sm border p-6 mb-6">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-medium">모델 추가</h2>
-              <button
-                onClick={() => setIsAddingModel(false)}
-                className="text-gray-500 hover:text-gray-700"
-              >
-                &times;
-              </button>
+              
             </div>
 
             <div className="grid gap-4 mb-6">
@@ -197,13 +193,16 @@ const ModelManagement = ({ models, providerData }) => {
                   onChange={(e) => setNewModelData({ ...newModelData, name: e.target.value })}
                 />
 
-                <label className="block text-sm font-medium mb-2">파라미터</label>
-                <textarea
-                  type="text"
-                  className="w-full px-4 py-2 border rounded-lg"
-                  placeholder="기본 파라미터를 작성해주세요"
-                  onChange={(e) => setNewModelData({ ...newModelData, parameter: e.target.value })}
-                />
+                {/* <label className="block text-sm font-medium mb-2">파라미터</label> */}
+                {/* <textarea
+                  // type="text"
+                  // className="w-full px-4 py-2 border rounded-lg"
+                  // placeholder="기본 파라미터를 작성해주세요"
+                  // onChange={(e) => setNewModelData({ ...newModelData, parameter: e.target.value })}
+                /> */}
+
+
+                
               </div>
             </div>
 
@@ -217,7 +216,7 @@ const ModelManagement = ({ models, providerData }) => {
               <button
                 onClick={addNewModel}
                 // disabled={!newModelData.name || !newModelData.provider_name || !newModelData.parameter}
-                className={`px-4 py-2 rounded-lg ${!newModelData.name || !newModelData.provider_name || !newModelData.parameter ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'bg-blue-500 text-white hover:bg-blue-600'}`}
+                className={`px-4 py-2 rounded-lg ${!newModelData.name || !newModelData.provider_name ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'bg-blue-500 text-white hover:bg-blue-600'}`}
               >
                 추가
               </button>
@@ -237,9 +236,9 @@ const ModelManagement = ({ models, providerData }) => {
                   프로바이더
                 </th>
 
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                {/* <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   파라미터
-                </th>
+                </th> */}
                 <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                   액션
                 </th>
@@ -289,7 +288,7 @@ const ModelManagement = ({ models, providerData }) => {
 
 
 
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  {/* <td className="px-6 py-4 whitespace-nowrap">
                     {editingModel === model.name ? (
                       <div className="flex items-center space-x-4">
                         <div>
@@ -335,7 +334,7 @@ const ModelManagement = ({ models, providerData }) => {
                         Temperature: {model.settings.temperature}, Max Tokens: {model.settings.maxTokens}
                       </div>
                     )}
-                  </td>
+                  </td> */}
 
 
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">

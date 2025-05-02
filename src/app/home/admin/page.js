@@ -17,11 +17,31 @@ const AdminInterface = () => {
   const [currentView, setCurrentView] = useState('dashboard');
   const { data: session } = useSession();
   const [providerData, setproviderData] = useState([]);
+  const [OpenaiModels, setOpenaiModels] = useState([]);
   const [ModelsData, setModelsData] = useState([]);
   const [userData, setuserData] = useState([]);
   const [projects, setProjects] = useState([]);
 
   useEffect(() => {
+
+    const fetchOpenaiModels = async () => {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/getOpenaiModels`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await response.json();
+      if (response.ok) {
+        console.log(data);
+        // setOpenaiModels(data.models);
+      } else {
+        alert("공급자 오류발생");
+      }
+    };
+
+
+
     const fetchProvider = async () => {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/providerList`, {
         method: "POST",
@@ -91,6 +111,7 @@ const AdminInterface = () => {
     fetchUser();
     fetchProvider();
     fetchModels();
+    // fetchOpenaiModels();
   }, []);
 
   const usageData = {
@@ -135,7 +156,7 @@ const AdminInterface = () => {
       case 'providers':
         return <ProviderManagement providers={providerData} />;
       case 'models':
-        return <ModelManagement models={ModelsData} providerData={providerData} />;
+        return <ModelManagement models={ModelsData} providerData={providerData} setModelsData={setModelsData}/>;
       case 'users':
         return <UserManagement users={userData} />;
       case 'settings':

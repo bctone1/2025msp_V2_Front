@@ -123,6 +123,18 @@ const UserManagement = ({ users: initialUsers }) => {
     }
   };
 
+  const [sortBy, setSortBy] = useState("role");
+
+  const sortedUsers = [...filteredUsers].sort((a, b) => {
+    if (sortBy === "role") {
+      return a.role.localeCompare(b.role);
+    } else if (sortBy === "group") {
+      return a.group?.localeCompare(b.group ?? "");
+    }
+    return 0;
+  });
+  
+
   return (
     <div className="p-6">
       <div className="max-w-6xl mx-auto">
@@ -156,6 +168,14 @@ const UserManagement = ({ users: initialUsers }) => {
                 className="pl-10 pr-4 py-2 border rounded-lg w-full"
               />
             </div>
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+              className="px-4 py-2 border rounded-lg"
+            >
+              <option value="role">역할</option>
+              <option value="group">소속 그룹</option>
+            </select>
           </div>
         </div>
 
@@ -275,7 +295,7 @@ const UserManagement = ({ users: initialUsers }) => {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {filteredUsers.map(user => (
+              {sortedUsers.map(user => (
                 <tr key={user.email}>
                   <td className="px-6 py-4 whitespace-nowrap">
                     {editingUserId === user.email ? (
@@ -398,7 +418,7 @@ const UserManagement = ({ users: initialUsers }) => {
           </table>
         </div>
 
-        {filteredUsers.length === 0 && (
+        {sortedUsers.length === 0 && (
           <div className="text-center py-6 bg-white rounded-lg shadow-sm border mt-6">
             <p className="text-gray-500">검색 결과가 없습니다.</p>
           </div>

@@ -363,7 +363,10 @@ const ProjectChat = ({
     const data = await response.json();
     if (response.ok) {
       // console.log(data);
-      setcurrentSessionLogs(currentSessionLogs.filter(pre => pre.id !== session_id))
+      setcurrentSessionLogs(currentSessionLogs.filter(pre => pre.id !== session_id));
+      setSessionLogs(sessionLogs.filter(pre => pre.id !== session_id));
+
+
       // setFiles(files.filter(pre => pre.name !== file.name));
 
     } else {
