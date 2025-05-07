@@ -393,11 +393,6 @@ const ProjectChat = ({
   return (
     <div className="flex-1 flex overflow-x-auto">
 
-
-
-
-
-
       {/* 왼쪽: 지식 베이스 및 대화 이력 패널 축소*/}
       {collapsed ? (
         <div className="w-10 bg-white border-r flex flex-col pt-3">
@@ -667,7 +662,11 @@ const ProjectChat = ({
                     )}
                   </div>
 
-                  <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+                  {message.content.startsWith('https://') ? (
+                    <img src={message.content} alt="Generated" className="rounded-md max-w-full" />
+                  ) : (
+                    <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+                  )}
 
                   {message.files && (
                     <div className="mt-2 flex flex-wrap gap-1">
