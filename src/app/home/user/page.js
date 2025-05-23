@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSession, signOut } from "next-auth/react";
 
 import Navigation from '@/components/Navigation';
@@ -11,7 +11,7 @@ import ProjectChat from '@/components/ProjectChat';
 import ApiKeys from '@/components/ApiKeys';
 import Profile from '@/components/Profile';
 
-import { useSearchParams } from 'next/navigation';
+
 
 import { Power } from 'lucide-react';
 
@@ -40,7 +40,6 @@ const EnhancedMetaLLMInterface = () => {
   useEffect(() => {
     if (status !== "authenticated") return;
     if (session?.user?.email) {
-      // console.log(session);
       fetchProjects(session.user.email);
       fetchUserInfo(session.user.email);
       fetchSessions(session.user.email);
