@@ -388,7 +388,126 @@ const ProjectChat = ({
 
   const [collapsed, setCollapsed] = useState(false);
 
+  // 마크다운 테이블을 HTML로 변환하는 함수 추가
+  const convertMarkdownTableToHtml = (content) => {
+    if (!content.includes('|')) return content;
 
+    // 텍스트와 테이블 분리
+    const parts = content.split('\n');
+    let tableStart = -1;
+    let tableEnd = -1;
+
+    // 테이블의 시작과 끝 위치 찾기
+    for (let i = 0; i < parts.length; i++) {
+      if (parts[i].includes('|')) {
+        if (tableStart === -1) tableStart = i;
+        tableEnd = i;
+      } else if (tableStart !== -1 && !parts[i].trim().startsWith('|-')) {
+        // 테이블 다음에 빈 줄이 아닌 일반 텍스트가 나오면 종료
+        break;
+      }
+    }
+
+    // 테이블 부분만 추출
+    const tableLines = parts.slice(tableStart, tableEnd + 1).filter(line =>
+      line.includes('|') && !line.trim().startsWith('|-')
+    );
+
+    let html = '<table class="min-w-full divide-y divide-gray-200 my-4">\n';
+
+    // 헤더 처리
+    if (tableLines[0]) {
+      html += '<thead class="bg-gray-50">\n<tr>\n';
+      const headers = tableLines[0]
+        .split('|')
+        .filter(cell => cell.trim())
+        .map(header => header.trim());
+
+      headers.forEach(header => {
+        html += `<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">${header}</th>\n`;
+      });
+      html += '</tr>\n</thead>\n';
+    }
+
+    // 본문 처리
+    html += '<tbody class="bg-white divide-y divide-gray-200">\n';
+    for (let i = 1; i < tableLines.length; i++) {
+      const row = tableLines[i];
+      if (row.trim() && !row.trim().startsWith('|-')) {
+        html += '<tr class="even:bg-gray-50">\n';
+        const cells = row
+          .split('|')
+          .filter(cell => cell.trim())
+          .map(cell => cell.trim());
+
+        cells.forEach(cell => {
+          html += `<td class="px-6 py-4 whitespace-nowrap text-sm">${cell}</td>\n`;
+        });
+        html += '</tr>\n';
+      }
+    }
+    html += '</tbody>\n</table>';
+
+    // 테이블 전후의 텍스트 결합
+    const beforeText = parts.slice(0, tableStart).filter(line => line.trim()).join('\n');
+    const afterText = parts.slice(tableEnd + 1).filter(line => line.trim()).join('\n');
+
+    return [
+      beforeText,
+      html,
+      afterText
+    ].filter(part => part).join('\n\n');
+  };
+
+  // 코드 블록 변환 함수 추가
+  const convertCodeBlockToHtml = (content) => {
+    if (!content.includes('```')) return content;
+
+    const parts = content.split('\n');
+    let result = [];
+    let isInCodeBlock = false;
+    let currentCodeBlock = [];
+    let language = '';
+
+    for (let i = 0; i < parts.length; i++) {
+      const line = parts[i];
+      
+      if (line.startsWith('```')) {
+        if (!isInCodeBlock) {
+          // 코드 블록 시작
+          isInCodeBlock = true;
+          language = line.slice(3).trim(); // 언어 추출
+          continue;
+        } else {
+          // 코드 블록 종료
+          isInCodeBlock = false;
+          const code = currentCodeBlock.join('\n');
+          const languageClass = language ? ` language-${language}` : '';
+          result.push(`<pre class="bg-gray-800 rounded-lg p-4 my-4 overflow-x-auto"><code class="text-sm text-white${languageClass}">${escapeHtml(code)}</code></pre>`);
+          currentCodeBlock = [];
+          continue;
+        }
+      }
+
+      if (isInCodeBlock) {
+        currentCodeBlock.push(line);
+      } else {
+        result.push(line);
+      }
+    }
+
+    return result.join('\n');
+  };
+
+  // HTML 특수문자 이스케이프 함수
+  const escapeHtml = (unsafe) => {
+    return unsafe
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  };
 
   return (
     <div className="flex-1 flex overflow-x-auto">
@@ -664,6 +783,20 @@ const ProjectChat = ({
 
                   {message.content.startsWith('https://') ? (
                     <img src={message.content} alt="Generated" className="rounded-md max-w-full" />
+                  ) : message.content.includes('```') ? (
+                    <div 
+                      className="text-sm whitespace-pre-wrap"
+                      dangerouslySetInnerHTML={{ 
+                        __html: convertCodeBlockToHtml(message.content)
+                      }}
+                    />
+                  ) : message.content.includes('|') ? (
+                    <div 
+                      className="text-sm whitespace-pre-wrap overflow-x-auto"
+                      dangerouslySetInnerHTML={{ 
+                        __html: convertMarkdownTableToHtml(message.content)
+                      }}
+                    />
                   ) : message.content.includes('<table>') || message.content.includes('<code>') ? (
                     <div 
                       className="text-sm whitespace-pre-wrap"
