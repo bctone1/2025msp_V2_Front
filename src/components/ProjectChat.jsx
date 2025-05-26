@@ -471,7 +471,7 @@ const ProjectChat = ({
 
     for (let i = 0; i < parts.length; i++) {
       const line = parts[i];
-      
+
       if (line.startsWith('```')) {
         if (!isInCodeBlock) {
           // 코드 블록 시작
@@ -721,20 +721,8 @@ const ProjectChat = ({
             </div>
           </div>
         </div>
-
-
-
-
-
-
-
       )
       }
-
-
-
-
-
 
 
 
@@ -783,24 +771,52 @@ const ProjectChat = ({
 
                   {message.content.startsWith('https://') ? (
                     <img src={message.content} alt="Generated" className="rounded-md max-w-full" />
+                  ) : message.content.includes('.png') || message.content.includes('.jpg') || message.content.includes('.jpeg') || message.content.includes('.gif') ? (
+                    <div className="relative">
+                      <img
+                        src={`${process.env.NEXT_PUBLIC_API_URL}/file/upload/${message.content.replace(/\\/g, '/')}`}
+                        alt="Uploaded"
+                        className="rounded-md max-w-full hover:opacity-90 transition-opacity cursor-pointer"
+                        onClick={() => window.open(`${process.env.NEXT_PUBLIC_API_URL}/file/upload/${message.content.replace(/\\/g, '/')}`, '_blank')}
+                        onError={(e) => {
+                          const imgUrl = e.target.src;
+                          console.error('Image load error - URL:', imgUrl);
+                          console.error('Original message content:', message.content);
+                          console.error('Modified URL:', `/file/upload/${message.content.replace(/\\/g, '/')}`);
+
+                          // 이미지 로드 실패 시 에러 메시지 표시
+                          e.target.style.display = 'none';
+                          const errorDiv = document.createElement('div');
+                          errorDiv.className = 'text-red-500 text-sm mt-2';
+                          errorDiv.innerHTML = `
+                            <div class="bg-red-50 border border-red-200 rounded p-3">
+                              <p>이미지를 불러올 수 없습니다.</p>
+                              <p class="text-xs mt-1">원본 경로: ${message.content}</p>
+                              <p class="text-xs mt-1">요청 경로: /file/upload/${message.content.replace(/\\/g, '/')}</p>
+                            </div>
+                          `;
+                          e.target.parentNode.appendChild(errorDiv);
+                        }}
+                      />
+                    </div>
                   ) : message.content.includes('```') ? (
-                    <div 
+                    <div
                       className="text-sm whitespace-pre-wrap"
-                      dangerouslySetInnerHTML={{ 
+                      dangerouslySetInnerHTML={{
                         __html: convertCodeBlockToHtml(message.content)
                       }}
                     />
                   ) : message.content.includes('|') ? (
-                    <div 
+                    <div
                       className="text-sm whitespace-pre-wrap overflow-x-auto"
-                      dangerouslySetInnerHTML={{ 
+                      dangerouslySetInnerHTML={{
                         __html: convertMarkdownTableToHtml(message.content)
                       }}
                     />
                   ) : message.content.includes('<table>') || message.content.includes('<code>') ? (
-                    <div 
+                    <div
                       className="text-sm whitespace-pre-wrap"
-                      dangerouslySetInnerHTML={{ 
+                      dangerouslySetInnerHTML={{
                         __html: message.content
                           .replace(/<table>/g, '<table class="min-w-full divide-y divide-gray-200 my-4">')
                           .replace(/<thead>/g, '<thead class="bg-gray-50">')
