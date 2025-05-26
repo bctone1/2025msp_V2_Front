@@ -249,26 +249,25 @@ const ProjectChat = ({
   };
 
   const handleFileSelect = async (e) => {
-    const selectedFiles = Array.from(e.target.files);
+    // const selectedFiles = Array.from(e.target.files);
+    const selectedFile = e.target.files[0];
+    if (!selectedFile) return;
     const formData = new FormData();
-
+    formData.append("file", selectedFile);
     // formData.append("files[]", selectedFiles);
     formData.append("project_id", activeProject.project_id);
     formData.append("user_email", activeProject.user_email);
     formData.append("session_id", currentSession.current);
-    selectedFiles.forEach(file => {
-      formData.append("files[]", file);
-    });
 
-    const formDataObject = {};
-    formData.forEach((value, key) => {
-      formDataObject[key] = value;
-    });
-    console.log(formDataObject);
+    // selectedFiles.forEach(file => {
+    //   formData.append("files[]", file);
+    // });
 
-
-    // console.log(selectedFiles);
-    // console.log(activeProject.project_id, activeProject.user_email);
+    // const formDataObject = {};
+    // formData.forEach((value, key) => {
+    //   formDataObject[key] = value;
+    // });
+    // console.log(formDataObject);
 
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/UploadFile`, {
       method: "POST",
@@ -283,18 +282,18 @@ const ProjectChat = ({
 
 
 
-    if (selectedFiles.length > 0) {
-      const newFiles = selectedFiles.map(f => ({
-        name: f.name,
+    if (selectedFile) {
+      const newFiles = [{
+        name: selectedFile.name,
         source: 'local',
-      }));
+      }];
 
       setFiles([...files, ...newFiles]);
 
       const fileMessage = {
         id: messages.length + 1,
         role: 'user',
-        content: `파일 업로드: ${selectedFiles.map(f => f.name).join(', ')}`,
+        content: `파일 업로드: ${selectedFile.name}`,
         files: newFiles
       };
 
@@ -302,6 +301,7 @@ const ProjectChat = ({
 
       // AI 응답 시뮬레이션
       setIsLoading(true);
+      alert(data.message);
       setTimeout(() => {
         const response = {
           id: messages.length + 2,
@@ -900,7 +900,7 @@ const ProjectChat = ({
               type="file"
               ref={fileInputRef}
               className="hidden"
-              multiple
+              // multiple
               onChange={handleFileSelect}
             />
 
