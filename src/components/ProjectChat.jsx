@@ -90,7 +90,7 @@ const ProjectChat = ({
     if (!initialized.current) {
       initialized.current = true;
       fetchGetInfoBase();
-      newChat();
+      // newChat();
     }
   }, []);
 
