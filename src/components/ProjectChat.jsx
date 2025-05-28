@@ -72,7 +72,7 @@ const ProjectChat = ({
         if (response.ok) {
           console.log(data);
           const newFiles = data.map(f => ({
-            name: f.file_url,
+            name: f.file_name,
             source: 'local',
             id: f.id
           }));
@@ -628,7 +628,8 @@ const ProjectChat = ({
                     className="flex items-center p-1.5 text-xs "
                   >
                     {getFileSourceIcon(file.source)}
-                    <span className="ml-1.5 truncate">{file.name.split("\\").pop()}</span> {/* 파일명만 표시 */}
+                    <span className="ml-1.5 truncate">{file.name}</span>
+                    {/* <span className="ml-1.5 truncate">{file.name.split("\\").pop()}</span> */}
                     <Trash2 size={14} className="ml-5 text-red-500 float-right cursor-pointer" onClick={() => handleDeleteFile(file)} />
                   </div>
                 ))}
