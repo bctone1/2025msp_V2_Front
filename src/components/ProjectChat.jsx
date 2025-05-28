@@ -831,20 +831,20 @@ const ProjectChat = ({
                         __html: convertMarkdownTableToHtml(message.content)
                       }}
                     />
-                  ) : message?.content?.includes('<table>') || message?.content?.includes('<code>') ? (
-                    <div
-                      className="text-sm whitespace-pre-wrap"
-                      dangerouslySetInnerHTML={{
-                        __html: message.content
-                          .replace(/<table>/g, '<table class="min-w-full divide-y divide-gray-200 my-4">')
-                          .replace(/<thead>/g, '<thead class="bg-gray-50">')
-                          .replace(/<th>/g, '<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">')
-                          .replace(/<td>/g, '<td class="px-6 py-4 whitespace-nowrap text-sm">')
-                          .replace(/<tr>/g, '<tr class="even:bg-gray-50">')
-                          .replace(/<code>/g, '<code class="bg-gray-100 rounded px-2 py-1">')
-                          .replace(/<pre>/g, '<pre class="bg-gray-800 text-white rounded-lg p-4 my-4 overflow-x-auto">')
-                      }}
-                    />
+                  // ) : message?.content?.includes('<table>') || message?.content?.includes('<code>') ? (
+                  //   <div
+                  //     className="text-sm whitespace-pre-wrap"
+                  //     dangerouslySetInnerHTML={{
+                  //       __html: message.content
+                  //         .replace(/<table>/g, '<table class="min-w-full divide-y divide-gray-200 my-4">')
+                  //         .replace(/<thead>/g, '<thead class="bg-gray-50">')
+                  //         .replace(/<th>/g, '<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">')
+                  //         .replace(/<td>/g, '<td class="px-6 py-4 whitespace-nowrap text-sm">')
+                  //         .replace(/<tr>/g, '<tr class="even:bg-gray-50">')
+                  //         .replace(/<code>/g, '<code class="bg-gray-100 rounded px-2 py-1">')
+                  //         .replace(/<pre>/g, '<pre class="bg-gray-800 text-white rounded-lg p-4 my-4 overflow-x-auto">')
+                  //     }}
+                  //   />
                   ) : (
                     <p className="text-sm whitespace-pre-wrap">{message.content}</p>
                   )}
