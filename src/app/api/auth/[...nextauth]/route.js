@@ -111,7 +111,7 @@ export const handler = NextAuth({
         try {
           const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/googlelogin`, {
           // const res = await axios.post("http://127.0.0.1:5000/googlelogin", {
-            email: user.name,
+            email: user.email,
             name: user.name,
             image: user.image,
           });
