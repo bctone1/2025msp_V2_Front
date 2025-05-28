@@ -789,7 +789,7 @@ const ProjectChat = ({
 
                   {message?.content?.startsWith?.('https://') ? (
                     <img src={message.content} alt="Generated" className="rounded-md max-w-full" />
-                  ) : message.content.includes('.png') || message.content.includes('.jpg') || message.content.includes('.jpeg') || message.content.includes('.gif') ? (
+                  ) : message?.content && (message.content.includes('.png') || message.content.includes('.jpg') || message.content.includes('.jpeg') || message.content.includes('.gif')) ? (
                     <div className="relative">
                       <img
                         src={`${process.env.NEXT_PUBLIC_API_URL}/file/upload/${message.content.replace(/\\/g, '/')}`}
@@ -817,21 +817,21 @@ const ProjectChat = ({
                         }}
                       />
                     </div>
-                  ) : message.content.includes('```') ? (
+                  ) : message?.content?.includes('```') ? (
                     <div
                       className="text-sm whitespace-pre-wrap"
                       dangerouslySetInnerHTML={{
                         __html: convertCodeBlockToHtml(message.content)
                       }}
                     />
-                  ) : message.content.includes('|') ? (
+                  ) : message?.content?.includes('|') ? (
                     <div
                       className="text-sm whitespace-pre-wrap overflow-x-auto"
                       dangerouslySetInnerHTML={{
                         __html: convertMarkdownTableToHtml(message.content)
                       }}
                     />
-                  ) : message.content.includes('<table>') || message.content.includes('<code>') ? (
+                  ) : message?.content?.includes('<table>') || message?.content?.includes('<code>') ? (
                     <div
                       className="text-sm whitespace-pre-wrap"
                       dangerouslySetInnerHTML={{
