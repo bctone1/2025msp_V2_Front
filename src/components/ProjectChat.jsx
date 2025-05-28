@@ -70,7 +70,7 @@ const ProjectChat = ({
         const data = await response.json();
 
         if (response.ok) {
-          // console.log(data);
+          console.log(data);
           const newFiles = data.map(f => ({
             name: f.file_url,
             source: 'local',
