@@ -787,7 +787,7 @@ const ProjectChat = ({
                     )}
                   </div>
 
-                  {message.content.startsWith('https://') ? (
+                  {message?.content?.startsWith?.('https://') ? (
                     <img src={message.content} alt="Generated" className="rounded-md max-w-full" />
                   ) : message.content.includes('.png') || message.content.includes('.jpg') || message.content.includes('.jpeg') || message.content.includes('.gif') ? (
                     <div className="relative">
