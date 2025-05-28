@@ -846,7 +846,7 @@ const ProjectChat = ({
                   //     }}
                   //   />
                   ) : (
-                    <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+                    <p className="text-sm whitespace-pre-wrap">여기서 출력됨 : {message.content}</p>
                   )}
 
                   {message.files && (
