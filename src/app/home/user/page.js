@@ -174,10 +174,10 @@ const EnhancedMetaLLMInterface = () => {
 
 
   const categories = [
-    { id: 'web', name: '웹 개발', example:'웹사이트, 웹앱' },
-    { id: 'mobile', name: '모바일 개발', example:'iOS, Android' },
-    { id: 'design', name: '디자인', example:'UI/UX, 그래픽' },
-    { id: 'other', name: '기타', example:'다른 유형의 프로젝트' }
+    { id: 'web', name: '웹 개발', example: '웹사이트, 웹앱' },
+    { id: 'mobile', name: '모바일 개발', example: 'iOS, Android' },
+    { id: 'design', name: '디자인', example: 'UI/UX, 그래픽' },
+    { id: 'other', name: '기타', example: '다른 유형의 프로젝트' }
   ];
 
 
@@ -227,7 +227,7 @@ const EnhancedMetaLLMInterface = () => {
 
             <div className="flex items-center gap-4">
               <span className="text-sm text-gray-500">{session?.user?.email || "정보 없음"}</span>
-              
+
               <button onClick={() => signOut({ callbackUrl: "/" })}>
                 <Power className="ml-3 text-red-300" />
               </button>
@@ -281,6 +281,7 @@ const EnhancedMetaLLMInterface = () => {
             setView={setView}
             conversations={conversations}
             setSessionLogs={setSessionLogs}
+            setconversations={setconversations}
 
           />
         )}

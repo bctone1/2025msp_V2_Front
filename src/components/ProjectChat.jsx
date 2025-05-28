@@ -14,7 +14,8 @@ const ProjectChat = ({
   setSelectedModel,
   setView,
   conversations,
-  setSessionLogs
+  setSessionLogs,
+  setconversations
 }) => {
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState([]);
@@ -69,7 +70,7 @@ const ProjectChat = ({
         const data = await response.json();
 
         if (response.ok) {
-          console.log(data);
+          // console.log(data);
           const newFiles = data.map(f => ({
             name: f.file_url,
             source: 'local',
@@ -90,6 +91,11 @@ const ProjectChat = ({
     if (!initialized.current) {
       initialized.current = true;
       fetchGetInfoBase();
+      setMessages([{
+        id: 1,
+        role: 'system',
+        content: `${activeProject.project_name} 프로젝트를 시작합니다. ${activeProject.description ? `설명: ${activeProject.description}` : ''} 어떤 도움이 필요하신가요?`
+      }]);
       // newChat();
     }
   }, []);
@@ -131,20 +137,33 @@ const ProjectChat = ({
       body: JSON.stringify({ messageInput: input, project_id: activeProject.project_id, user_email: activeProject.user_email, session: currentSession.current, selected_model: selectedModel }),
     });
     const data = await response.json();
+
     if (response.ok) {
       console.log(data);
-      // setTimeout(() => {
+      setconversations(pre => [...pre, data.response]);
+      if (data.project_id) {
+        const newSessionLogs = {
+          id: data.session_id,
+          project_id: data.project_id.project_id,
+          session_title: data.title,
+          register_at: data.register_at,
+          messages: 0,
+          user_email: activeProject.user_email,
+        };
+        setcurrentSessionLogs([newSessionLogs, ...currentSessionLogs]);
+        setSessionLogs(pre => [...pre, newSessionLogs]);
+      }
+
+
       const aiResponse = {
         id: messages.length + 2,
         role: 'assistant',
-        content: data,
+        content: data.response,
         model: selectedModel
       };
-
       setMessages(prev => [...prev, aiResponse]);
       setIsLoading(false);
-      // messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-      // }, 1000);
+
     } else {
       alert("오류발생1");
     }
@@ -162,7 +181,7 @@ const ProjectChat = ({
     const filteredConversations = conversations.filter(convo => convo.session_id === param.id);
     filteredConversations.forEach((object, index) => {
       setMessages(prevMessages => {
-        const newId = prevMessages.length + 1;  // 이전 상태의 길이를 사용
+        const newId = prevMessages.length + 1;
         const updatedMessage = {
           id: newId,
           role: object.message_role,
@@ -195,33 +214,31 @@ const ProjectChat = ({
 
     const formattedDate = now.toLocaleString();
 
-    const newSessionLogs = {
-      // id: currentSession.current,
-      id: currentTime,
-      project_id: activeProject.project_id,
-      session_title: 'New Chat!',
-      register_at: formattedDate,
-      messages: 0,
-      user_email: activeProject.user_email,
-    };
+    // const newSessionLogs = {
+    //   // id: currentSession.current,
+    //   id: currentTime,
+    //   project_id: activeProject.project_id,
+    //   session_title: 'New Chat!',
+    //   register_at: formattedDate,
+    //   messages: 0,
+    //   user_email: activeProject.user_email,
+    // };
 
-    // console.log(newSessionLogs);
 
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/newSession`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(newSessionLogs),
-    });
-    const data = await response.json();
-    if (response.ok) {
-      // console.log(data);
-      setcurrentSessionLogs([newSessionLogs, ...currentSessionLogs]);
-      setSessionLogs(pre => [...pre, newSessionLogs])
-    } else {
-      alert("오류발생2");
-    }
+    // const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/newSession`, {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify(newSessionLogs),
+    // });
+    // const data = await response.json();
+    // if (response.ok) {
+    // setcurrentSessionLogs([newSessionLogs, ...currentSessionLogs]);
+    // setSessionLogs(pre => [...pre, newSessionLogs]);
+    // } else {
+    //   alert("오류발생2");
+    // }
   }
 
 
