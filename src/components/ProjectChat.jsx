@@ -70,7 +70,7 @@ const ProjectChat = ({
         const data = await response.json();
 
         if (response.ok) {
-          console.log(data);
+          // console.log(data);
           const newFiles = data.map(f => ({
             name: f.file_name,
             source: 'local',
@@ -117,7 +117,7 @@ const ProjectChat = ({
   const sendMessage = async () => {
     const textarea = textareaRef.current;
     textarea.style.height = "auto"; // 높이 초기화
-    console.log(currentSession.current);
+    // console.log(currentSession.current);
 
     if (!input.trim()) return;
     const userMessage = {
@@ -137,9 +137,10 @@ const ProjectChat = ({
       body: JSON.stringify({ messageInput: input, project_id: activeProject.project_id, user_email: activeProject.user_email, session: currentSession.current, selected_model: selectedModel }),
     });
     const data = await response.json();
+    console.log(data);
 
     if (response.ok) {
-      console.log(data);
+      // console.log(data);
       setconversations(pre => [...pre, data.response]);
       if (data.project_id) {
         const newSessionLogs = {
@@ -149,17 +150,17 @@ const ProjectChat = ({
           register_at: data.register_at,
           messages: 0,
           user_email: activeProject.user_email,
+          case : data.case
         };
         setcurrentSessionLogs([newSessionLogs, ...currentSessionLogs]);
         setSessionLogs(pre => [...pre, newSessionLogs]);
       }
-
-
       const aiResponse = {
         id: messages.length + 2,
         role: 'assistant',
         content: data.response,
-        model: selectedModel
+        model: selectedModel,
+        // case : data.case
       };
       setMessages(prev => [...prev, aiResponse]);
       setIsLoading(false);
@@ -186,7 +187,9 @@ const ProjectChat = ({
           id: newId,
           role: object.message_role,
           content: object.conversation,
-          model: selectedModel
+          model: selectedModel,
+          case: object.case
+          // case : "message"
         };
         return [...prevMessages, updatedMessage];
       });
@@ -787,64 +790,58 @@ const ProjectChat = ({
                     )}
                   </div>
 
-                  {message?.content?.startsWith?.('https://') ? (
-                    <img src={message.content} alt="Generated" className="rounded-md max-w-full" />
-                  ) : message?.content && (message.content.includes('.png') || message.content.includes('.jpg') || message.content.includes('.jpeg') || message.content.includes('.gif')) ? (
-                    <div className="relative">
-                      <img
-                        src={`${process.env.NEXT_PUBLIC_API_URL}/file/upload/${message.content.replace(/\\/g, '/')}`}
-                        alt="Uploaded"
-                        className="rounded-md max-w-full hover:opacity-90 transition-opacity cursor-pointer"
-                        onClick={() => window.open(`${process.env.NEXT_PUBLIC_API_URL}/file/upload/${message.content.replace(/\\/g, '/')}`, '_blank')}
-                        onError={(e) => {
-                          const imgUrl = e.target.src;
-                          console.error('Image load error - URL:', imgUrl);
-                          console.error('Original message content:', message.content);
-                          console.error('Modified URL:', `/file/upload/${message.content.replace(/\\/g, '/')}`);
+                  {message.role === 'assistant' ? (
+                    
+                    message?.content?.startsWith?.('https://') ? (
+                      <img src={message.content} alt="Generated" className="rounded-md max-w-full" />
 
-                          // 이미지 로드 실패 시 에러 메시지 표시
-                          e.target.style.display = 'none';
-                          const errorDiv = document.createElement('div');
-                          errorDiv.className = 'text-red-500 text-sm mt-2';
-                          errorDiv.innerHTML = `
-                            <div class="bg-red-50 border border-red-200 rounded p-3">
-                              <p>이미지를 불러올 수 없습니다.</p>
-                              <p class="text-xs mt-1">원본 경로: ${message.content}</p>
-                              <p class="text-xs mt-1">요청 경로: /file/upload/${message.content.replace(/\\/g, '/')}</p>
-                            </div>
-                          `;
-                          e.target.parentNode.appendChild(errorDiv);
+
+                      // message.content가 이미지도 아닌데 .png, .jpg가 포함되어있을때 적용되는 오류가 발생함
+                    ) : message?.content && message.case === "image" && (message.content.includes('.png') || message.content.includes('.jpg') || message.content.includes('.jpeg') || message.content.includes('.gif')) ? (
+                      <div className="relative">
+                        <img
+                          src={`${process.env.NEXT_PUBLIC_API_URL}/file/upload/${message.content.replace(/\\/g, '/')}`}
+                          alt="Uploaded"
+                          className="rounded-md max-w-full hover:opacity-90 transition-opacity cursor-pointer"
+                          onClick={() => window.open(`${process.env.NEXT_PUBLIC_API_URL}/file/upload/${message.content.replace(/\\/g, '/')}`, '_blank')}
+                          onError={(e) => {
+                            const imgUrl = e.target.src;
+                            console.error('Image load error - URL:', imgUrl);
+                            console.error('Original message content:', message.content);
+                            console.error('Modified URL:', `/file/upload/${message.content.replace(/\\/g, '/')}`);
+
+                            // 이미지 로드 실패 시 에러 메시지 표시
+                            e.target.style.display = 'none';
+                            const errorDiv = document.createElement('div');
+                            errorDiv.className = 'text-red-500 text-sm mt-2';
+                            errorDiv.innerHTML = `
+                              <div class="bg-red-50 border border-red-200 rounded p-3">
+                                <p>이미지를 불러올 수 없습니다.</p>
+                                <p class="text-xs mt-1">원본 경로: ${message.content}</p>
+                                <p class="text-xs mt-1">요청 경로: /file/upload/${message.content.replace(/\\/g, '/')}</p>
+                              </div>
+                            `;
+                            e.target.parentNode.appendChild(errorDiv);
+                          }}
+                        />
+                      </div>
+                    ) : message?.content?.includes('```') ? (
+                      <div
+                        className="text-sm whitespace-pre-wrap"
+                        dangerouslySetInnerHTML={{
+                          __html: convertCodeBlockToHtml(message.content)
                         }}
                       />
-                    </div>
-                  ) : message?.content?.includes('```') ? (
-                    <div
-                      className="text-sm whitespace-pre-wrap"
-                      dangerouslySetInnerHTML={{
-                        __html: convertCodeBlockToHtml(message.content)
-                      }}
-                    />
-                  ) : message?.content?.includes('|') ? (
-                    <div
-                      className="text-sm whitespace-pre-wrap overflow-x-auto"
-                      dangerouslySetInnerHTML={{
-                        __html: convertMarkdownTableToHtml(message.content)
-                      }}
-                    />
-                  // ) : message?.content?.includes('<table>') || message?.content?.includes('<code>') ? (
-                  //   <div
-                  //     className="text-sm whitespace-pre-wrap"
-                  //     dangerouslySetInnerHTML={{
-                  //       __html: message.content
-                  //         .replace(/<table>/g, '<table class="min-w-full divide-y divide-gray-200 my-4">')
-                  //         .replace(/<thead>/g, '<thead class="bg-gray-50">')
-                  //         .replace(/<th>/g, '<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">')
-                  //         .replace(/<td>/g, '<td class="px-6 py-4 whitespace-nowrap text-sm">')
-                  //         .replace(/<tr>/g, '<tr class="even:bg-gray-50">')
-                  //         .replace(/<code>/g, '<code class="bg-gray-100 rounded px-2 py-1">')
-                  //         .replace(/<pre>/g, '<pre class="bg-gray-800 text-white rounded-lg p-4 my-4 overflow-x-auto">')
-                  //     }}
-                  //   />
+                    ) : message?.content?.includes('|') ? (
+                      <div
+                        className="text-sm whitespace-pre-wrap overflow-x-auto"
+                        dangerouslySetInnerHTML={{
+                          __html: convertMarkdownTableToHtml(message.content)
+                        }}
+                      />
+                    ) : (
+                      <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+                    )
                   ) : (
                     <p className="text-sm whitespace-pre-wrap">{message.content}</p>
                   )}
