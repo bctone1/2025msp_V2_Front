@@ -150,7 +150,7 @@ const ProjectChat = ({
           register_at: data.register_at,
           messages: 0,
           user_email: activeProject.user_email,
-          case : data.case
+          case: data.case
         };
         setcurrentSessionLogs([newSessionLogs, ...currentSessionLogs]);
         setSessionLogs(pre => [...pre, newSessionLogs]);
@@ -172,7 +172,7 @@ const ProjectChat = ({
 
 
   const showConversations = (param) => {
-    // console.log(conversations);
+    console.log(conversations);
     // console.log(param.id);
     if (currentSession.current === param.id) {
       alert("이미 같은 세션입니다.");
@@ -529,6 +529,17 @@ const ProjectChat = ({
       .replace(/'/g, "&#039;");
   };
 
+  // 인라인 코드 변환 함수 추가 (convertCodeBlockToHtml 함수 위에 추가)
+  const convertInlineCodeToHtml = (content) => {
+    if (!content.includes('`')) return content;
+
+    // 코드 블록(```)은 건너뛰기
+    if (content.includes('```')) return content;
+
+    // 인라인 코드(`)를 <b> 태그로 변환
+    return content.replace(/``([^`]+)``/g, '<b>$1</b>');
+  };
+
   return (
     <div className="flex-1 flex overflow-x-auto">
 
@@ -791,7 +802,7 @@ const ProjectChat = ({
                   </div>
 
                   {message.role === 'assistant' ? (
-                    
+
                     message?.content?.startsWith?.('https://') ? (
                       <img src={message.content} alt="Generated" className="rounded-md max-w-full" />
 
@@ -840,7 +851,12 @@ const ProjectChat = ({
                         }}
                       />
                     ) : (
-                      <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+                      <div
+                        className="text-sm whitespace-pre-wrap"
+                        dangerouslySetInnerHTML={{
+                          __html: convertInlineCodeToHtml(message.content)
+                        }}
+                      />
                     )
                   ) : (
                     <p className="text-sm whitespace-pre-wrap">{message.content}</p>
