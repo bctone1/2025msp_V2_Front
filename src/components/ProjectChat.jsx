@@ -481,6 +481,7 @@ const ProjectChat = ({
 
   // 코드 블록 변환 함수 추가
   const convertCodeBlockToHtml = (content) => {
+    console.log("코드블록");
     if (!content.includes('```')) return content;
 
     const parts = content.split('\n');
@@ -530,14 +531,60 @@ const ProjectChat = ({
   };
 
   // 인라인 코드 변환 함수 추가 (convertCodeBlockToHtml 함수 위에 추가)
-  const convertInlineCodeToHtml = (content) => {
-    if (!content.includes('`')) return content;
+  const markdownToHtml = (markdown) => {
+    console.log(markdown);
+    if (!markdown) return '';
 
-    // 코드 블록(```)은 건너뛰기
-    if (content.includes('```')) return content;
+    let html = markdown;
 
-    // 인라인 코드(`)를 <b> 태그로 변환
-    return content.replace(/``([^`]+)``/g, '<b>$1</b>');
+    // 코드 블록 (```code```)
+    html = html.replace(/```([\s\S]*?)```/g, '<pre class="bg-gray-800 rounded-lg p-4 my-4 overflow-x-auto"><code class="text-sm text-white">$1</code></pre>');
+
+    // 인라인 코드 (`code`)
+    // html = html.replace(/`([^`\n]+)`/g, '<code>$1</code>');
+
+    // 제목 (# ~ ######)
+    html = html.replace(/^###### (.*)$/gm, '<h6>$1</h6>');
+    html = html.replace(/^##### (.*)$/gm, '<h5>$1</h5>');
+    html = html.replace(/^#### (.*)$/gm, '<h4>$1</h4>');
+    html = html.replace(/^### (.*)$/gm, '<h3>$1</h3>');
+    html = html.replace(/^## (.*)$/gm, '<h2>$1</h2>');
+    html = html.replace(/^# (.*)$/gm, '<h1>$1</h1>');
+
+    // 굵게 (**bold** or __bold__)
+    html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    // html = html.replace(/__(.*?)__/g, '<strong>$1</strong>');
+
+    // // 기울임 (*italic* or _italic_)
+    // html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
+    // html = html.replace(/_(.*?)_/g, '<em>$1</em>');
+
+    // // 링크 [text](url)
+    // html = html.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank">$1</a>');
+
+    // // 이미지 ![alt](url)
+    // html = html.replace(/!\[([^\]]*)\]\((https?:\/\/[^\s)]+)\)/g, '<img src="$2" alt="$1" />');
+
+    // // 목록 (순서 없음)
+    // html = html.replace(/^\s*[-*] (.*)$/gm, '<li>$1</li>');
+    // html = html.replace(/(<li>.*<\/li>)/gms, '<ul>$1</ul>');
+
+    // // 목록 (순서 있음)
+    // html = html.replace(/^\s*\d+\. (.*)$/gm, '<li>$1</li>');
+    // html = html.replace(/(<li>.*<\/li>)/gms, '<ol>$1</ol>');
+
+    // // 수평선 (---, ***, ___)
+    // html = html.replace(/^[-*_]{3,}$/gm, '<hr/>');
+
+    // // 마크다운 테이블 변환 (기초적 지원)
+    // if (html.includes('|')) {
+    //   html = convertMarkdownTableToHtml(html);
+    // }
+
+    // 줄바꿈
+    html = html.replace(/\n/g, '<br>');
+
+    return html;
   };
 
   return (
@@ -836,13 +883,13 @@ const ProjectChat = ({
                           }}
                         />
                       </div>
-                    ) : message?.content?.includes('```') ? (
-                      <div
-                        className="text-sm whitespace-pre-wrap"
-                        dangerouslySetInnerHTML={{
-                          __html: convertCodeBlockToHtml(message.content)
-                        }}
-                      />
+                    // ) : message?.content?.includes('```') ? (
+                    //   <div
+                    //     className="text-sm whitespace-pre-wrap"
+                    //     dangerouslySetInnerHTML={{
+                    //       __html: convertCodeBlockToHtml(message.content)
+                    //     }}
+                    //   />
                     ) : message?.content?.includes('|') ? (
                       <div
                         className="text-sm whitespace-pre-wrap overflow-x-auto"
@@ -854,7 +901,7 @@ const ProjectChat = ({
                       <div
                         className="text-sm whitespace-pre-wrap"
                         dangerouslySetInnerHTML={{
-                          __html: convertInlineCodeToHtml(message.content)
+                          __html: markdownToHtml(message.content)
                         }}
                       />
                     )
