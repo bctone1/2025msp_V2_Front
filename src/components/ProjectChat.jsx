@@ -17,6 +17,7 @@ const ProjectChat = ({
   setSessionLogs,
   setconversations
 }) => {
+  // console.log(models);
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -137,7 +138,7 @@ const ProjectChat = ({
       body: JSON.stringify({ messageInput: input, project_id: activeProject.project_id, user_email: activeProject.user_email, session: currentSession.current, selected_model: selectedModel }),
     });
     const data = await response.json();
-    console.log(data);
+    // console.log(data);
 
     if (response.ok) {
       // console.log(data);
@@ -530,9 +531,9 @@ const ProjectChat = ({
       .replace(/'/g, "&#039;");
   };
 
-  // 인라인 코드 변환 함수 추가 (convertCodeBlockToHtml 함수 위에 추가)
+  
   const markdownToHtml = (markdown) => {
-    console.log(markdown);
+    // console.log(markdown);
     if (!markdown) return '';
 
     let html = markdown;
@@ -843,18 +844,17 @@ const ProjectChat = ({
                     </div>
                     {message.model && message.role !== 'user' && (
                       <div className="ml-auto text-xs bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded">
-                        {models.find(m => m.id === message.model)?.name || message.model}
+                        {/* {models.find(m => m.id === message.model)?.name || message.model} */}
+                        {message.role}
                       </div>
                     )}
                   </div>
 
-                  {message.role === 'assistant' ? (
+                  {message.role !== 'user' ? (
 
                     message?.content?.startsWith?.('https://') ? (
                       <img src={message.content} alt="Generated" className="rounded-md max-w-full" />
 
-
-                      // message.content가 이미지도 아닌데 .png, .jpg가 포함되어있을때 적용되는 오류가 발생함
                     ) : message?.content && message.case === "image" && (message.content.includes('.png') || message.content.includes('.jpg') || message.content.includes('.jpeg') || message.content.includes('.gif')) ? (
                       <div className="relative">
                         <img
