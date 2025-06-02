@@ -84,7 +84,7 @@ export default function LoginPage({ className }) {
           <Card>
             <CardHeader className="text-center">
               <CardTitle className="text-xl">Welcome back</CardTitle>
-              <CardDescription> Login with your Kakao or Naver or Google account </CardDescription>
+              <CardDescription> Login with your Kakao or Google account </CardDescription>
             </CardHeader>
 
             <CardContent>
@@ -104,7 +104,7 @@ export default function LoginPage({ className }) {
                   </Button>
 
 
-                  <Button variant="outline" className="w-full" onClick={handleNaverLogin}>
+                  {/* <Button variant="outline" className="w-full" onClick={handleNaverLogin}>
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" className="w-5 h-5 mr-2">
                       <path
                         d="M0 32C0 14.33 14.33 0 32 0h448c17.7 0 32 14.33 32 32v448c0 17.7-14.3 32-32 32H32c-17.67 0-32-14.3-32-32V32z"
@@ -116,7 +116,7 @@ export default function LoginPage({ className }) {
                       />
                     </svg>
                     Login with Naver
-                  </Button>
+                  </Button> */}
 
 
                   <Button variant="outline" className="w-full" onClick={handleGoogleLogin}>
@@ -223,7 +223,7 @@ export default function LoginPage({ className }) {
           </div>
 
           <div className="text-balance text-center text-xs text-muted-foreground [&_a]:underline [&_a]:underline-offset-4 [&_a]:hover:text-primary  ">
-            Frontend Ver : {process.env.NEXT_PUBLIC_META_FRONT_VER} <br />
+            Frontend Ver : {process.env.NEXT_PUBLIC_META_FRONT_VER} |
             Backend Ver : {process.env.NEXT_PUBLIC_META_BACKEND_VER}
 
           </div>

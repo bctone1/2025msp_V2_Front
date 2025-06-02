@@ -216,7 +216,7 @@ const ProjectChat = ({
       content: `${activeProject.project_name} 프로젝트를 시작합니다. ${activeProject.description ? `설명: ${activeProject.description}` : ''} 어떤 도움이 필요하신가요?`
     }]);
 
-    const formattedDate = now.toLocaleString();
+    // const formattedDate = now.toLocaleString();
 
     // const newSessionLogs = {
     //   // id: currentSession.current,
